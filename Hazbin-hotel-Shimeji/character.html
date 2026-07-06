@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customise Your Shimeji</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style id="dynamic-styles">
+    /* Fallback – will be overridden by JS */
+    body {
+      background: #1a0b0b;
+      color: #f3d9b1;
+      font-family: 'Segoe UI', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div style="max-width:800px; margin:2rem auto; padding:1rem;">
+    <a href="index.html" style="color:#f5b342; text-decoration:none;">← Back to all characters</a>
+    <h1 id="charName" style="margin-top:1rem;">Loading...</h1>
+    <img id="charPreview" src="" alt="" style="max-width:300px; border-radius:16px; margin:1rem 0;">
+
+    <div id="customPanel" style="display:none;">
+      <div style="display:flex; flex-wrap:wrap; gap:2rem; align-items:center; margin:2rem 0;">
+        <div>
+          <label>📏 Size: <span id="sizeValue">1.0</span></label><br>
+          <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0" style="width:200px;">
+        </div>
+        <div>
+          <label>🔁 Duplicates: <span id="countValue">1</span></label><br>
+          <input type="range" id="countSlider" min="1" max="10" step="1" value="1" style="width:200px;">
+        </div>
+      </div>
+
+      <button id="summonBtn" style="
+        padding: 1rem 3rem;
+        font-size: 1.3rem;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-top: 1rem;
+      ">🔥 Summon Chaos</button>
+      <p style="margin-top:0.5rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
+    </div>
+
+    <div id="error" style="color:red; display:none;"></div>
+  </div>
+
+  <script>
+    (async function() {
+      const params = new URLSearchParams(window.location.search);
+      const charId = params.get('char');
+      if (!charId) {
+        showError('No character selected. Please go back and choose one.');
+        return;
+      }
+
+      try {
+        const res = await fetch('../characters.json');  // relative to character.html in root
+        if (!res.ok) throw new Error('Cannot load characters.json');
+        const allChars = await res.json();
+        const char = allChars.find(c => c.id === charId);
+        if (!char) throw new Error('Character not found.');
+
+        // Apply dynamic colour theme
+        applyColors(char.colors);
+        // Fill content
+        document.getElementById('charName').textContent = char.name;
+        document.getElementById('charPreview').src = '../' + char.preview;
+        document.getElementById('charPreview').alt = char.name;
+        document.getElementById('customPanel').style.display = 'block';
+
+        // Sliders setup
+        const sizeSlider = document.getElementById('sizeSlider');
+        const countSlider = document.getElementById('countSlider');
+        const sizeValue = document.getElementById('sizeValue');
+        const countValue = document.getElementById('countValue');
+        sizeSlider.addEventListener('input', () => sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1));
+        countSlider.addEventListener('input', () => countValue.textContent = countSlider.value);
+
+        // Summon button
+        document.getElementById('summonBtn').addEventListener('click', async () => {
+          const scale = parseFloat(sizeSlider.value);
+          const count = parseInt(countSlider.value, 10);
+          await generateAndDownload(char, scale, count);
+        });
+
+      } catch (err) {
+        showError(err.message);
+      }
+    })();
+
+    function applyColors(c) {
+      const style = document.getElementById('dynamic-styles');
+      style.textContent = `
+        body {
+          background: ${c.bg};
+          color: ${c.text};
+          font-family: 'Segoe UI', sans-serif;
+        }
+        #charName {
+          color: ${c.heading};
+          text-shadow: 0 0 10px ${c.accent};
+        }
+        #customPanel label {
+          color: ${c.accent};
+        }
+        #summonBtn {
+          background: ${c.button};
+          color: white;
+          border: 2px solid ${c.accent};
+          box-shadow: 0 0 15px ${c.accent};
+        }
+        #summonBtn:hover {
+          background: ${c.buttonHover};
+          box-shadow: 0 0 25px ${c.accent};
+        }
+        input[type="range"] {
+          accent-color: ${c.accent};
+        }
+        a {
+          color: ${c.accent};
+        }
+      `;
+    }
+
+    function showError(msg) {
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error').textContent = msg;
+    }
+
+    async function generateAndDownload(char, scale, count) {
+      try {
+        const zipUrl = '../' + char.zip;  // relative path
+        const zipResp = await fetch(zipUrl);
+        if (!zipResp.ok) throw new Error('Could not fetch original ZIP.');
+        const zipBlob = await zipResp.blob();
+        const zip = await JSZip.loadAsync(zipBlob);
+
+        // Find and edit config
+        let configFile = zip.file('conf/設定.properties') || zip.file('conf/Actions.properties');
+        if (!configFile) {
+          const confFiles = Object.keys(zip.files).filter(f => f.startsWith('conf/') && f.endsWith('.properties'));
+          if (confFiles.length > 0) configFile = zip.file(confFiles[0]);
+        }
+        if (configFile) {
+          let text = await configFile.async('text');
+          text = setOrReplace(text, 'OnScreenCount', count.toString());
+          text = setOrReplace(text, 'Scale', scale.toFixed(1));
+          zip.file(configFile.name, text);
+        } else {
+          console.warn('No config file found in ZIP; using default settings.');
+        }
+
+        const newZip = await zip.generateAsync({ type: 'blob' });
+        const url = URL.createObjectURL(newZip);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${char.name}_Shimeji_custom.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        alert('Error generating ZIP: ' + err.message);
+        console.error(err);
+      }
+    }
+
+    function setOrReplace(text, key, value) {
+      const lines = text.split('\n');
+      let found = false;
+      const newLines = lines.map(line => {
+        if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
+          found = true;
+          return `${key}=${value}`;
+        }
+        return line;
+      });
+      if (!found) newLines.push(`${key}=${value}`);
+      return newLines.join('\n');
+    }
+  </script>
+</body>
+</html>

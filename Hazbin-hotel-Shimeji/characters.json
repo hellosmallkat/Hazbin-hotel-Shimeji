@@ -1,0 +1,82 @@
+[
+  {
+    "id": "alastor",
+    "name": "Alastor",
+    "preview": "images/alastor.png",
+    "zip": "downloads/Alastor.zip",
+    "group": "hazbin",
+    "colors": {
+      "bg": "#1a0b0b",
+      "card": "rgba(45,15,15,0.9)",
+      "accent": "#c7923e",
+      "text": "#f3d9b1",
+      "heading": "#f0c27a",
+      "button": "linear-gradient(45deg, #a3411a, #d47b2a)",
+      "buttonHover": "linear-gradient(45deg, #c55c2a, #eda140)"
+    }
+  },
+  {
+    "id": "lucifer",
+    "name": "Lucifer",
+    "preview": "images/lucifer.png",
+    "zip": "downloads/Lucifer.zip",
+    "group": "hazbin",
+    "colors": {
+      "bg": "#0f0a1a",
+      "card": "rgba(30,15,40,0.9)",
+      "accent": "#d4af37",
+      "text": "#e0d7ff",
+      "heading": "#f5e56c",
+      "button": "linear-gradient(45deg, #5a2d82, #c99b2e)",
+      "buttonHover": "linear-gradient(45deg, #7a3da3, #e5b83c)"
+    }
+  },
+  {
+    "id": "valentino",
+    "name": "Valentino",
+    "preview": "images/valentino.png",
+    "zip": "downloads/Valentino.zip",
+    "group": "vee",
+    "colors": {
+      "bg": "#1a001a",
+      "card": "rgba(50,10,50,0.9)",
+      "accent": "#ff69b4",
+      "text": "#f9d5f0",
+      "heading": "#ff8dcb",
+      "button": "linear-gradient(45deg, #b0306a, #ff1493)",
+      "buttonHover": "linear-gradient(45deg, #d4478c, #ff5ba7)"
+    }
+  },
+  {
+    "id": "velvette",
+    "name": "Velvette",
+    "preview": "images/velvette.png",
+    "zip": "downloads/Velvette.zip",
+    "group": "vee",
+    "colors": {
+      "bg": "#1a0b1e",
+      "card": "rgba(45,15,50,0.9)",
+      "accent": "#d87093",
+      "text": "#f0d5e0",
+      "heading": "#f5a3c7",
+      "button": "linear-gradient(45deg, #9b2d6f, #d44a8c)",
+      "buttonHover": "linear-gradient(45deg, #b83d85, #e65c9e)"
+    }
+  },
+  {
+    "id": "vox",
+    "name": "Vox",
+    "preview": "images/vox.png",
+    "zip": "downloads/Vox.zip",
+    "group": "vee",
+    "colors": {
+      "bg": "#0a0a2a",
+      "card": "rgba(10,15,45,0.9)",
+      "accent": "#00ffff",
+      "text": "#cce6ff",
+      "heading": "#66ffff",
+      "button": "linear-gradient(45deg, #003366, #00cccc)",
+      "buttonHover": "linear-gradient(45deg, #0055aa, #00e6e6)"
+    }
+  }
+]
