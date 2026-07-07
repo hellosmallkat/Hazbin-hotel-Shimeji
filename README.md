@@ -97,6 +97,24 @@ So you don't have to dig through folders every time:
 
 > **Tip:** You can rename the shortcut to something like "My Shimeji" by right-clicking it and selecting **Rename**.
 
+## 🛡️ Backend: Persisting character accent colors
+
+If you want color choices to be saved permanently (server-side) rather than in your browser, a small Node.js backend is included.
+
+To run the backend locally:
+
+1. Copy `.env.example` to `.env` and set `ADMIN_SECRET` to a strong secret.
+2. Install dependencies and start the server:
+
+```bash
+npm install
+npm start
+```
+
+3. Open the site at `http://localhost:3000` and use the color picker. Enter the admin secret to save a character's accent to `characters.json`.
+
+Note: The server updates the `characters.json` file in-place. Commit changes to your repository if you want them tracked.
+
 ---
 
 ## 🖱️ Using Your Shimeji

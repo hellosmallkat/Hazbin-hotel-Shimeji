@@ -5,6 +5,8 @@
     "preview": "images/alastor.png",
     "zip": "downloads/Alastor.zip",
     "group": "hazbin",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "Stay tuned...",
       "description": "The Radio Demon. A charismatic 1930s New Orleans radio host and serial killer who masks his sadistic, manipulative nature behind an unnervingly constant, polite smile. He loves jazz, chaos, and orchestrating misery."
@@ -31,6 +33,8 @@
     "preview": "images/lucifer.png",
     "zip": "downloads/Lucifer.zip",
     "group": "hazbin",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "Welcome to my kingdom.",
       "description": "The proud ruler of Hell, carrying the weight of his fall with regal composure. Beneath the calm, a wounded artist and father who still believes in dreams, even if his own are long shattered."
@@ -57,6 +61,8 @@
     "preview": "images/charlie.png",
     "zip": "downloads/Charlie.zip",
     "group": "hazbin",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "Everyone deserves a second chance.",
       "description": "The ever-optimistic princess of Hell, determined to prove that redemption is possible. Her boundless energy and kindness mask a fierce will to change the system, no matter how many demons laugh at her."
@@ -83,6 +89,8 @@
     "preview": "images/vaggie.png",
     "zip": "downloads/Vaggie.zip",
     "group": "hazbin",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "I'll keep everyone in line.",
       "description": "Fierce, loyal, and perpetually armed. Charlie’s protector and girlfriend, she hides her own painful past behind a warrior’s discipline and a sharp tongue, but her heart bleeds for those she loves."
@@ -109,6 +117,8 @@
     "preview": "images/angeldust.png",
     "zip": "downloads/AngelDust.zip",
     "group": "hazbin",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "Heya, toots.",
       "description": "A flamboyant spider-demon and adult film star who uses humour and bravado to hide deep insecurity and a soul-crushing contract. Behind the glamour, he’s a survivor searching for real freedom."
@@ -135,6 +145,8 @@
     "preview": "images/husk.png",
     "zip": "downloads/Husk.zip",
     "group": "hazbin",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "Just another day in Hell.",
       "description": "A grumpy, winged cat demon and former Overlord who lost everything to Alastor. Now the hotel’s bartender, he drowns old regrets in cheap booze, but a soft heart still flickers beneath the cynicism."
@@ -161,6 +173,8 @@
     "preview": "images/niffty.png",
     "zip": "downloads/Niffty.zip",
     "group": "hazbin",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "Cleanliness is next to... something.",
       "description": "A tiny, hyperactive cyclops maid obsessed with cleanliness and stabbing bugs. Her chaotic energy and unsettling fixation on order make her simultaneously adorable and terrifying."
@@ -187,6 +201,8 @@
     "preview": "images/sirpentious.png",
     "zip": "downloads/SirPentious.zip",
     "group": "hazbin",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "I'll conquer all with my brilliant inventions!",
       "description": "A theatrical snake demon and self-proclaimed evil genius whose grand schemes always explode in his face. Beneath the bluster, a surprisingly sweet soul desperate for acceptance."
@@ -213,6 +229,8 @@
     "preview": "images/valentino.png",
     "zip": "downloads/Valentino.zip",
     "group": "vee",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "You're mine, baby.",
       "description": "A manipulative moth demon and porn overlord who controls souls with velvet words and poison smoke. His charm is a cage, and cruelty is just another business transaction."
@@ -239,6 +257,8 @@
     "preview": "images/velvette.png",
     "zip": "downloads/Velvette.zip",
     "group": "vee",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "Likes, shares, and total domination.",
       "description": "A social-media-obsessed overlord who treats reality like her personal feed. Sharp, fashion-forward, and utterly ruthless, she weaponises trends and public opinion to stay on top."
@@ -265,6 +285,8 @@
     "preview": "images/vox.png",
     "zip": "downloads/Vox.zip",
     "group": "vee",
+    "accent": "#c84b4b",
+    "accentDark": "#7a2b2b",
     "vibe": {
       "quote": "All eyes on me.",
       "description": "A media-obsessed overlord who controls Hell’s airwaves. His charismatic, high-tech facade hides a paranoid need for control, turning every screen into a weapon and every viewer into a subject."
