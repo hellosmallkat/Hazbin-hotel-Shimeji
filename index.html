@@ -250,37 +250,7 @@
       cursor: pointer;
     }
 
-    /* Color picker button on each card */
-    .color-btn {
-      position: absolute;
-      top: 8px; right: 8px;
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.35);
-      border: 2px solid rgba(255,255,255,0.06);
-      color: #f3d9b1;
-      cursor: pointer;
-      z-index: 3;
-      opacity: 0; transform: translateY(-6px);
-      transition: opacity 0.18s, transform 0.18s;
-    }
-    .character-card:hover .color-btn { opacity: 1; transform: translateY(0); }
-
-    /* Color picker modal (small) */
-    .color-modal {
-      display: none; position: fixed; inset: 0; align-items: center; justify-content: center; z-index: 200;
-      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-    }
-    .color-modal.active { display: flex; }
-    .color-modal-content {
-      background: #1a0b0b; border: 3px solid #c7923e; border-radius: 14px; padding: 1.2rem; width: 360px; color: #f3d9b1;
-    }
-    .color-modal-content h3 { margin-bottom: 0.6rem; font-size: 1.1rem; }
-    .color-row { display:flex; gap:0.5rem; align-items:center; margin-bottom:0.8rem; }
-    .color-row label { width: 110px; font-size:0.95rem; }
-    .color-actions { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:0.6rem; }
-    .color-actions button { padding:0.45rem 0.8rem; border-radius:8px; cursor:pointer; border:1px solid rgba(0,0,0,0.2); }
+    
 
     @media (max-width: 600px) {
       .character-grid { grid-template-columns: 1fr; }
@@ -358,30 +328,7 @@ java -jar "Shimeji-ee.jar"</code></pre> (Replace with actual path.)</li>
     </div>
   </div>
 
-  <!-- Color Picker Modal -->
-  <div class="color-modal" id="colorModal">
-    <div class="color-modal-content">
-      <h3 id="colorModalTitle">Pick accents</h3>
-      <div class="color-row">
-        <label for="accentInput">Accent</label>
-        <input type="color" id="accentInput" value="#c84b4b">
-        <input type="text" id="accentText" style="flex:1; margin-left:6px; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#f3d9b1; padding:6px; border-radius:6px;" />
-      </div>
-      <div class="color-row">
-        <label for="accentDarkInput">Accent dark</label>
-        <input type="color" id="accentDarkInput" value="#7a2b2b">
-        <input type="text" id="accentDarkText" style="flex:1; margin-left:6px; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#f3d9b1; padding:6px; border-radius:6px;" />
-      </div>
-      <div class="color-row">
-        <label for="adminSecret">Admin secret</label>
-        <input type="password" id="adminSecret" placeholder="server secret (required)" style="flex:1; margin-left:6px; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#f3d9b1; padding:6px; border-radius:6px;" />
-      </div>
-      <div class="color-actions">
-        <button id="colorCancel">Cancel</button>
-        <button id="colorSave">Save</button>
-      </div>
-    </div>
-  </div>
+  
 
   <script>
     (async function() {
@@ -432,16 +379,7 @@ java -jar "Shimeji-ee.jar"</code></pre> (Replace with actual path.)</li>
 
             // (server-side persistence expected) no client-only overrides applied
 
-            // Color button
-            const btn = document.createElement('button');
-            btn.className = 'color-btn';
-            btn.title = 'Set card color';
-            btn.innerHTML = '&#9881;';
-            btn.addEventListener('click', (ev) => {
-              ev.preventDefault(); ev.stopPropagation();
-              openColorModal(char.id, a);
-            });
-            a.appendChild(btn);
+            // no client-side color controls (colors managed in characters.json)
 
             grid.appendChild(a);
           });
@@ -450,72 +388,7 @@ java -jar "Shimeji-ee.jar"</code></pre> (Replace with actual path.)</li>
         renderGrid(hazbinGrid, hazbin);
         renderGrid(veeGrid, vees);
 
-        // Color modal wiring
-        const colorModal = document.getElementById('colorModal');
-        const accentInput = document.getElementById('accentInput');
-        const accentText = document.getElementById('accentText');
-        const accentDarkInput = document.getElementById('accentDarkInput');
-        const accentDarkText = document.getElementById('accentDarkText');
-        const adminSecretInput = document.getElementById('adminSecret');
-        const colorSave = document.getElementById('colorSave');
-        const colorCancel = document.getElementById('colorCancel');
-        const colorModalTitle = document.getElementById('colorModalTitle');
-        let currentEditingId = null;
-        let currentEditingEl = null;
-
-        function openColorModal(id, el) {
-          currentEditingId = id; currentEditingEl = el;
-          colorModalTitle.textContent = `Pick accents — ${id}`;
-          // read computed accent from element
-          const comp = getComputedStyle(el).getPropertyValue('--accent').trim() || '#c84b4b';
-          accentInput.value = comp;
-          accentText.value = comp;
-          const compDark = getComputedStyle(el).getPropertyValue('--accent-dark').trim() || '#7a2b2b';
-          accentDarkInput.value = compDark;
-          accentDarkText.value = compDark;
-          adminSecretInput.value = '';
-          colorModal.classList.add('active');
-        }
-
-        function closeColorModal() {
-          colorModal.classList.remove('active');
-          currentEditingId = null; currentEditingEl = null;
-        }
-
-        // keep text + color inputs in sync
-        accentInput.addEventListener('input', () => { accentText.value = accentInput.value; });
-        accentDarkInput.addEventListener('input', () => { accentDarkText.value = accentDarkInput.value; });
-        accentText.addEventListener('input', () => {
-          try { if (/^#?[0-9a-fA-F]{6}$/.test(accentText.value)) accentInput.value = accentText.value.startsWith('#') ? accentText.value : '#'+accentText.value; } catch(e){}
-        });
-        accentDarkText.addEventListener('input', () => {
-          try { if (/^#?[0-9a-fA-F]{6}$/.test(accentDarkText.value)) accentDarkInput.value = accentDarkText.value.startsWith('#') ? accentDarkText.value : '#'+accentDarkText.value; } catch(e){}
-        });
-
-        colorCancel.addEventListener('click', () => closeColorModal());
-        colorModal.addEventListener('click', (e) => { if (e.target === colorModal) closeColorModal(); });
-
-        colorSave.addEventListener('click', async () => {
-          if (!currentEditingId) return closeColorModal();
-          const accent = (accentInput.value || '').trim();
-          const accentDark = (accentDarkInput.value || '').trim();
-          const secret = (adminSecretInput.value || '').trim();
-          if (!secret) return alert('Admin secret required to save to server.');
-          try {
-            const res = await fetch('/api/save-accent', {
-              method: 'POST', headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: currentEditingId, accent, accentDark, secret })
-            });
-            const json = await res.json();
-            if (!res.ok) throw new Error(json && json.message ? json.message : 'Server error');
-            // apply to all matching elements
-            document.querySelectorAll(`[data-char-id="${currentEditingId}"]`).forEach(el => applyAccentToCard(el, { accent, accentDark }));
-            closeColorModal();
-            alert('Saved accent to server successfully.');
-          } catch (e) {
-            alert('Failed to save on server: ' + (e.message || e));
-          }
-        });
+        
 
       } catch (err) {
         hazbinGrid.innerHTML = '<p style="color:red;">Unable to load characters.</p>';
