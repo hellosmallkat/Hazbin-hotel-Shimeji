@@ -1,1 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hazbin Hotel Shimeji Collection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: #2b0f0f;
+      color: #f3d9b1;
+      --border-color: #d4af37;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Fixed Gothic arch (castle window) */
+    .castle-frame {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .main-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+      padding-top: 1rem;
+    }
+
+    /* Top shortcut button */
+    .top-tab {
+      position: absolute;
+      top: 1.5rem; right: 2.5rem;
+      z-index: 10;
+    }
+    .top-tab button {
+      font-family: 'Playfair Display', serif;
+      background: rgba(20, 8, 8, 0.85);
+      border: 2px solid #c7923e;
+      color: #f0c27a;
+      padding: 0.5rem 1.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s;
+      box-shadow: 0 0 15px rgba(212,175,55,0.3);
+    }
+    .top-tab button:hover {
+      background: rgba(30, 10, 10, 0.95);
+      border-color: #e8924b;
+      box-shadow: 0 0 25px #e8924b;
+      transform: scale(1.05);
+    }
+
+    header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-bottom: none;
+      margin-bottom: 3rem;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      color: #f0c27a;
+      text-shadow: 0 0 30px #aa4a30, 0 0 60px #6b2020;
+      letter-spacing: 3px;
+    }
+    header p {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      color: #d4af7a;
+      margin-top: 0.5rem;
+    }
+
+    /* Section banners */
+    .section-banner {
+      text-align: center;
+      margin: 3rem 0 1.5rem;
+      position: relative;
+    }
+    .section-banner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .section-banner .desc {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      max-width: 800px;
+      margin: 0.8rem auto 0;
+      line-height: 1.6;
+      color: #e0d3b8;
+      text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    }
+
+    .hazbin-section h2 {
+      color: #f0c27a;
+      text-shadow: 0 0 30px #aa4a30;
+    }
+    .hazbin-section .desc {
+      border-top: 2px dashed #c7923e;
+      border-bottom: 2px dashed #c7923e;
+      padding: 1rem 0;
+    }
+
+    .vee-section {
+      margin-top: 5rem;
+    }
+    .vee-section h2 {
+      color: #00ffff;
+      text-shadow: 0 0 30px #0055aa;
+    }
+    .vee-section .desc {
+      border-top: 2px dashed #00ffff;
+      border-bottom: 2px dashed #00ffff;
+      padding: 1rem 0;
+      color: #cce6ff;
+    }
+
+    .character-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin: 2rem 0;
+      max-width: 900px;
+      margin-left: auto; margin-right: auto;
+    }
+
+    .character-card {
+      background: rgba(45, 15, 15, 0.9);
+      border: 3px solid #c7923e;
+      border-radius: 24px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      aspect-ratio: 1 / 1;
+      position: relative;
+      box-shadow: 0 0 25px rgba(170,74,48,0.4);
+    }
+    .character-card::before {
+      content: "";
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-radius: 26px;
+      background: linear-gradient(45deg, #d4af37, #aa4a30, #d4af37);
+      z-index: -1;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+    }
+    .character-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 0 45px #e8924b, 0 0 90px #aa4a30;
+    }
+    .character-card:hover::before { opacity: 1; }
+    .character-card img {
+      width: 100%;
+      height: 70%;
+      object-fit: cover;
+      background: #0a0303;
+      border-bottom: 3px solid #c7923e;
+    }
+    .card-body {
+      padding: 1.2rem;
+      text-align: center;
+      background: linear-gradient(0deg, rgba(20,8,8,0.95) 0%, rgba(45,15,15,0.8) 100%);
+    }
+    .card-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #f5c782;
+      text-shadow: 0 0 8px #aa4a30;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #9e896a;
+      border-top: 2px dashed #c7923e;
+      margin-top: 4rem;
+      max-width: 900px;
+      margin-left: auto; margin-right: auto;
+    }
+    footer a { color: #f5b342; }
+
+    /* Modal for shortcut guide */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: #1a0b0b;
+      border: 3px solid #c7923e;
+      border-radius: 24px;
+      padding: 2.5rem;
+      max-width: 750px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      color: #f3d9b1;
+      box-shadow: 0 0 60px #aa4a30;
+      position: relative;
+    }
+    .modal-content h2 {
+      font-family: 'Playfair Display', serif;
+      color: #f0c27a;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+    }
+    .close-modal {
+      position: absolute;
+      top: 1rem; right: 1.5rem;
+      background: none;
+      border: none;
+      color: #f0c27a;
+      font-size: 2.2rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .character-grid { grid-template-columns: 1fr; }
+      .character-card { aspect-ratio: auto; }
+      .character-card img { height: 250px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed Gothic arch (castle window) -->
+  <svg class="castle-frame" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <path d="M 4,100 L 4,30 Q 4,12 18,6 Q 34,1 50,3 Q 66,1 82,6 Q 96,12 96,30 L 96,100"
+          fill="none" stroke="var(--border-color)" stroke-width="6" vector-effect="non-scaling-stroke" />
+    <path d="M 8,100 L 8,32 Q 8,18 20,10 Q 40,5 50,7 Q 60,5 80,10 Q 92,18 92,32 L 92,100"
+          fill="none" stroke="var(--border-color)" stroke-width="2" stroke-dasharray="4,2" vector-effect="non-scaling-stroke" opacity="0.5" />
+    <path d="M 12,100 L 12,35 Q 12,22 24,14 Q 44,9 50,11 Q 56,9 76,14 Q 88,22 88,35 L 88,100"
+          fill="none" stroke="var(--border-color)" stroke-width="1" vector-effect="non-scaling-stroke" opacity="0.3" />
+  </svg>
+
+  <div class="main-wrapper">
+    <!-- Shortcut button at top -->
+    <div class="top-tab">
+      <button id="shortcutTabBtn">Shortcut Guide</button>
+    </div>
+
+    <header>
+      <h1>Hazbin Hotel</h1>
+      <p>A demonic sanctuary of chaos & redemption</p>
+    </header>
+
+    <div class="section-banner hazbin-section">
+      <h2>Residents of the Hotel</h2>
+      <p class="desc">Perched in Pentagram City within the Pride Ring of Hell, the Hazbin Hotel is a bizarre, vibrant, and wildly eccentric sanctuary. Founded by Princess Charlie Morningstar, it is a hopeful yet misguided rehabilitation centre for damned souls. The building itself is a chaotic amalgamation of whimsical gothic architecture, complete with a carousel, airship remnants, looping train tracks, and Alastor's neon-lit radio tower.</p>
+    </div>
+    <div class="character-grid" id="hazbinGrid"></div>
+
+    <div class="section-banner vee-section">
+      <h2>The V Tower</h2>
+      <p class="desc">A fortress of surveillance and power, the V Tower is the domain of Vox, Valentino, and Velvette. More than a building, it is a network of hidden cameras, electrified corridors, and completely distinct studios dedicated to media, fashion, and adult entertainment. Often compared to the Tower of Babel, it reflects the Vees' ambition to overthrow the heavens themselves.</p>
+    </div>
+    <div class="character-grid" id="veeGrid"></div>
+
+    <footer>
+      <p>Hazbin Hotel Shimeji Collection &middot; <a href="https://github.com/hellosmallkat/Hazbin-hotel-Shimeji">GitHub Repository</a></p>
+    </footer>
+  </div>
+
+  <!-- Shortcut Guide Modal -->
+  <div class="modal" id="shortcutModal">
+    <div class="modal-content">
+      <button class="close-modal" id="closeModal">&times;</button>
+      <h2>Create a Desktop Shortcut</h2>
+      <p><strong>After you download your custom Shimeji:</strong></p>
+      <h3 style="font-family:'Playfair Display'; color:#f0c27a;">Windows</h3>
+      <ol>
+        <li>Extract the ZIP to a folder you will keep.</li>
+        <li>Inside that folder, right-click, choose <strong>New &gt; Text Document</strong>.</li>
+        <li>Name it <code>Launch_Shimeji.bat</code> (make sure the extension is <code>.bat</code>).</li>
+        <li>Right-click &gt; <strong>Edit</strong>, paste:<pre><code>java -jar "Shimeji-ee.jar"</code></pre></li>
+        <li>Save. Double-click <code>.bat</code> to launch.</li>
+        <li>For desktop icon: right-click <code>.bat</code> &gt; <strong>Send to &gt; Desktop (create shortcut)</strong>.</li>
+      </ol>
+      <h3 style="font-family:'Playfair Display'; color:#f0c27a; margin-top:2rem;">macOS</h3>
+      <ol>
+        <li>Extract the ZIP and open the folder.</li>
+        <li>Open <strong>Automator</strong> (Command+Space, type Automator).</li>
+        <li>Choose <strong>Application</strong>, click <strong>Choose</strong>.</li>
+        <li>Add a <strong>Run Shell Script</strong> action.</li>
+        <li>Paste:<pre><code>cd /path/to/your/extracted/folder
+java -jar "Shimeji-ee.jar"</code></pre> (Replace with actual path.)</li>
+        <li>Save to Desktop. Double-click to run.</li>
+      </ol>
+      <p style="margin-top:1rem; color:#a58b6f;">Tip: Pin the shortcut to your taskbar or dock.</p>
+    </div>
+  </div>
+
+  <script>
+    (async function() {
+      const hazbinGrid = document.getElementById('hazbinGrid');
+      const veeGrid = document.getElementById('veeGrid');
+      try {
+        const res = await fetch('characters.json');
+        const characters = await res.json();
+        const hazbin = characters.filter(c => c.group === 'hazbin');
+        const vees = characters.filter(c => c.group === 'vee');
+
+        function renderGrid(grid, chars) {
+          grid.innerHTML = '';
+          chars.forEach(char => {
+            const a = document.createElement('a');
+            a.className = 'character-card';
+            a.href = `character.html?char=${encodeURIComponent(char.id)}`;
+            a.innerHTML = `<img src="${char.preview}" alt="${char.name}" loading="lazy"><div class="card-body"><h3>${char.name}</h3></div>`;
+            grid.appendChild(a);
+          });
+        }
+
+        renderGrid(hazbinGrid, hazbin);
+        renderGrid(veeGrid, vees);
+
+      } catch (err) {
+        hazbinGrid.innerHTML = '<p style="color:red;">Unable to load characters.</p>';
+      }
+    })();
+
+    // Border color transition (gold -> black) without moving the frame
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = Math.min(scrollTop / docHeight, 1);
+      const start = { r:212, g:175, b:55 };
+      const end = { r:0, g:0, b:0 };
+      let factor = progress < 0.3 ? 0 : (progress > 0.8 ? 1 : (progress - 0.3) / 0.5);
+      const r = Math.round(start.r + (end.r - start.r) * factor);
+      const g = Math.round(start.g + (end.g - start.g) * factor);
+      const b = Math.round(start.b + (end.b - start.b) * factor);
+      document.body.style.setProperty('--border-color', `rgb(${r},${g},${b})`);
+    });
+
+    // Modal logic
+    document.getElementById('shortcutTabBtn').addEventListener('click', () => {
+      document.getElementById('shortcutModal').classList.add('active');
+    });
+    document.getElementById('closeModal').addEventListener('click', () => {
+      document.getElementById('shortcutModal').classList.remove('active');
+    });
+    window.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('shortcutModal')) {
+        document.getElementById('shortcutModal').classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
