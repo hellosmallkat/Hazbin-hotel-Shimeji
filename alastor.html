@@ -36,6 +36,12 @@
       position: relative;
       overflow-x: hidden;
       background:
+        /* swamp fog/glow gathering toward the bottom of the page */
+        radial-gradient(ellipse at 50% 100%, rgba(38,74,58,0.55) 0%, transparent 50%),
+        radial-gradient(ellipse at 15% 97%, rgba(70,90,40,0.35) 0%, transparent 40%),
+        radial-gradient(ellipse at 85% 95%, rgba(30,60,70,0.3) 0%, transparent 40%),
+        /* overall top(radio-red) -> bottom(swamp) vertical shift, held lower */
+        linear-gradient(180deg, transparent 0%, transparent 68%, rgba(24,48,38,0.35) 85%, rgba(14,36,30,0.65) 94%, rgba(8,26,22,0.9) 100%),
         radial-gradient(circle at 75% 15%, rgba(141,24,31,0.35) 0%, transparent 40%),
         repeating-conic-gradient(from 0deg at 50% -10%, rgba(250,167,66,0.05) 0deg 6deg, transparent 6deg 12deg),
         radial-gradient(circle at 20% 30%, #3a0509 0%, #150102 55%, var(--onyx) 100%),
@@ -70,20 +76,7 @@
       position: relative;
       z-index: 1;
     }
-    .deco-sunburst {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 500px;
-      height: 220px;
-      z-index: -1;
-      opacity: 0.5;
-      pointer-events: none;
-      background: repeating-conic-gradient(from -90deg at 50% 100%, rgba(212,162,78,0.28) 0deg 4deg, transparent 4deg 12deg);
-      mask-image: radial-gradient(circle at 50% 100%, black 0%, black 55%, transparent 75%);
-      -webkit-mask-image: radial-gradient(circle at 50% 100%, black 0%, black 55%, transparent 75%);
-    }
+   
     .back-link {
       display: inline-block;
       margin-bottom: 1.5rem;
@@ -289,27 +282,6 @@
       }
     }
 
-    /* ===== Antler divider ===== */
-    .antler-divider {
-      display: block;
-      width: 100%;
-      max-width: 450px;
-      height: 36px;
-      margin: 0.5rem 0 1.5rem 0;
-      opacity: 0.55;
-    }
-    .antler-divider svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    .antler-divider path {
-      stroke: var(--accent);
-      stroke-width: 2;
-      fill: none;
-      stroke-linecap: round;
-      filter: drop-shadow(0 0 2px var(--accent-glow));
-    }
 
     /* ===== Bold poster-style header ===== */
     .room-title {
@@ -341,7 +313,35 @@
       filter: drop-shadow(0 0 1.5px var(--accent-glow));
     }
 
-    /* Floating symbols styling (just in case you want to add them manually outside the container) */
+    /* ===== Swamp imagery banner at the bottom of the page ===== */
+    .swamp-banner {
+      width: 100vw;
+      height: 400px;
+      margin: 20px 0 0 0;
+      margin-left: calc(50% - 50vw);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .swamp-banner svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .firefly {
+      animation: firefly-glow 3s ease-in-out infinite;
+    }
+    .firefly:nth-child(2) { animation-delay: 0.7s; }
+    .firefly:nth-child(3) { animation-delay: 1.5s; }
+    .firefly:nth-child(4) { animation-delay: 2.1s; }
+    .firefly:nth-child(5) { animation-delay: 0.3s; }
+    @keyframes firefly-glow {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* Floating symbols styling  */
     .floating-symbol {
       position: absolute;
       pointer-events: none;
@@ -364,16 +364,6 @@
 
     <div style="text-align:center;">
       <span class="on-air-badge">ON AIR</span>
-    </div>
-
-    <!-- Antler divider -->
-    <div class="antler-divider" style="margin-left:auto; margin-right:auto;" aria-hidden="true">
-      <svg viewBox="0 0 450 36" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20,18 L180,18 M270,18 L430,18" />
-        <path d="M180,18 L165,6 M180,18 L165,30 M180,18 L195,4" />
-        <path d="M270,18 L285,6 M270,18 L285,30 M270,18 L255,4" />
-        <circle cx="225" cy="18" r="4" fill="var(--accent)" stroke="none" />
-      </svg>
     </div>
 
     <!-- Live preview image -->
@@ -408,6 +398,80 @@
       <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
     </div>
     <div class="chevron-strip" aria-hidden="true"></div>
+
+    <!-- Louisiana swamp banner -->
+    <div class="swamp-banner" aria-hidden="true">
+      <svg viewBox="0 0 900 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- water line -->
+        <rect x="0" y="150" width="900" height="140" fill="#0c231d" opacity="0.9" />
+        <path d="M0,120 Q50,112 100,120 T200,120 T300,120 T400,120 T500,120 T600,120 T700,120 T800,120 T900,120 V200 H0 Z"
+              fill="#123329" opacity="0.85" />
+
+        <!-- distant mossy tree, left -->
+        <g opacity="0.8">
+          <path d="M60,130 C55,90 70,70 65,30" stroke="#1f2e22" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M65,50 C40,45 25,55 15,45" stroke="#1f2e22" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M65,65 C95,58 100,70 115,62" stroke="#1f2e22" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <!-- hanging moss -->
+          <path d="M20,48 C18,65 22,78 17,92" stroke="#3a4a30" stroke-width="2" fill="none" opacity="0.7" stroke-linecap="round"/>
+          <path d="M30,50 C28,70 33,85 29,100" stroke="#3a4a30" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round"/>
+          <path d="M105,64 C108,80 103,92 108,105" stroke="#3a4a30" stroke-width="2" fill="none" opacity="0.65" stroke-linecap="round"/>
+        </g>
+
+        <!-- distant mossy tree, right -->
+        <g opacity="0.7">
+          <path d="M840,132 C846,95 832,75 838,40" stroke="#1a281d" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M838,58 C862,52 875,60 888,52" stroke="#1a281d" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M838,72 C812,66 802,76 788,70" stroke="#1a281d" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M878,54 C881,72 876,86 881,100" stroke="#33422a" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round"/>
+          <path d="M800,72 C797,90 802,102 798,114" stroke="#33422a" stroke-width="2" fill="none" opacity="0.65" stroke-linecap="round"/>
+        </g>
+
+        <!-- cattails, scattered -->
+        <g fill="#2d3a24" opacity="0.85">
+          <g transform="translate(180,95)">
+            <rect x="-1.5" y="0" width="3" height="35" />
+            <ellipse cx="0" cy="-8" rx="4" ry="12" fill="#4a3524"/>
+          </g>
+          <g transform="translate(195,100) rotate(8)">
+            <rect x="-1.5" y="0" width="3" height="30" />
+            <ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/>
+          </g>
+          <g transform="translate(430,92) rotate(-6)">
+            <rect x="-1.5" y="0" width="3" height="38" />
+            <ellipse cx="0" cy="-9" rx="4" ry="13" fill="#4a3524"/>
+          </g>
+          <g transform="translate(445,98) rotate(4)">
+            <rect x="-1.5" y="0" width="3" height="32" />
+            <ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/>
+          </g>
+          <g transform="translate(650,94) rotate(-4)">
+            <rect x="-1.5" y="0" width="3" height="36" />
+            <ellipse cx="0" cy="-8" rx="4" ry="12" fill="#4a3524"/>
+          </g>
+          <g transform="translate(700,100) rotate(7)">
+            <rect x="-1.5" y="0" width="3" height="30" />
+            <ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/>
+          </g>
+        </g>
+
+        <!-- reed blades among the cattails -->
+        <g stroke="#354528" stroke-width="1.5" opacity="0.6" fill="none">
+          <path d="M185,130 C182,110 190,95 187,80"/>
+          <path d="M440,132 C443,112 435,98 439,84"/>
+          <path d="M660,128 C657,108 665,94 661,78"/>
+        </g>
+
+        <!-- fireflies -->
+        <g fill="var(--caramel)">
+          <circle class="firefly" cx="150" cy="60" r="2.5"/>
+          <circle class="firefly" cx="400" cy="45" r="2"/>
+          <circle class="firefly" cx="500" cy="70" r="2.5"/>
+          <circle class="firefly" cx="620" cy="50" r="2"/>
+          <circle class="firefly" cx="750" cy="65" r="2.5"/>
+        </g>
+      </svg>
+    </div>
   </div>
 
   <script>

@@ -3,31 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>%%CHARACTER_NAME%% - Hazbin Hotel Shimeji</title>
+  <title>Alastor - The radio demon</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     /* ===== CHARACTER-SPECIFIC THEME ===== */
+    /* Alastor's canon signature palette */
     :root {
-      --accent: %%ACCENT_COLOR%%;
-      --text: %%TEXT_COLOR%%;
-      --heading: %%HEADING_COLOR%%;
-      --button-bg: %%BUTTON_GRADIENT%%;
-      --card-bg: %%CARD_BG%%;
-      --bg-solid: %%BACKGROUND_SOLID%%;
+      --scarlet: #EE2B48;        /* hair, shirt, jacket highlights */
+      --crimson: #8D181F;        /* main coat */
+      --onyx: #050505;           /* antlers, mic staff, bowtie */
+      --caramel: #FAA742;        /* teeth, monocle glow, mic details */
+      --sepia: #DAB39D;          /* skin tone */
+
+      --accent: var(--caramel);
+      --accent-glow: rgba(250,167,66,0.45);
+      --text: #b8917c;
+      --heading: var(--scarlet);
+      --button-bg: linear-gradient(45deg, var(--crimson), var(--scarlet));
+      --card-bg: rgba(5,5,5,0.95);
+      --bg-solid: var(--onyx);
+      --static-line: rgba(238,43,72,0.07);
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.3px;
       margin: 0;
       padding: 0;
       position: relative;
       overflow-x: hidden;
-      background: %%BACKGROUND_PATTERN%%;
+      background:
+        radial-gradient(circle at 75% 15%, rgba(141,24,31,0.35) 0%, transparent 40%),
+        repeating-conic-gradient(from 0deg at 50% -10%, rgba(250,167,66,0.05) 0deg 6deg, transparent 6deg 12deg),
+        radial-gradient(circle at 20% 30%, #3a0509 0%, #150102 55%, var(--onyx) 100%),
+        repeating-linear-gradient(0deg, var(--static-line) 0px, var(--static-line) 1px, transparent 1px, transparent 3px);
       background-color: var(--bg-solid);
       color: var(--text);
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at 50% 40%, transparent 40%, rgba(0,0,0,0.65) 100%);
+      mix-blend-mode: multiply;
     }
 
     /* Floating symbols container */
@@ -47,6 +70,20 @@
       position: relative;
       z-index: 1;
     }
+    .deco-sunburst {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 220px;
+      z-index: -1;
+      opacity: 0.5;
+      pointer-events: none;
+      background: repeating-conic-gradient(from -90deg at 50% 100%, rgba(212,162,78,0.28) 0deg 4deg, transparent 4deg 12deg);
+      mask-image: radial-gradient(circle at 50% 100%, black 0%, black 55%, transparent 75%);
+      -webkit-mask-image: radial-gradient(circle at 50% 100%, black 0%, black 55%, transparent 75%);
+    }
     .back-link {
       display: inline-block;
       margin-bottom: 1.5rem;
@@ -60,10 +97,10 @@
     .preview-wrapper {
       display: inline-block;
       overflow: hidden;
-      border-radius: 28px;
+      clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%, 0 calc(100% - 24px), 0 24px);
       max-width: 450px;
       margin: 1rem 0 2.5rem 0;
-      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 80px var(--accent);
+      box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 45px var(--accent-glow), 0 0 25px rgba(141,24,31,0.5) inset;
       border: 3px solid var(--accent);
     }
     .preview-wrapper img {
@@ -77,10 +114,12 @@
       background: rgba(0,0,0,0.65);
       backdrop-filter: blur(12px);
       border: 2px solid var(--accent);
-      border-radius: 28px;
+      outline: 1px solid rgba(212,162,78,0.35);
+      outline-offset: -6px;
+      clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
       padding: 2rem;
       margin-bottom: 2.5rem;
-      box-shadow: 0 0 35px rgba(0,0,0,0.8);
+      box-shadow: 0 0 35px rgba(0,0,0,0.85), 0 0 18px rgba(141,24,31,0.45) inset;
       position: relative;
       overflow: hidden;
     }
@@ -101,7 +140,9 @@
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       border: 2px solid var(--accent);
-      border-radius: 28px;
+      outline: 1px solid rgba(212,162,78,0.35);
+      outline-offset: -7px;
+      clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
       padding: 2.5rem;
       box-shadow: 0 0 40px rgba(0,0,0,0.6);
     }
@@ -126,12 +167,40 @@
       accent-color: var(--accent);
       border-radius: 4px;
     }
+    .toggle-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(5,5,5,0.7);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover {
+      opacity: 0.85;
+    }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
     .summon-button {
       display: inline-block;
       padding: 1.2rem 3.5rem;
       font-family: 'Playfair Display', serif;
       font-size: 1.8rem;
-      border-radius: 60px;
+      clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
       border: none;
       cursor: pointer;
       text-transform: uppercase;
@@ -142,13 +211,134 @@
       background: var(--button-bg);
       color: #fff;
       border: 3px solid var(--accent);
-      box-shadow: 0 0 25px var(--accent);
+      box-shadow: 0 0 15px var(--accent-glow);
       text-shadow: 0 0 8px rgba(0,0,0,0.6);
     }
     .summon-button:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 45px var(--accent);
+      box-shadow: 0 0 28px var(--accent-glow);
       filter: brightness(1.2);
+    }
+
+    /* ===== ON AIR badge ===== */
+    .on-air-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0.75rem 0 1.5rem 0;
+      padding: 0.55rem 1.6rem;
+      border: 3px solid var(--scarlet);
+      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--scarlet);
+      vertical-align: middle;
+      animation: neon-flicker 4s infinite;
+    }
+    .on-air-badge::before {
+      content: "";
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--scarlet);
+      box-shadow: 0 0 8px var(--scarlet);
+      display: inline-block;
+    }
+    @keyframes neon-flicker {
+      0%, 3%, 6%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 8px var(--scarlet), 0 0 20px var(--scarlet), 0 0 34px var(--crimson);
+        box-shadow: 0 0 14px rgba(238,43,72,0.7), 0 0 28px rgba(141,24,31,0.5) inset;
+      }
+      4% {
+        opacity: 0.35;
+        text-shadow: none;
+        box-shadow: 0 0 4px rgba(238,43,72,0.25) inset;
+      }
+      5% {
+        opacity: 0.85;
+        text-shadow: 0 0 4px var(--scarlet);
+        box-shadow: 0 0 8px rgba(238,43,72,0.4) inset;
+      }
+      41%, 44% {
+        opacity: 1;
+        text-shadow: 0 0 8px var(--scarlet), 0 0 20px var(--scarlet), 0 0 34px var(--crimson);
+        box-shadow: 0 0 14px rgba(238,43,72,0.7), 0 0 28px rgba(141,24,31,0.5) inset;
+      }
+      42% {
+        opacity: 0.5;
+        text-shadow: none;
+        box-shadow: 0 0 5px rgba(238,43,72,0.3) inset;
+      }
+      43% {
+        opacity: 0.9;
+        text-shadow: 0 0 6px var(--scarlet);
+        box-shadow: 0 0 10px rgba(238,43,72,0.5) inset;
+      }
+      78%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 8px var(--scarlet), 0 0 20px var(--scarlet), 0 0 34px var(--crimson);
+        box-shadow: 0 0 14px rgba(238,43,72,0.7), 0 0 28px rgba(141,24,31,0.5) inset;
+      }
+      79% {
+        opacity: 0.3;
+        text-shadow: none;
+        box-shadow: 0 0 3px rgba(238,43,72,0.2) inset;
+      }
+    }
+
+    /* ===== Antler divider ===== */
+    .antler-divider {
+      display: block;
+      width: 100%;
+      max-width: 450px;
+      height: 36px;
+      margin: 0.5rem 0 1.5rem 0;
+      opacity: 0.55;
+    }
+    .antler-divider svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .antler-divider path {
+      stroke: var(--accent);
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 2px var(--accent-glow));
+    }
+
+    /* ===== Bold poster-style header ===== */
+    .room-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.4rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      color: var(--heading);
+      -webkit-text-stroke: 2px var(--onyx);
+      text-stroke: 2px var(--onyx);
+      text-shadow:
+        3px 3px 0 var(--onyx),
+        0 0 24px var(--crimson),
+        0 0 45px rgba(238,43,72,0.5);
+      letter-spacing: 1px;
+    }
+
+    /* ===== Chevron zigzag strip ===== */
+    .chevron-strip {
+      width: 100%;
+      height: 18px;
+      margin: 0.5rem 0 2rem 0;
+      background:
+        linear-gradient(135deg, var(--accent) 25%, transparent 25%) 0 0,
+        linear-gradient(225deg, var(--accent) 25%, transparent 25%) 0 0;
+      background-size: 24px 24px;
+      background-repeat: repeat-x;
+      opacity: 0.7;
+      filter: drop-shadow(0 0 1.5px var(--accent-glow));
     }
 
     /* Floating symbols styling (just in case you want to add them manually outside the container) */
@@ -164,21 +354,39 @@
   <div id="symbols-container"></div>
 
   <div class="room-container">
+    <div class="deco-sunburst" aria-hidden="true"></div>
+    <div class="chevron-strip" aria-hidden="true"></div>
     <a href="index.html" class="back-link">Back to the Hotel</a>
 
-    <h1 style="font-family:'Playfair Display'; font-size:3rem; margin-bottom:0.5rem; text-shadow:0 0 20px var(--accent); color:var(--heading);">
-      %%CHARACTER_NAME%%
+    <h1 class="room-title" style="text-align:center;">
+      Angeldust
     </h1>
 
+    <div style="text-align:center;">
+      <span class="on-air-badge">ON AIR</span>
+    </div>
+
+    <!-- Antler divider -->
+    <div class="antler-divider" style="margin-left:auto; margin-right:auto;" aria-hidden="true">
+      <svg viewBox="0 0 450 36" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20,18 L180,18 M270,18 L430,18" />
+        <path d="M180,18 L165,6 M180,18 L165,30 M180,18 L195,4" />
+        <path d="M270,18 L285,6 M270,18 L285,30 M270,18 L255,4" />
+        <circle cx="225" cy="18" r="4" fill="var(--accent)" stroke="none" />
+      </svg>
+    </div>
+
     <!-- Live preview image -->
-    <div class="preview-wrapper" id="previewWrapper">
-      <img id="charPreview" src="%%PREVIEW_IMAGE_PATH%%" alt="%%CHARACTER_NAME%%">
+    <div style="text-align:center;">
+      <div class="preview-wrapper" id="previewWrapper">
+        <img id="charPreview" src="images/alastor.png" alt="Alastor Preview ">
+      </div>
     </div>
 
     <!-- Vibe section (quote + description) -->
     <div class="vibe-section">
-      <p class="vibe-quote">%%QUOTE%%</p>
-      <p class="vibe-desc">%%DESCRIPTION%%</p>
+      <p class="vibe-quote">Smile, my dear! You know, you're never fully dressed without one!</p>
+      <p class="vibe-desc">The Radio Demon. A charismatic 1930s New Orleans radio host and serial killer who masks his sadistic, manipulative nature behind an unnervingly constant, polite smile. He loves jazz, chaos, and orchestrating misery.</p>
     </div>
 
     <!-- Customisation controls -->
@@ -189,13 +397,17 @@
           <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
         </div>
         <div class="slider-item">
-          <label>Duplicates: <span id="countValue">1</span></label>
-          <input type="range" id="countSlider" min="1" max="10" step="1" value="1">
+          <label>Allow Duplication?</label>
+          <div class="toggle-group" id="duplicateToggle">
+            <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
+            <button type="button" class="toggle-btn" data-value="no">No</button>
+          </div>
         </div>
       </div>
       <button class="summon-button" id="summonBtn">Summon Chaos</button>
       <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
     </div>
+    <div class="chevron-strip" aria-hidden="true"></div>
   </div>
 
   <script>
@@ -203,11 +415,14 @@
     //  HARDCODED CHARACTER DATA (replace each field)
     // =============================================
     const CHARACTER = {
-      name: "%%CHARACTER_NAME%%",
-      zip: "%%ZIP_PATH%%",           // e.g., "downloads/Alastor.zip"
-      preview: "%%PREVIEW_IMAGE_PATH%%",
+      name: "Angeldust",
+      zip: "downloads/angeldustShimeji.zip",   // must match the exact filename on GitHub, including .zip
+      preview: "images/angeldust.png",
       backgroundSymbols: [
-        %%BACKGROUND_SYMBOLS_ARRAY%%
+       { "symbol": "\u266B", "color": "#FAA742", "size": "2.2rem", "opacity": 0.14 },
+       { "symbol": "\u2727", "color": "#EE2B48", "size": "1.5rem", "opacity": 0.12 },
+       { "symbol": "\uD83C\uDF99", "color": "#DAB39D", "size": "1.8rem", "opacity": 0.08 },
+       { "symbol": "\u2728", "color": "#8D181F", "size": "1.2rem", "opacity": 0.1 }
       ]
     };
 
@@ -215,9 +430,19 @@
     const previewImg = document.getElementById('charPreview');
     const sizeSlider = document.getElementById('sizeSlider');
     const sizeValue = document.getElementById('sizeValue');
-    const countSlider = document.getElementById('countSlider');
-    const countValue = document.getElementById('countValue');
+    const duplicateToggle = document.getElementById('duplicateToggle');
+    let allowDuplication = true; // defaults to "Yes"
 
+    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        allowDuplication = btn.dataset.value === 'yes';
+      });
+    });
+
+    // Ensure preview comes from CHARACTER config
+    previewImg.src = CHARACTER.preview;
     // Live size preview
     function updatePreviewSize(scale) {
       previewImg.style.transform = `scale(${scale})`;
@@ -227,53 +452,97 @@
       sizeValue.textContent = val;
       updatePreviewSize(parseFloat(val));
     });
-    countSlider.addEventListener('input', () => {
-      countValue.textContent = countSlider.value;
-    });
     updatePreviewSize(1.0); // initial
 
     // Summon button
     document.getElementById('summonBtn').addEventListener('click', async () => {
       const scale = parseFloat(sizeSlider.value);
-      const count = parseInt(countSlider.value, 10);
-      await generateAndDownload(CHARACTER, scale, count);
+      await generateAndDownload(CHARACTER, scale, allowDuplication);
     });
+      // Keep UI values in sync on initial load
+    sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1);
+    updatePreviewSize(parseFloat(sizeSlider.value));
 
-    // ========== ZIP GENERATION ==========
-    async function generateAndDownload(char, scale, count) {
+     function triggerDownload(blobOrUrl, filename) {
+    const a = document.createElement('a');
+    if (typeof blobOrUrl === 'string') {
+      a.href = blobOrUrl;
+    } else {
+      a.href = URL.createObjectURL(blobOrUrl);
+    }
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    if (typeof blobOrUrl !== 'string') {
+      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    }
+  }
+
+  // ========== ZIP GENERATION ==========
+  async function generateAndDownload(char, scale, allowDuplication) {
+    const filename = `${char.name}_Shimeji_custom.zip`;
+
+    try {
+      if (location.protocol === 'file:') {
+        throw new Error('This page is running as file://. Use a local web server.');
+      }
+
+      // Build absolute URL safely, encoding spaces/special characters in the path
+      const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+
+      const resp = await fetch(zipUrl, { cache: 'no-store' });
+      if (!resp.ok) throw new Error(`Could not fetch ZIP (${resp.status}) at ${zipUrl}`);
+
+      const zipBlob = await resp.blob();
+      const zip = await JSZip.loadAsync(zipBlob);
+
+      // Locate configuration file anywhere inside the zip, regardless of nesting
+      // (handles zips where everything sits inside an extra top-level folder,
+      // and different config filenames used across Shimeji-ee builds)
+      const allPaths = Object.keys(zip.files);
+
+      let configPath = allPaths.find(p =>
+        /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p)
+      );
+
+      if (!configPath) {
+        configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
+      }
+
+      const configFile = configPath ? zip.file(configPath) : null;
+
+      if (configFile) {
+        let text = await configFile.async('text');
+        // Starting count on launch: 1 if duplication is disallowed, otherwise a
+        // small default so it doesn't spawn a crowd immediately.
+        text = setOrReplace(text, 'OnScreenCount', allowDuplication ? '1' : '1');
+        text = setOrReplace(text, 'Scale', scale.toFixed(1));
+        // NOTE: Shimeji-ee's config format doesn't have a documented key that
+        // blocks the in-app right-click "Call Another" menu option, so this
+        // flag is written for reference/future use but won't itself stop
+        // someone from manually spawning more once the mascot is running.
+        text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
+        zip.file(configFile.name, text);
+      } else {
+        console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
+      }
+
+      const newZip = await zip.generateAsync({ type: 'blob' });
+      triggerDownload(newZip, filename);
+    } catch (err) {
+      console.error('ZIP generation failed:', err);
+      // Fallback: still let user download the original zip file
       try {
-        const resp = await fetch('../' + char.zip);
-        if (!resp.ok) throw new Error('Could not fetch ZIP.');
-        const zipBlob = await resp.blob();
-        const zip = await JSZip.loadAsync(zipBlob);
-
-        // Locate configuration file
-        let configFile = zip.file('conf/設定.properties') || zip.file('conf/Actions.properties');
-        if (!configFile) {
-          const confs = Object.keys(zip.files).filter(f => f.startsWith('conf/') && f.endsWith('.properties'));
-          if (confs.length) configFile = zip.file(confs[0]);
-        }
-
-        if (configFile) {
-          let text = await configFile.async('text');
-          text = setOrReplace(text, 'OnScreenCount', count.toString());
-          text = setOrReplace(text, 'Scale', scale.toFixed(1));
-          zip.file(configFile.name, text);
-        }
-
-        const newZip = await zip.generateAsync({ type: 'blob' });
-        const url = URL.createObjectURL(newZip);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${char.name}_Shimeji_custom.zip`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      } catch (err) {
+        const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+        triggerDownload(zipUrl, `${char.name}_Shimeji.zip`);
+        alert('Custom edit failed, downloaded original ZIP instead.');
+      } catch (fallbackErr) {
         alert('Error generating ZIP: ' + err.message);
       }
     }
+  }
 
     function setOrReplace(text, key, val) {
       const lines = text.split('\n');
