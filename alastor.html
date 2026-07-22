@@ -19,7 +19,6 @@
       --bg-solid: #0a0303;
     }
 
-
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -205,7 +204,7 @@
     // =============================================
     const CHARACTER = {
       name: "Alastor",
-      zip: "downloads/Alastor.zip",           // e.g., "downloads/Alastor.zip"
+      zip: "downloads/AlastorShimeji.zip",   // must match the exact filename on GitHub, including .zip
       preview: "images/alastor.png",
       backgroundSymbols: [
        { "symbol": "\u266B", "color": "#c7923e", "size": "2.2rem", "opacity": 0.15 }, { "symbol": "\u2727", "color": "#f0c27a", "size": "1.5rem", "opacity": 0.1 }
@@ -246,42 +245,79 @@
     countValue.textContent = countSlider.value;
     updatePreviewSize(parseFloat(sizeSlider.value));
 
-    // ========== ZIP GENERATION ==========
-    async function generateAndDownload(char, scale, count) {
-      try {
-    const resp = await fetch(char.zip);
-      if (!resp.ok) throw new Error('Could not fetch ZIP.');
+     function triggerDownload(blobOrUrl, filename) {
+    const a = document.createElement('a');
+    if (typeof blobOrUrl === 'string') {
+      a.href = blobOrUrl;
+    } else {
+      a.href = URL.createObjectURL(blobOrUrl);
+    }
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    if (typeof blobOrUrl !== 'string') {
+      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    }
+  }
+
+  // ========== ZIP GENERATION ==========
+  async function generateAndDownload(char, scale, count) {
+    const filename = `${char.name}_Shimeji_custom.zip`;
+
+    try {
+      if (location.protocol === 'file:') {
+        throw new Error('This page is running as file://. Use a local web server.');
+      }
+
+      // Build absolute URL safely, encoding spaces/special characters in the path
+      const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+
+      const resp = await fetch(zipUrl, { cache: 'no-store' });
+      if (!resp.ok) throw new Error(`Could not fetch ZIP (${resp.status}) at ${zipUrl}`);
+
       const zipBlob = await resp.blob();
       const zip = await JSZip.loadAsync(zipBlob);
 
+      // Locate configuration file anywhere inside the zip, regardless of nesting
+      // (handles zips where everything sits inside an extra top-level folder,
+      // and different config filenames used across Shimeji-ee builds)
+      const allPaths = Object.keys(zip.files);
 
-        // Locate configuration file
-        let configFile = zip.file('conf/設定.properties') || zip.file('conf/Actions.properties');
-        if (!configFile) {
-          const confs = Object.keys(zip.files).filter(f => f.startsWith('conf/') && f.endsWith('.properties'));
-          if (confs.length) configFile = zip.file(confs[0]);
-        }
+      let configPath = allPaths.find(p =>
+        /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p)
+      );
 
-        if (configFile) {
-          let text = await configFile.async('text');
-          text = setOrReplace(text, 'OnScreenCount', count.toString());
-          text = setOrReplace(text, 'Scale', scale.toFixed(1));
-          zip.file(configFile.name, text);
-        }
+      if (!configPath) {
+        configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
+      }
 
-        const newZip = await zip.generateAsync({ type: 'blob' });
-        const url = URL.createObjectURL(newZip);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${char.name}_Shimeji_custom.zip`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      } catch (err) {
-      alert('Error generating ZIP: ' + err.message);
+      const configFile = configPath ? zip.file(configPath) : null;
+
+      if (configFile) {
+        let text = await configFile.async('text');
+        text = setOrReplace(text, 'OnScreenCount', count.toString());
+        text = setOrReplace(text, 'Scale', scale.toFixed(1));
+        zip.file(configFile.name, text);
+      } else {
+        console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
+      }
+
+      const newZip = await zip.generateAsync({ type: 'blob' });
+      triggerDownload(newZip, filename);
+    } catch (err) {
+      console.error('ZIP generation failed:', err);
+      // Fallback: still let user download the original zip file
+      try {
+        const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+        triggerDownload(zipUrl, `${char.name}_Shimeji.zip`);
+        alert('Custom edit failed, downloaded original ZIP instead.');
+      } catch (fallbackErr) {
+        alert('Error generating ZIP: ' + err.message);
+      }
     }
-    }
+  }
 
     function setOrReplace(text, key, val) {
       const lines = text.split('\n');
