@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>%%CHARACTER_NAME%% - Hazbin Hotel Shimeji</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CHARACTER-SPECIFIC THEME ===== */
+    :root {
+      --accent: %%ACCENT_COLOR%%;
+      --text: %%TEXT_COLOR%%;
+      --heading: %%HEADING_COLOR%%;
+      --button-bg: %%BUTTON_GRADIENT%%;
+      --card-bg: %%CARD_BG%%;
+      --bg-solid: %%BACKGROUND_SOLID%%;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      overflow-x: hidden;
+      background: %%BACKGROUND_PATTERN%%;
+      background-color: var(--bg-solid);
+      color: var(--text);
+    }
+
+    /* Floating symbols container */
+    #symbols-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===== LAYOUT (unchanged from previous character page) ===== */
+    .room-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      transition: color 0.3s;
+    }
+    .preview-wrapper {
+      display: inline-block;
+      overflow: hidden;
+      border-radius: 28px;
+      max-width: 450px;
+      margin: 1rem 0 2.5rem 0;
+      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 80px var(--accent);
+      border: 3px solid var(--accent);
+    }
+    .preview-wrapper img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform 0.2s ease-out;
+      transform-origin: top left;
+    }
+    .vibe-section {
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(12px);
+      border: 2px solid var(--accent);
+      border-radius: 28px;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 0 35px rgba(0,0,0,0.8);
+      position: relative;
+      overflow: hidden;
+    }
+    .vibe-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-style: italic;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      text-shadow: 0 0 15px currentColor;
+    }
+    .vibe-desc {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .control-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 2px solid var(--accent);
+      border-radius: 28px;
+      padding: 2.5rem;
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    }
+    .slider-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: center;
+      margin: 1.5rem 0;
+    }
+    .slider-item label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-family: 'Playfair Display', serif;
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+    input[type="range"] {
+      width: 240px;
+      height: 8px;
+      accent-color: var(--accent);
+      border-radius: 4px;
+    }
+    .summon-button {
+      display: inline-block;
+      padding: 1.2rem 3.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      border-radius: 60px;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 2px;
+      transition: all 0.3s;
+      margin-top: 1.5rem;
+      background: var(--button-bg);
+      color: #fff;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 25px var(--accent);
+      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+    }
+    .summon-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 45px var(--accent);
+      filter: brightness(1.2);
+    }
+
+    /* Floating symbols styling (just in case you want to add them manually outside the container) */
+    .floating-symbol {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Container for background symbols (filled by script) -->
+  <div id="symbols-container"></div>
+
+  <div class="room-container">
+    <a href="index.html" class="back-link">Back to the Hotel</a>
+
+    <h1 style="font-family:'Playfair Display'; font-size:3rem; margin-bottom:0.5rem; text-shadow:0 0 20px var(--accent); color:var(--heading);">
+      %%CHARACTER_NAME%%
+    </h1>
+
+    <!-- Live preview image -->
+    <div class="preview-wrapper" id="previewWrapper">
+      <img id="charPreview" src="%%PREVIEW_IMAGE_PATH%%" alt="%%CHARACTER_NAME%%">
+    </div>
+
+    <!-- Vibe section (quote + description) -->
+    <div class="vibe-section">
+      <p class="vibe-quote">%%QUOTE%%</p>
+      <p class="vibe-desc">%%DESCRIPTION%%</p>
+    </div>
+
+    <!-- Customisation controls -->
+    <div class="control-panel">
+      <div class="slider-group">
+        <div class="slider-item">
+          <label>Size: <span id="sizeValue">1.0</span></label>
+          <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
+        </div>
+        <div class="slider-item">
+          <label>Duplicates: <span id="countValue">1</span></label>
+          <input type="range" id="countSlider" min="1" max="10" step="1" value="1">
+        </div>
+      </div>
+      <button class="summon-button" id="summonBtn">Summon Chaos</button>
+      <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
+    </div>
+  </div>
+
+  <script>
+    // =============================================
+    //  HARDCODED CHARACTER DATA (replace each field)
+    // =============================================
+    const CHARACTER = {
+      name: "%%CHARACTER_NAME%%",
+      zip: "%%ZIP_PATH%%",           // e.g., "downloads/Alastor.zip"
+      preview: "%%PREVIEW_IMAGE_PATH%%",
+      backgroundSymbols: [
+        %%BACKGROUND_SYMBOLS_ARRAY%%
+      ]
+    };
+
+    // ============== FUNCTIONALITY ==============
+    const previewImg = document.getElementById('charPreview');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const sizeValue = document.getElementById('sizeValue');
+    const countSlider = document.getElementById('countSlider');
+    const countValue = document.getElementById('countValue');
+
+    // Live size preview
+    function updatePreviewSize(scale) {
+      previewImg.style.transform = `scale(${scale})`;
+    }
+    sizeSlider.addEventListener('input', () => {
+      const val = parseFloat(sizeSlider.value).toFixed(1);
+      sizeValue.textContent = val;
+      updatePreviewSize(parseFloat(val));
+    });
+    countSlider.addEventListener('input', () => {
+      countValue.textContent = countSlider.value;
+    });
+    updatePreviewSize(1.0); // initial
+
+    // Summon button
+    document.getElementById('summonBtn').addEventListener('click', async () => {
+      const scale = parseFloat(sizeSlider.value);
+      const count = parseInt(countSlider.value, 10);
+      await generateAndDownload(CHARACTER, scale, count);
+    });
+
+    // ========== ZIP GENERATION ==========
+    async function generateAndDownload(char, scale, count) {
+      try {
+        const resp = await fetch('../' + char.zip);
+        if (!resp.ok) throw new Error('Could not fetch ZIP.');
+        const zipBlob = await resp.blob();
+        const zip = await JSZip.loadAsync(zipBlob);
+
+        // Locate configuration file
+        let configFile = zip.file('conf/設定.properties') || zip.file('conf/Actions.properties');
+        if (!configFile) {
+          const confs = Object.keys(zip.files).filter(f => f.startsWith('conf/') && f.endsWith('.properties'));
+          if (confs.length) configFile = zip.file(confs[0]);
+        }
+
+        if (configFile) {
+          let text = await configFile.async('text');
+          text = setOrReplace(text, 'OnScreenCount', count.toString());
+          text = setOrReplace(text, 'Scale', scale.toFixed(1));
+          zip.file(configFile.name, text);
+        }
+
+        const newZip = await zip.generateAsync({ type: 'blob' });
+        const url = URL.createObjectURL(newZip);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${char.name}_Shimeji_custom.zip`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        alert('Error generating ZIP: ' + err.message);
+      }
+    }
+
+    function setOrReplace(text, key, val) {
+      const lines = text.split('\n');
+      let found = false;
+      const updated = lines.map(line => {
+        if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
+          found = true;
+          return `${key}=${val}`;
+        }
+        return line;
+      });
+      if (!found) updated.push(`${key}=${val}`);
+      return updated.join('\n');
+    }
+
+    // ========== FLOATING SYMBOLS ==========
+    (function renderSymbols() {
+      const container = document.getElementById('symbols-container');
+      container.innerHTML = '';
+      if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
+        CHARACTER.backgroundSymbols.forEach(sym => {
+          for (let i = 0; i < 8; i++) {
+            const span = document.createElement('span');
+            span.textContent = sym.symbol;
+            span.style.cssText = `
+              position:absolute;
+              left:${Math.random() * 95}%;
+              top:${Math.random() * 95}%;
+              font-size:${sym.size};
+              color:${sym.color};
+              opacity:${sym.opacity};
+              pointer-events:none;
+              user-select:none;
+            `;
+            container.appendChild(span);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
