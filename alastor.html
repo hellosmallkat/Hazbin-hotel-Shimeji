@@ -167,6 +167,34 @@
       accent-color: var(--accent);
       border-radius: 4px;
     }
+    .toggle-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(5,5,5,0.7);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover {
+      opacity: 0.85;
+    }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
     .summon-button {
       display: inline-block;
       padding: 1.2rem 3.5rem;
@@ -369,8 +397,11 @@
           <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
         </div>
         <div class="slider-item">
-          <label>Duplicates: <span id="countValue">1</span></label>
-          <input type="range" id="countSlider" min="1" max="10" step="1" value="1">
+          <label>Allow Duplication?</label>
+          <div class="toggle-group" id="duplicateToggle">
+            <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
+            <button type="button" class="toggle-btn" data-value="no">No</button>
+          </div>
         </div>
       </div>
       <button class="summon-button" id="summonBtn">Summon Chaos</button>
@@ -399,8 +430,16 @@
     const previewImg = document.getElementById('charPreview');
     const sizeSlider = document.getElementById('sizeSlider');
     const sizeValue = document.getElementById('sizeValue');
-    const countSlider = document.getElementById('countSlider');
-    const countValue = document.getElementById('countValue');
+    const duplicateToggle = document.getElementById('duplicateToggle');
+    let allowDuplication = true; // defaults to "Yes"
+
+    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        allowDuplication = btn.dataset.value === 'yes';
+      });
+    });
 
     // Ensure preview comes from CHARACTER config
     previewImg.src = CHARACTER.preview;
@@ -413,20 +452,15 @@
       sizeValue.textContent = val;
       updatePreviewSize(parseFloat(val));
     });
-    countSlider.addEventListener('input', () => {
-      countValue.textContent = countSlider.value;
-    });
     updatePreviewSize(1.0); // initial
 
     // Summon button
     document.getElementById('summonBtn').addEventListener('click', async () => {
       const scale = parseFloat(sizeSlider.value);
-      const count = parseInt(countSlider.value, 10);
-      await generateAndDownload(CHARACTER, scale, count);
+      await generateAndDownload(CHARACTER, scale, allowDuplication);
     });
       // Keep UI values in sync on initial load
     sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1);
-    countValue.textContent = countSlider.value;
     updatePreviewSize(parseFloat(sizeSlider.value));
 
      function triggerDownload(blobOrUrl, filename) {
@@ -447,7 +481,7 @@
   }
 
   // ========== ZIP GENERATION ==========
-  async function generateAndDownload(char, scale, count) {
+  async function generateAndDownload(char, scale, allowDuplication) {
     const filename = `${char.name}_Shimeji_custom.zip`;
 
     try {
@@ -481,8 +515,15 @@
 
       if (configFile) {
         let text = await configFile.async('text');
-        text = setOrReplace(text, 'OnScreenCount', count.toString());
+        // Starting count on launch: 1 if duplication is disallowed, otherwise a
+        // small default so it doesn't spawn a crowd immediately.
+        text = setOrReplace(text, 'OnScreenCount', allowDuplication ? '1' : '1');
         text = setOrReplace(text, 'Scale', scale.toFixed(1));
+        // NOTE: Shimeji-ee's config format doesn't have a documented key that
+        // blocks the in-app right-click "Call Another" menu option, so this
+        // flag is written for reference/future use but won't itself stop
+        // someone from manually spawning more once the mascot is running.
+        text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
         zip.file(configFile.name, text);
       } else {
         console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
