@@ -3,34 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>%%CHARACTER_NAME%% - Hazbin Hotel Shimeji</title>
+  <title>Charlie - Princess of Hell</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     /* ===== CHARACTER-SPECIFIC THEME ===== */
+    /* Charlie's canon signature palette */
     :root {
-      --accent: %%ACCENT_COLOR%%;
-      --text: %%TEXT_COLOR%%;
-      --heading: %%HEADING_COLOR%%;
-      --button-bg: %%BUTTON_GRADIENT%%;
-      --card-bg: %%CARD_BG%%;
-      --bg-solid: %%BACKGROUND_SOLID%%;
+      --mainred: #E32D46;    /* tuxedo & lapels */
+      --deepred: #AC1737;    /* inner cuff, shading */
+      --brightred: #D40A2C;  /* cheeks, accents */
+      --white: #FFFCF7;      /* skin & shirt */
+      --blonde: #FCE6C5;     /* hair */
+      --inkblack: #000000;   /* hair ties, buttons */
+      --gold: #cf9f3f;       /* ornate trim, string lights */
+      --magenta: #4a0f2e;    /* deep curtain purple-magenta */
+
+      --accent: var(--gold);
+      --accent-glow: rgba(207,159,63,0.6);
+      --text: #ecd3b8;
+      --heading: var(--gold);
+      --button-bg: linear-gradient(45deg, var(--deepred), var(--gold));
+      --card-bg: rgba(20,4,10,0.88);
+      --bg-solid: #1a0410;
+      --static-line: rgba(207,159,63,0.05);
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Baloo 2', sans-serif;
+      letter-spacing: 0.2px;
       margin: 0;
       padding: 0;
       position: relative;
       overflow-x: hidden;
-      background: %%BACKGROUND_PATTERN%%;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(74,15,46,0.7) 0%, transparent 45%),
+        radial-gradient(circle at 85% 20%, rgba(227,45,70,0.18) 0%, transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(207,159,63,0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 45%, #2e0818 0%, #200510 55%, var(--bg-solid) 100%),
+        repeating-linear-gradient(0deg, var(--static-line) 0px, var(--static-line) 1px, transparent 1px, transparent 3px);
       background-color: var(--bg-solid);
       color: var(--text);
     }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at 50% 35%, transparent 45%, rgba(0,0,0,0.55) 100%);
+      mix-blend-mode: multiply;
+    }
 
-    /* Floating symbols container */
     #symbols-container {
       position: fixed;
       top: 0; left: 0;
@@ -39,7 +65,6 @@
       z-index: 0;
     }
 
-    /* ===== LAYOUT (unchanged from previous character page) ===== */
     .room-container {
       max-width: 900px;
       margin: 2rem auto;
@@ -50,20 +75,94 @@
     .back-link {
       display: inline-block;
       margin-bottom: 1.5rem;
-      color: var(--accent);
+      color: var(--mainred);
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
       font-family: 'Playfair Display', serif;
       font-size: 1.2rem;
       transition: color 0.3s;
     }
+
+    /* ===== Confetti strip up top, standing in for a stage curtain valance ===== */
+    .confetti-strip {
+      width: 100%;
+      height: 34px;
+      margin: 0.25rem 0 1rem 0;
+      opacity: 0.9;
+    }
+    .confetti-strip svg { width: 100%; height: 100%; display: block; }
+
+    /* ===== Glowing rainbow arc worn above her name, tilted like a jaunty accessory ===== */
+    .title-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0.5rem 0 0.6rem 0;
+    }
+    .rainbow-arc {
+      width: 200px;
+      height: 90px;
+      margin-bottom: -22px;
+      opacity: 0.9;
+      pointer-events: none;
+      transform: rotate(-6deg);
+      animation: rainbow-glow 3.2s ease-in-out infinite;
+    }
+    @keyframes rainbow-glow {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(227,45,70,0.35)) drop-shadow(0 0 12px rgba(252,230,197,0.4)); }
+      50%      { filter: drop-shadow(0 0 14px rgba(227,45,70,0.6)) drop-shadow(0 0 22px rgba(252,230,197,0.7)); }
+    }
+    .title-wrap .room-title { position: relative; margin: 0; }
+
+    .room-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 0.4rem;
+      color: var(--heading);
+      text-align: center;
+      -webkit-text-stroke: 2px var(--inkblack);
+      text-stroke: 2px var(--inkblack);
+      text-shadow:
+        3px 3px 0 var(--inkblack),
+        0 0 22px var(--gold),
+        0 0 42px rgba(207,159,63,0.7),
+        0 0 60px rgba(227,45,70,0.25);
+      letter-spacing: 1px;
+    }
+
+    /* ===== Whimsical badge - Broadway spotlight energy ===== */
+    .mood-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.6rem 0 1.2rem 0;
+      padding: 0.5rem 1.4rem;
+      border: 3px dashed var(--gold);
+      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--gold);
+      background: rgba(212,10,44, 0.7);
+      box-shadow: 0 0 14px rgba(207,159,63,0.35);
+      vertical-align: middle;
+      animation: wobble 4.5s ease-in-out infinite;
+    }
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-1.5deg); }
+      50% { transform: rotate(1.5deg); }
+    }
+
     .preview-wrapper {
       display: inline-block;
       overflow: hidden;
-      border-radius: 28px;
+      clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 22px);
       max-width: 450px;
       margin: 1rem 0 2.5rem 0;
-      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 80px var(--accent);
+      box-shadow: 0 0 40px rgba(0,0,0,0.6), 0 0 45px var(--accent-glow), 0 0 22px rgba(74,15,46,0.5) inset;
       border: 3px solid var(--accent);
     }
     .preview-wrapper img {
@@ -73,37 +172,81 @@
       transition: transform 0.2s ease-out;
       transform-origin: top left;
     }
+
     .vibe-section {
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      border-radius: 28px;
+      background: rgba(126, 9, 29, 0.82);
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
       padding: 2rem;
-      margin-bottom: 2.5rem;
-      box-shadow: 0 0 35px rgba(0,0,0,0.8);
+      margin-bottom: 2rem;
+      box-shadow: 0 0 30px rgba(0,0,0,0.7), 0 0 16px rgba(207,159,63,0.25) inset;
       position: relative;
       overflow: hidden;
     }
     .vibe-quote {
       font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+      font-size: 1.7rem;
       font-style: italic;
       margin-bottom: 1rem;
-      color: var(--accent);
-      text-shadow: 0 0 15px currentColor;
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(207,159,63,0.3);
     }
     .vibe-desc {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       line-height: 1.7;
       color: var(--text);
     }
+
+    .photo-frame-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      border-top: 2px dashed rgba(227,45,70,0.25);
+    }
+    .photo-frame {
+      flex-shrink: 0;
+      width: 78px;
+      height: 92px;
+      background: linear-gradient(160deg, var(--gold), #8a6420);
+      border-radius: 6px;
+      padding: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 0 2px var(--deepred) inset;
+      transform: rotate(-4deg);
+    }
+    .photo-frame-inner {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #2e0818, #14040a);
+      border-radius: 3px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .photo-frame-caption {
+      font-size: 0.7rem;
+      color: var(--gold);
+      opacity: 0.9;
+      font-style: italic;
+      padding-bottom: 4px;
+    }
+    .photo-frame-note {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
     .control-panel {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      border-radius: 28px;
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
       padding: 2.5rem;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      box-shadow: 0 0 35px rgba(0,0,0,0.5);
     }
     .slider-group {
       display: flex;
@@ -114,100 +257,244 @@
     }
     .slider-item label {
       display: block;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 0.5rem;
-      font-family: 'Playfair Display', serif;
-      color: var(--accent);
+      font-family: 'Baloo 2', sans-serif;
+      color: var(--gold);
       font-size: 1.1rem;
     }
     input[type="range"] {
       width: 240px;
       height: 8px;
-      accent-color: var(--accent);
+      accent-color: var(--gold);
       border-radius: 4px;
     }
+    .toggle-group { display: flex; gap: 0.75rem; }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover { opacity: 0.85; }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
     .summon-button {
       display: inline-block;
-      padding: 1.2rem 3.5rem;
+      padding: 1.1rem 3.2rem;
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      border-radius: 60px;
+      font-size: 1.6rem;
+      clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
       border: none;
       cursor: pointer;
       text-transform: uppercase;
       font-weight: 900;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       transition: all 0.3s;
       margin-top: 1.5rem;
       background: var(--button-bg);
       color: #fff;
-      border: 3px solid var(--accent);
-      box-shadow: 0 0 25px var(--accent);
-      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+      border: 3px solid var(--blonde);
+      box-shadow: 0 0 15px var(--accent-glow);
+      text-shadow: 0 0 8px rgba(0,0,0,0.25);
     }
     .summon-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 45px var(--accent);
-      filter: brightness(1.2);
+      transform: scale(1.05) rotate(-1deg);
+      box-shadow: 0 0 28px var(--accent-glow);
+      filter: brightness(1.08);
     }
 
-    /* Floating symbols styling (just in case you want to add them manually outside the container) */
+    /* ===== Bottom decoration: confetti, musical notes, cotton candy cloud ===== */
+    .finale-banner {
+      width: 100%;
+      height: 130px;
+      margin-top: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .finale-banner svg { width: 100%; height: 100%; display: block; }
+    .twinkle { animation: twinkle-glow 2.4s ease-in-out infinite; }
+    .twinkle:nth-child(2) { animation-delay: 0.5s; }
+    .twinkle:nth-child(3) { animation-delay: 1s; }
+    .twinkle:nth-child(4) { animation-delay: 1.6s; }
+    @keyframes twinkle-glow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
     .floating-symbol {
       position: absolute;
       pointer-events: none;
       user-select: none;
+      animation: drift-float 8s ease-in-out infinite;
+    }
+    @keyframes drift-float {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(8px, -14px) rotate(6deg); }
+      50%  { transform: translate(-6px, -26px) rotate(-4deg); }
+      75%  { transform: translate(10px, -14px) rotate(5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
   </style>
 </head>
 <body>
-  <!-- Container for background symbols (filled by script) -->
   <div id="symbols-container"></div>
 
   <div class="room-container">
     <a href="index.html" class="back-link">Back to the Hotel</a>
 
-    <h1 style="font-family:'Playfair Display'; font-size:3rem; margin-bottom:0.5rem; text-shadow:0 0 20px var(--accent); color:var(--heading);">
-      %%CHARACTER_NAME%%
-    </h1>
+    <!-- String lights, echoing the beaded curtain lights in her room -->
+    <div class="confetti-strip" aria-hidden="true">
+      <svg viewBox="0 0 900 34" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,4 Q225,30 450,6 T900,4" stroke="var(--gold)" stroke-width="1" fill="none" opacity="0.5"/>
+        <g fill="var(--gold)" opacity="0.9">
+          <circle class="twinkle" cx="40" cy="8" r="3"/>
+          <circle class="twinkle" cx="130" cy="20" r="3"/>
+          <circle class="twinkle" cx="220" cy="26" r="3"/>
+          <circle class="twinkle" cx="320" cy="24" r="3"/>
+          <circle class="twinkle" cx="420" cy="12" r="3"/>
+          <circle class="twinkle" cx="520" cy="8" r="3"/>
+          <circle class="twinkle" cx="620" cy="18" r="3"/>
+          <circle class="twinkle" cx="720" cy="24" r="3"/>
+          <circle class="twinkle" cx="820" cy="14" r="3"/>
+        </g>
+      </svg>
+    </div>
 
-    <!-- Live preview image -->
-    <div class="preview-wrapper" id="previewWrapper">
-      <img id="charPreview" src="%%PREVIEW_IMAGE_PATH%%" alt="%%CHARACTER_NAME%%">
+    <div class="title-wrap">
+      <svg class="rainbow-arc" viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M15,90 A85,85 0 0 1 185,90" fill="none" stroke="#E32D46" stroke-width="7"/>
+        <path d="M27,90 A73,73 0 0 1 173,90" fill="none" stroke="#FCE6C5" stroke-width="7"/>
+        <path d="M39,90 A61,61 0 0 1 161,90" fill="none" stroke="#D40A2C" stroke-width="7"/>
+        <path d="M51,90 A49,49 0 0 1 149,90" fill="none" stroke="#AC1737" stroke-width="7"/>
+      </svg>
+      <h1 class="room-title">Charlie</h1>
+    </div>
+
+    <div style="text-align:center;">
+      <span class="mood-badge">☆ I believe anyone can be redeemed ☆</span>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="preview-wrapper" id="previewWrapper">
+        <img id="charPreview" src="images/charlie.png" alt="Charlie Preview">
+      </div>
     </div>
 
     <!-- Vibe section (quote + description) -->
     <div class="vibe-section">
-      <p class="vibe-quote">%%QUOTE%%</p>
-      <p class="vibe-desc">%%DESCRIPTION%%</p>
+      <div style="text-align:center; margin-bottom:0.8rem;">
+        <img src="images/key.png" alt="" width="154" height="154" style="display:block; margin:0 auto;">
+      </div>
+      <p class="vibe-quote">Sinners made mistakes, sure, but everyone makes mistakes.</p>
+      <p class="vibe-desc">Hi, my name is Charlie. Nice to meet you. I'm the Princess of Hell. I help run the Hazbin Hotel with my wonderful girlfriend Vaggie, where I try to redeem every sinner, since I believe every soul can change. </p>
+      <div class="photo-frame-row">
+        <div class="photo-frame photo-frame-left">
+          <div class="photo-frame-inner" style="text-align:center;">
+            <img class="photo-frame-img" src="images/Familyphoto.jpg" alt="family photo" style="width:100px; height:100px; display:block; margin:0 auto;">
+          </div>
+        </div>
+        <p class="photo-frame-note">I keep a photo of my family close by - between my dad and my girlfriend Vaggie, I've got more people in my corner than most people down here get.</p>
+        <div class="photo-frame photo-frame-right">
+          <div class="photo-frame-inner" style="text-align:center;">
+            <img class="photo-frame-img" src="images/vaggiechartogether.jpg" alt="Vaggie" style="width:150px; height:100px; display:block; margin:0 auto;">
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Customisation controls -->
-    <div class="control-panel">
+    <div class="control-panel" style="text-align:center;">
       <div class="slider-group">
-        <div class="slider-item">
+        <div class="slider-item" style="margin-left: auto; margin-right: auto;">
           <label>Size: <span id="sizeValue">1.0</span></label>
           <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
         </div>
-        <div class="slider-item">
-          <label>Duplicates: <span id="countValue">1</span></label>
-          <input type="range" id="countSlider" min="1" max="10" step="1" value="1">
+        <div class="slider-item" style="margin-left: auto; margin-right: auto;">
+          <label>Allow Duplication?</label>
+          <div class="toggle-group" id="duplicateToggle">
+            <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
+            <button type="button" class="toggle-btn" data-value="no">No</button>
+          </div>
         </div>
       </div>
-      <button class="summon-button" id="summonBtn">Summon Chaos</button>
+      <button class="summon-button" id="summonBtn">Summon Sunshine</button>
       <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
+    </div>
+
+    <!-- Bottom decoration: confetti, notes, cotton candy -->
+    <div class="finale-banner" aria-hidden="true">
+      <svg viewBox="0 0 900 130" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="108" width="900" height="6" fill="var(--gold)" opacity="0.5"/>
+
+        <!-- cotton candy cloud, left -->
+        <g transform="translate(90,60)">
+          <circle cx="-18" cy="10" r="20" fill="var(--deepred)" opacity="0.7"/>
+          <circle cx="12" cy="0" r="24" fill="var(--gold)" opacity="0.55"/>
+          <circle cx="30" cy="18" r="18" fill="var(--blonde)" opacity="0.5"/>
+          <rect x="6" y="24" width="6" height="30" rx="3" fill="var(--gold)"/>
+        </g>
+
+        <!-- musical note cluster, right -->
+        <g fill="var(--mainred)" transform="translate(760,50)">
+          <circle cx="0" cy="40" r="8"/>
+          <rect x="7" y="0" width="4" height="42"/>
+          <circle cx="30" cy="30" r="7"/>
+          <rect x="36" y="-6" width="4" height="38"/>
+          <path d="M11,0 L40,-6 L40,2 L11,8 Z"/>
+        </g>
+
+        <!-- small hat & cane, theater touch, center -->
+        <g transform="translate(430,72)" opacity="0.85">
+          <rect x="-22" y="18" width="44" height="8" rx="3" fill="var(--inkblack)"/>
+          <rect x="-14" y="-8" width="28" height="26" rx="2" fill="var(--inkblack)"/>
+          <rect x="-14" y="-2" width="28" height="6" fill="var(--mainred)"/>
+        </g>
+
+        <!-- twinkling stars -->
+        <g class="twinkle" fill="var(--blonde)">
+          <path d="M150,25 l3,8 l8,1 l-6,6 l2,8 l-7,-4 l-7,4 l2,-8 l-6,-6 l8,-1 Z"/>
+        </g>
+        <g class="twinkle" fill="var(--mainred)">
+          <path d="M300,18 l2.5,7 l7,1 l-5,5 l1.5,7 l-6,-3.5 l-6,3.5 l1.5,-7 l-5,-5 l7,-1 Z"/>
+        </g>
+        <g class="twinkle" fill="var(--blonde)">
+          <path d="M580,22 l2.5,7 l7,1 l-5,5 l1.5,7 l-6,-3.5 l-6,3.5 l1.5,-7 l-5,-5 l7,-1 Z"/>
+        </g>
+        <g class="twinkle" fill="var(--brightred)">
+          <path d="M660,32 l3,8 l8,1 l-6,6 l2,8 l-7,-4 l-7,4 l2,-8 l-6,-6 l8,-1 Z"/>
+        </g>
+      </svg>
     </div>
   </div>
 
   <script>
-    // =============================================
-    //  HARDCODED CHARACTER DATA (replace each field)
-    // =============================================
+    //  HARDCODED CHARACTER DATA 
     const CHARACTER = {
-      name: "%%CHARACTER_NAME%%",
-      zip: "%%ZIP_PATH%%",           // e.g., "downloads/Alastor.zip"
-      preview: "%%PREVIEW_IMAGE_PATH%%",
+      name: "Charlie",
+      zip: "downloads/CharlieShimeji.zip", 
+      preview: "images/charlie.png",
       backgroundSymbols: [
-        %%BACKGROUND_SYMBOLS_ARRAY%%
+       { "symbol": "\u2726", "color": "#FCE6C5", "size": "1.8rem", "opacity": 0.16 },
+       { "symbol": "\u2665", "color": "#E32D46", "size": "1.3rem", "opacity": 0.11 },
+       { "symbol": "\u2727", "color": "#D40A2C", "size": "1.4rem", "opacity": 0.11 },
+       { "symbol": "\u266A", "color": "#AC1737", "size": "1.6rem", "opacity": 0.13 },
+       { "symbol": "\u266B", "color": "#E32D46", "size": "1.9rem", "opacity": 0.11 },
+       { "symbol": "\u2728", "color": "#FCE6C5", "size": "1.5rem", "opacity": 0.14 }
       ]
     };
 
@@ -215,10 +502,18 @@
     const previewImg = document.getElementById('charPreview');
     const sizeSlider = document.getElementById('sizeSlider');
     const sizeValue = document.getElementById('sizeValue');
-    const countSlider = document.getElementById('countSlider');
-    const countValue = document.getElementById('countValue');
+    const duplicateToggle = document.getElementById('duplicateToggle');
+    let allowDuplication = true; // defaults to "Yes"
 
-    // Live size preview
+    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        allowDuplication = btn.dataset.value === 'yes';
+      });
+    });
+
+    previewImg.src = CHARACTER.preview;
     function updatePreviewSize(scale) {
       previewImg.style.transform = `scale(${scale})`;
     }
@@ -227,51 +522,75 @@
       sizeValue.textContent = val;
       updatePreviewSize(parseFloat(val));
     });
-    countSlider.addEventListener('input', () => {
-      countValue.textContent = countSlider.value;
-    });
-    updatePreviewSize(1.0); // initial
+    updatePreviewSize(1.0);
 
-    // Summon button
     document.getElementById('summonBtn').addEventListener('click', async () => {
       const scale = parseFloat(sizeSlider.value);
-      const count = parseInt(countSlider.value, 10);
-      await generateAndDownload(CHARACTER, scale, count);
+      await generateAndDownload(CHARACTER, scale, allowDuplication);
     });
+    sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1);
+    updatePreviewSize(parseFloat(sizeSlider.value));
 
-    // ========== ZIP GENERATION ==========
-    async function generateAndDownload(char, scale, count) {
+    function triggerDownload(blobOrUrl, filename) {
+      const a = document.createElement('a');
+      if (typeof blobOrUrl === 'string') {
+        a.href = blobOrUrl;
+      } else {
+        a.href = URL.createObjectURL(blobOrUrl);
+      }
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      if (typeof blobOrUrl !== 'string') {
+        setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+      }
+    }
+
+    async function generateAndDownload(char, scale, allowDuplication) {
+      const filename = `${char.name}_Shimeji_custom.zip`;
       try {
-        const resp = await fetch('../' + char.zip);
-        if (!resp.ok) throw new Error('Could not fetch ZIP.');
+        if (location.protocol === 'file:') {
+          throw new Error('This page is running as file://. Use a local web server.');
+        }
+        const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+        const resp = await fetch(zipUrl, { cache: 'no-store' });
+        if (!resp.ok) throw new Error(`Could not fetch ZIP (${resp.status}) at ${zipUrl}`);
+
         const zipBlob = await resp.blob();
         const zip = await JSZip.loadAsync(zipBlob);
 
-        // Locate configuration file
-        let configFile = zip.file('conf/設定.properties') || zip.file('conf/Actions.properties');
-        if (!configFile) {
-          const confs = Object.keys(zip.files).filter(f => f.startsWith('conf/') && f.endsWith('.properties'));
-          if (confs.length) configFile = zip.file(confs[0]);
+        const allPaths = Object.keys(zip.files);
+        let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
+        if (!configPath) {
+          configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
         }
+        const configFile = configPath ? zip.file(configPath) : null;
 
         if (configFile) {
           let text = await configFile.async('text');
-          text = setOrReplace(text, 'OnScreenCount', count.toString());
+          text = setOrReplace(text, 'OnScreenCount', '1');
           text = setOrReplace(text, 'Scale', scale.toFixed(1));
+          // NOTE: Shimeji-ee has no documented key that blocks the in-app
+          // right-click "Call Another" option, so this flag is written for
+          // reference only and won't itself prevent manual duplication.
+          text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
           zip.file(configFile.name, text);
+        } else {
+          console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
         }
 
         const newZip = await zip.generateAsync({ type: 'blob' });
-        const url = URL.createObjectURL(newZip);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${char.name}_Shimeji_custom.zip`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+        triggerDownload(newZip, filename);
       } catch (err) {
-        alert('Error generating ZIP: ' + err.message);
+        console.error('ZIP generation failed:', err);
+        try {
+          const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+          triggerDownload(zipUrl, `${char.name}_Shimeji.zip`);
+          alert('Custom edit failed, downloaded original ZIP instead.');
+        } catch (fallbackErr) {
+          alert('Error generating ZIP: ' + err.message);
+        }
       }
     }
 
@@ -289,7 +608,6 @@
       return updated.join('\n');
     }
 
-    // ========== FLOATING SYMBOLS ==========
     (function renderSymbols() {
       const container = document.getElementById('symbols-container');
       container.innerHTML = '';
@@ -307,6 +625,8 @@
               opacity:${sym.opacity};
               pointer-events:none;
               user-select:none;
+              animation-duration:${6 + Math.random() * 6}s;
+              animation-delay:${(Math.random() * 5).toFixed(2)}s;
             `;
             container.appendChild(span);
           }
