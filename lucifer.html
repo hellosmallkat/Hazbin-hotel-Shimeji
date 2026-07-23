@@ -3,34 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>%%CHARACTER_NAME%% - Hazbin Hotel Shimeji</title>
+  <title>Lucifer - The Morningstar</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    /* ===== CHARACTER-SPECIFIC THEME ===== */
     :root {
-      --accent: %%ACCENT_COLOR%%;
-      --text: %%TEXT_COLOR%%;
-      --heading: %%HEADING_COLOR%%;
-      --button-bg: %%BUTTON_GRADIENT%%;
-      --card-bg: %%CARD_BG%%;
-      --bg-solid: %%BACKGROUND_SOLID%%;
+      --deepred: #830007;
+      --cream: #feeb9d;
+      --scarlet: #e03546;
+      --coral: #e87d62;
+      --pink: #ea858a;
+      --ash: #16090a;      /* charred, ash-black - fallen angel base */
+
+      --accent: var(--cream);
+      --accent-glow: rgba(254,235,157,0.4);
+      --text: #d9c39a;
+      --heading: var(--cream);
+      --button-bg: linear-gradient(45deg, var(--ash), var(--deepred));
+      --card-bg: rgba(10,2,2,0.92);
+      --bg-solid: #0d0303;
+      --static-line: rgba(131,0,7,0.1);
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Baloo 2', sans-serif;
+      letter-spacing: 0.2px;
       margin: 0;
       padding: 0;
       position: relative;
       overflow-x: hidden;
-      background: %%BACKGROUND_PATTERN%%;
+      background:
+        radial-gradient(circle at 30% 60%, rgba(224,53,70,0.15) 0%, transparent 12%),
+        radial-gradient(circle at 70% 75%, rgba(254,235,157,0.08) 0%, transparent 10%),
+        radial-gradient(circle at 80% 10%, rgba(131,0,7,0.3) 0%, transparent 45%),
+        radial-gradient(circle at 15% 85%, rgba(224,53,70,0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 40%, #2c0509 0%, #17050a 55%, var(--bg-solid) 100%),
+        repeating-linear-gradient(0deg, var(--static-line) 0px, var(--static-line) 1px, transparent 1px, transparent 3px);
       background-color: var(--bg-solid);
       color: var(--text);
     }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at 50% 40%, transparent 45%, rgba(0,0,0,0.55) 100%);
+      mix-blend-mode: multiply;
+    }
 
-    /* Floating symbols container */
     #symbols-container {
       position: fixed;
       top: 0; left: 0;
@@ -39,7 +62,6 @@
       z-index: 0;
     }
 
-    /* ===== LAYOUT (unchanged from previous character page) ===== */
     .room-container {
       max-width: 900px;
       margin: 2rem auto;
@@ -57,13 +79,109 @@
       font-size: 1.2rem;
       transition: color 0.3s;
     }
+
+    .bunting-strip {
+      width: 100%;
+      height: 34px;
+      margin: 0.25rem 0 1.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      opacity: 0.85;
+    }
+    .bunting-strip svg { width: 100%; height: 100%; display: block; }
+
+    /* ===== Tilted halo, worn jauntily above the name ===== */
+    .title-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 1rem 0 0.6rem 0;
+    }
+    .halo-ring {
+      width: 150px;
+      height: 60px;
+      margin-bottom: -18px;
+      opacity: 0.75;
+      pointer-events: none;
+      transform: rotate(-14deg);
+      animation: halo-glow 3.5s ease-in-out infinite;
+    }
+    .title-wrap .room-title {
+      position: relative;
+      margin: 0;
+    }
+    @keyframes halo-glow {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(254,235,157,0.5)) drop-shadow(0 0 14px rgba(131,0,7,0.4)); }
+      50%      { filter: drop-shadow(0 0 14px rgba(254,235,157,0.85)) drop-shadow(0 0 26px rgba(131,0,7,0.6)); }
+    }
+
+    /* ===== Drifting black feathers ===== */
+    .feather-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .feather {
+      position: absolute;
+      top: -40px;
+      animation: feather-fall linear infinite;
+      opacity: 0.55;
+    }
+    @keyframes feather-fall {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      50%  { transform: translate(30px, 55vh) rotate(180deg); }
+      100% { transform: translate(-10px, 115vh) rotate(360deg); }
+    }
+
+    .room-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 0.4rem;
+      color: var(--heading);
+      text-align: center;
+      -webkit-text-stroke: 2px var(--ash);
+      text-stroke: 2px var(--ash);
+      text-shadow:
+        3px 3px 0 var(--ash),
+        0 0 22px var(--deepred),
+        0 0 40px rgba(131,0,7,0.6);
+      letter-spacing: 1px;
+    }
+
+    .mood-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.6rem 0 1.2rem 0;
+      padding: 0.5rem 1.4rem;
+      border: 3px dashed var(--cream);
+      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--cream);
+      background: rgba(22,9,10,0.7);
+      box-shadow: 0 0 14px rgba(131,0,7,0.5);
+      vertical-align: middle;
+      animation: wobble 5s ease-in-out infinite;
+    }
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-1.5deg); }
+      50% { transform: rotate(1.5deg); }
+    }
+
     .preview-wrapper {
       display: inline-block;
       overflow: hidden;
-      border-radius: 28px;
+      clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 22px);
       max-width: 450px;
       margin: 1rem 0 2.5rem 0;
-      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 80px var(--accent);
+      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 45px var(--accent-glow), 0 0 22px rgba(224,53,70,0.4) inset;
       border: 3px solid var(--accent);
     }
     .preview-wrapper img {
@@ -73,37 +191,81 @@
       transition: transform 0.2s ease-out;
       transform-origin: top left;
     }
+
     .vibe-section {
-      background: rgba(0,0,0,0.65);
+      background: rgba(13,3,3,0.8);
       backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      border-radius: 28px;
+      border: 3px solid var(--accent);
+      clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
       padding: 2rem;
-      margin-bottom: 2.5rem;
-      box-shadow: 0 0 35px rgba(0,0,0,0.8);
+      margin-bottom: 2rem;
+      box-shadow: 0 0 30px rgba(0,0,0,0.85), 0 0 16px rgba(131,0,7,0.4) inset;
       position: relative;
       overflow: hidden;
     }
     .vibe-quote {
       font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+      font-size: 1.7rem;
       font-style: italic;
       margin-bottom: 1rem;
       color: var(--accent);
-      text-shadow: 0 0 15px currentColor;
+      text-shadow: 0 0 12px currentColor;
     }
     .vibe-desc {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       line-height: 1.7;
       color: var(--text);
     }
+
+    .photo-frame-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      border-top: 2px dashed rgba(254,235,157,0.3);
+    }
+    .photo-frame {
+      flex-shrink: 0;
+      width: 78px;
+      height: 92px;
+      background: linear-gradient(160deg, var(--cream), #f3c96a);
+      border-radius: 6px;
+      padding: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 0 2px var(--deepred) inset;
+      transform: rotate(-4deg);
+    }
+    .photo-frame-inner {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #6e1a20, #3a0509);
+      border-radius: 3px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .photo-frame-caption {
+      font-size: 0.7rem;
+      color: var(--cream);
+      opacity: 0.85;
+      font-style: italic;
+      padding-bottom: 4px;
+    }
+    .photo-frame-note {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.85;
+      line-height: 1.4;
+    }
+
     .control-panel {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      border-radius: 28px;
+      border: 3px solid var(--accent);
+      clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
       padding: 2.5rem;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      box-shadow: 0 0 35px rgba(0,0,0,0.6);
     }
     .slider-group {
       display: flex;
@@ -114,74 +276,166 @@
     }
     .slider-item label {
       display: block;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 0.5rem;
-      font-family: 'Playfair Display', serif;
+      font-family: 'Baloo 2', sans-serif;
       color: var(--accent);
       font-size: 1.1rem;
     }
     input[type="range"] {
       width: 240px;
       height: 8px;
-      accent-color: var(--accent);
+      accent-color: var(--scarlet);
       border-radius: 4px;
     }
+    .toggle-group { display: flex; gap: 0.75rem; }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: rgba(0,0,0,0.4);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover { opacity: 0.85; }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
     .summon-button {
       display: inline-block;
-      padding: 1.2rem 3.5rem;
+      padding: 1.1rem 3.2rem;
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      border-radius: 60px;
+      font-size: 1.6rem;
+      clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
       border: none;
       cursor: pointer;
       text-transform: uppercase;
       font-weight: 900;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       transition: all 0.3s;
       margin-top: 1.5rem;
       background: var(--button-bg);
       color: #fff;
       border: 3px solid var(--accent);
-      box-shadow: 0 0 25px var(--accent);
+      box-shadow: 0 0 15px var(--accent-glow);
       text-shadow: 0 0 8px rgba(0,0,0,0.6);
     }
     .summon-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 45px var(--accent);
-      filter: brightness(1.2);
+      transform: scale(1.05) rotate(-1deg);
+      box-shadow: 0 0 28px var(--accent-glow);
+      filter: brightness(1.15);
     }
 
-    /* Floating symbols styling (just in case you want to add them manually outside the container) */
+    .duck-banner {
+      width: 100%;
+      height: 130px;
+      margin-top: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .duck-banner svg { width: 100%; height: 100%; display: block; }
+    .twinkle { animation: twinkle-glow 2.6s ease-in-out infinite; }
+    .twinkle:nth-child(2) { animation-delay: 0.5s; }
+    .twinkle:nth-child(3) { animation-delay: 1s; }
+    .twinkle:nth-child(4) { animation-delay: 1.6s; }
+    @keyframes twinkle-glow {
+      0%, 100% { opacity: 0.25; }
+      50% { opacity: 1; }
+    }
+
     .floating-symbol {
       position: absolute;
       pointer-events: none;
       user-select: none;
+      animation: drift-float 9s ease-in-out infinite;
+    }
+    @keyframes drift-float {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(8px, -14px) rotate(6deg); }
+      50%  { transform: translate(-6px, -26px) rotate(-4deg); }
+      75%  { transform: translate(10px, -14px) rotate(5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
   </style>
 </head>
 <body>
-  <!-- Container for background symbols (filled by script) -->
   <div id="symbols-container"></div>
+  <div class="feather-layer" id="featherLayer" aria-hidden="true"></div>
 
   <div class="room-container">
     <a href="index.html" class="back-link">Back to the Hotel</a>
 
-    <h1 style="font-family:'Playfair Display'; font-size:3rem; margin-bottom:0.5rem; text-shadow:0 0 20px var(--accent); color:var(--heading);">
-      %%CHARACTER_NAME%%
-    </h1>
-
-    <!-- Live preview image -->
-    <div class="preview-wrapper" id="previewWrapper">
-      <img id="charPreview" src="%%PREVIEW_IMAGE_PATH%%" alt="%%CHARACTER_NAME%%">
+    <div class="bunting-strip" aria-hidden="true">
+      <svg viewBox="0 0 900 34" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 L900,0" stroke="var(--cream)" stroke-width="2" opacity="0.6"/>
+        <g fill="var(--scarlet)" opacity="0.9">
+          <polygon points="20,2 50,2 35,30"/>
+          <polygon points="90,2 120,2 105,30"/>
+          <polygon points="160,2 190,2 175,30"/>
+        </g>
+        <g fill="var(--coral)" opacity="0.9">
+          <polygon points="230,2 260,2 245,30"/>
+          <polygon points="300,2 330,2 315,30"/>
+          <polygon points="370,2 400,2 385,30"/>
+        </g>
+        <g fill="var(--cream)" opacity="0.9">
+          <polygon points="440,2 470,2 455,30"/>
+          <polygon points="510,2 540,2 525,30"/>
+          <polygon points="580,2 610,2 595,30"/>
+        </g>
+        <g fill="var(--pink)" opacity="0.9">
+          <polygon points="650,2 680,2 665,30"/>
+          <polygon points="720,2 750,2 735,30"/>
+          <polygon points="790,2 820,2 805,30"/>
+        </g>
+        <g fill="var(--scarlet)" opacity="0.9">
+          <polygon points="850,2 880,2 865,30"/>
+        </g>
+      </svg>
     </div>
 
-    <!-- Vibe section (quote + description) -->
+    <div class="title-wrap">
+      <svg class="halo-ring" viewBox="0 0 150 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <ellipse cx="75" cy="30" rx="62" ry="20" fill="none" stroke="var(--cream)" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <h1 class="room-title">Lucifer</h1>
+    </div>
+
+    <div style="text-align:center;">
+      <span class="mood-badge">☆ So... Who's up for pancakes? ☆</span>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="preview-wrapper" id="previewWrapper">
+        <img id="charPreview" src="images/lucifer.png" alt="Lucifer Preview">
+      </div>
+    </div>
+
     <div class="vibe-section">
-      <p class="vibe-quote">%%QUOTE%%</p>
-      <p class="vibe-desc">%%DESCRIPTION%%</p>
+      <p class="vibe-quote">♪ Good thing we're in Hell. Check out this little magic number! ♪</p>
+      <p class="vibe-desc">Technically I'm the King of Hell, which sounds impressive until you remember it mostly means paperwork and people expecting things from me. I'd rather juggle rubber ducks, badly, than talk about my feelings - much more my speed. Ask me about my daughter Charlie, though, and suddenly I have all the time in the world.</p>
+
+      <div class="photo-frame-row">
+        <div class="photo-frame">
+          <div class="photo-frame-inner" style="text-align:center;">
+            <img class="photo-frame-img" src="images/Familyphoto.jpg" alt="family photo" style="width:100px; height:100px; display:block; margin:0 auto;">
+          </div>
+        </div>
+        <p class="photo-frame-note">I keep a small, well-worn family photo close by - even in Hell, some things stay sentimental.</p>
+      </div>
     </div>
 
-    <!-- Customisation controls -->
     <div class="control-panel">
       <div class="slider-group">
         <div class="slider-item">
@@ -189,36 +443,83 @@
           <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
         </div>
         <div class="slider-item">
-          <label>Duplicates: <span id="countValue">1</span></label>
-          <input type="range" id="countSlider" min="1" max="10" step="1" value="1">
+          <label>Allow Duplication?</label>
+          <div class="toggle-group" id="duplicateToggle">
+            <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
+            <button type="button" class="toggle-btn" data-value="no">No</button>
+          </div>
         </div>
       </div>
-      <button class="summon-button" id="summonBtn">Summon Chaos</button>
+      <button class="summon-button" id="summonBtn">Summon Whimsy</button>
       <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
+    </div>
+
+    <div class="duck-banner" aria-hidden="true">
+      <svg viewBox="0 0 900 130" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="108" width="900" height="6" fill="#3a0509" opacity="0.8"/>
+        <g transform="translate(80,60)">
+          <ellipse cx="0" cy="35" rx="34" ry="20" fill="var(--cream)"/>
+          <circle cx="18" cy="10" r="20" fill="var(--cream)"/>
+          <path d="M32,6 Q48,4 46,14 Q40,16 32,14 Z" fill="var(--coral)"/>
+          <circle cx="24" cy="4" r="2.5" fill="var(--deepred)"/>
+        </g>
+        <g transform="translate(760,72) scale(0.7)">
+          <ellipse cx="0" cy="35" rx="34" ry="20" fill="var(--cream)"/>
+          <circle cx="18" cy="10" r="20" fill="var(--cream)"/>
+          <path d="M32,6 Q48,4 46,14 Q40,16 32,14 Z" fill="var(--coral)"/>
+          <circle cx="24" cy="4" r="2.5" fill="var(--deepred)"/>
+        </g>
+        <g transform="translate(400,80)" opacity="0.85">
+          <rect x="0" y="0" width="70" height="14" rx="2" fill="var(--scarlet)"/>
+          <rect x="6" y="14" width="60" height="14" rx="2" fill="var(--deepred)"/>
+          <rect x="0" y="28" width="72" height="14" rx="2" fill="var(--coral)"/>
+        </g>
+        <g class="twinkle" fill="var(--cream)">
+          <path d="M150,30 l3,8 l8,1 l-6,6 l2,8 l-7,-4 l-7,4 l2,-8 l-6,-6 l8,-1 Z"/>
+        </g>
+        <g class="twinkle" fill="var(--pink)">
+          <path d="M300,20 l2.5,7 l7,1 l-5,5 l1.5,7 l-6,-3.5 l-6,3.5 l1.5,-7 l-5,-5 l7,-1 Z"/>
+        </g>
+        <g class="twinkle" fill="var(--cream)">
+          <path d="M550,25 l2.5,7 l7,1 l-5,5 l1.5,7 l-6,-3.5 l-6,3.5 l1.5,-7 l-5,-5 l7,-1 Z"/>
+        </g>
+        <g class="twinkle" fill="var(--coral)">
+          <path d="M650,35 l3,8 l8,1 l-6,6 l2,8 l-7,-4 l-7,4 l2,-8 l-6,-6 l8,-1 Z"/>
+        </g>
+      </svg>
     </div>
   </div>
 
   <script>
-    // =============================================
-    //  HARDCODED CHARACTER DATA (replace each field)
-    // =============================================
     const CHARACTER = {
-      name: "%%CHARACTER_NAME%%",
-      zip: "%%ZIP_PATH%%",           // e.g., "downloads/Alastor.zip"
-      preview: "%%PREVIEW_IMAGE_PATH%%",
+      name: "Lucifer",
+      zip: "downloads/LuciferShimeji.zip",
+      preview: "images/lucifer.png",
       backgroundSymbols: [
-        %%BACKGROUND_SYMBOLS_ARRAY%%
+       { "symbol": "\u2726", "color": "#feeb9d", "size": "1.8rem", "opacity": 0.14 },
+       { "symbol": "\u2665", "color": "#ea858a", "size": "1.3rem", "opacity": 0.1 },
+       { "symbol": "\uD83E\uDD86", "color": "#feeb9d", "size": "1.6rem", "opacity": 0.09 },
+       { "symbol": "\u2727", "color": "#e87d62", "size": "1.4rem", "opacity": 0.1 },
+       { "symbol": "\u266A", "color": "#feeb9d", "size": "1.6rem", "opacity": 0.13 },
+       { "symbol": "\u266B", "color": "#e03546", "size": "1.9rem", "opacity": 0.11 }
       ]
     };
 
-    // ============== FUNCTIONALITY ==============
     const previewImg = document.getElementById('charPreview');
     const sizeSlider = document.getElementById('sizeSlider');
     const sizeValue = document.getElementById('sizeValue');
-    const countSlider = document.getElementById('countSlider');
-    const countValue = document.getElementById('countValue');
+    const duplicateToggle = document.getElementById('duplicateToggle');
+    let allowDuplication = true;
 
-    // Live size preview
+    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        allowDuplication = btn.dataset.value === 'yes';
+      });
+    });
+
+    previewImg.src = CHARACTER.preview;
     function updatePreviewSize(scale) {
       previewImg.style.transform = `scale(${scale})`;
     }
@@ -227,51 +528,72 @@
       sizeValue.textContent = val;
       updatePreviewSize(parseFloat(val));
     });
-    countSlider.addEventListener('input', () => {
-      countValue.textContent = countSlider.value;
-    });
-    updatePreviewSize(1.0); // initial
+    updatePreviewSize(1.0);
 
-    // Summon button
     document.getElementById('summonBtn').addEventListener('click', async () => {
       const scale = parseFloat(sizeSlider.value);
-      const count = parseInt(countSlider.value, 10);
-      await generateAndDownload(CHARACTER, scale, count);
+      await generateAndDownload(CHARACTER, scale, allowDuplication);
     });
+    sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1);
+    updatePreviewSize(parseFloat(sizeSlider.value));
 
-    // ========== ZIP GENERATION ==========
-    async function generateAndDownload(char, scale, count) {
+    function triggerDownload(blobOrUrl, filename) {
+      const a = document.createElement('a');
+      if (typeof blobOrUrl === 'string') {
+        a.href = blobOrUrl;
+      } else {
+        a.href = URL.createObjectURL(blobOrUrl);
+      }
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      if (typeof blobOrUrl !== 'string') {
+        setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+      }
+    }
+
+    async function generateAndDownload(char, scale, allowDuplication) {
+      const filename = `${char.name}_Shimeji_custom.zip`;
       try {
-        const resp = await fetch('../' + char.zip);
-        if (!resp.ok) throw new Error('Could not fetch ZIP.');
+        if (location.protocol === 'file:') {
+          throw new Error('This page is running as file://. Use a local web server.');
+        }
+        const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+        const resp = await fetch(zipUrl, { cache: 'no-store' });
+        if (!resp.ok) throw new Error(`Could not fetch ZIP (${resp.status}) at ${zipUrl}`);
+
         const zipBlob = await resp.blob();
         const zip = await JSZip.loadAsync(zipBlob);
 
-        // Locate configuration file
-        let configFile = zip.file('conf/設定.properties') || zip.file('conf/Actions.properties');
-        if (!configFile) {
-          const confs = Object.keys(zip.files).filter(f => f.startsWith('conf/') && f.endsWith('.properties'));
-          if (confs.length) configFile = zip.file(confs[0]);
+        const allPaths = Object.keys(zip.files);
+        let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
+        if (!configPath) {
+          configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
         }
+        const configFile = configPath ? zip.file(configPath) : null;
 
         if (configFile) {
           let text = await configFile.async('text');
-          text = setOrReplace(text, 'OnScreenCount', count.toString());
+          text = setOrReplace(text, 'OnScreenCount', '1');
           text = setOrReplace(text, 'Scale', scale.toFixed(1));
+          text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
           zip.file(configFile.name, text);
+        } else {
+          console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
         }
 
         const newZip = await zip.generateAsync({ type: 'blob' });
-        const url = URL.createObjectURL(newZip);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${char.name}_Shimeji_custom.zip`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+        triggerDownload(newZip, filename);
       } catch (err) {
-        alert('Error generating ZIP: ' + err.message);
+        console.error('ZIP generation failed:', err);
+        try {
+          const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+          triggerDownload(zipUrl, `${char.name}_Shimeji.zip`);
+          alert('Custom edit failed, downloaded original ZIP instead.');
+        } catch (fallbackErr) {
+          alert('Error generating ZIP: ' + err.message);
+        }
       }
     }
 
@@ -289,7 +611,6 @@
       return updated.join('\n');
     }
 
-    // ========== FLOATING SYMBOLS ==========
     (function renderSymbols() {
       const container = document.getElementById('symbols-container');
       container.innerHTML = '';
@@ -307,10 +628,32 @@
               opacity:${sym.opacity};
               pointer-events:none;
               user-select:none;
+              animation-duration:${6 + Math.random() * 6}s;
+              animation-delay:${(Math.random() * 5).toFixed(2)}s;
             `;
             container.appendChild(span);
           }
         });
+      }
+    })();
+
+    // ========== DRIFTING FEATHERS ==========
+    (function renderFeathers() {
+      const layer = document.getElementById('featherLayer');
+      const FEATHER_COUNT = 9;
+      for (let i = 0; i < FEATHER_COUNT; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'feather';
+        wrapper.style.left = `${Math.random() * 95}%`;
+        wrapper.style.animationDuration = `${14 + Math.random() * 10}s`;
+        wrapper.style.animationDelay = `${(Math.random() * -20).toFixed(1)}s`;
+        wrapper.innerHTML = `
+          <svg width="${14 + Math.random() * 10}" height="${28 + Math.random() * 14}" viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10,0 C2,10 2,28 10,40 C18,28 18,10 10,0 Z" fill="#0d0303" stroke="var(--deepred)" stroke-width="1"/>
+            <line x1="10" y1="2" x2="10" y2="38" stroke="var(--deepred)" stroke-width="0.6" opacity="0.6"/>
+          </svg>
+        `;
+        layer.appendChild(wrapper);
       }
     })();
   </script>

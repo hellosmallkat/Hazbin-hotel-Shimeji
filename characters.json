@@ -196,34 +196,6 @@
     }
   },
   {
-    "id": "sirpentious",
-    "name": "Sir Pentious",
-    "preview": "images/sirpentious.png",
-    "zip": "downloads/SirPentious.zip",
-    "group": "hazbin",
-    "accent": "#c84b4b",
-    "accentDark": "#7a2b2b",
-    "vibe": {
-      "quote": "I'll conquer all with my brilliant inventions!",
-      "description": "A theatrical snake demon and self-proclaimed evil genius whose grand schemes always explode in his face. Beneath the bluster, a surprisingly sweet soul desperate for acceptance."
-    },
-    "room": {
-      "bg": "#0a1a1a",
-      "pattern": "linear-gradient(0deg, #0a2a2a 0%, #0a1a1a 50%, #0a1a1a 100%), radial-gradient(circle at 20% 80%, #00ffff 0%, transparent 40%)",
-      "cardBg": "rgba(5,20,20,0.95)",
-      "accent": "#00ffff",
-      "text": "#ccf2f2",
-      "heading": "#66ffff",
-      "button": "linear-gradient(45deg, #004466, #00cccc)",
-      "buttonHover": "linear-gradient(45deg, #005a88, #00e6e6)",
-      "slider": "#00ffff",
-      "backgroundSymbols": [
-        { "symbol": "⚙", "color": "#00ffff", "size": "2rem", "opacity": 0.2 },
-        { "symbol": "✦", "color": "#ccf2f2", "size": "1.4rem", "opacity": 0.1 }
-      ]
-    }
-  },
-  {
     "id": "valentino",
     "name": "Valentino",
     "preview": "images/valentino.png",
