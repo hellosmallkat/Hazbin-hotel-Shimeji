@@ -3,34 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>%%CHARACTER_NAME%% - Hazbin Hotel Shimeji</title>
+  <title>Vaggie - Manager of the Hazbin Hotel</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     /* ===== CHARACTER-SPECIFIC THEME ===== */
+    /* Vaggie's canon signature palette */
     :root {
-      --accent: %%ACCENT_COLOR%%;
-      --text: %%TEXT_COLOR%%;
-      --heading: %%HEADING_COLOR%%;
-      --button-bg: %%BUTTON_GRADIENT%%;
-      --card-bg: %%CARD_BG%%;
-      --bg-solid: %%BACKGROUND_SOLID%%;
+      --blush: #f4e9e7;      /* pale warm highlight */
+      --dustyrose: #cab1af;  /* muted rose-taupe */
+      --coral: #f9a5a0;      /* warmer pink accent */
+      --mainpink: #ed2b56;   /* her signature pink-red */
+      --slate: #4f4565;      /* deep violet-grey, guarded exterior */
+      --silver: #e8e6e2;     /* spearhead - off-white/metallic */
+      --steelgray: #9a9aa2;  /* spear shaft - pale gray */
+
+      --accent: var(--mainpink);
+      --accent-glow: rgba(237,43,86,0.4);
+      --text: #e3cdd2;
+      --heading: var(--mainpink);
+      --button-bg: linear-gradient(45deg, var(--slate), var(--mainpink));
+      --card-bg: rgba(30,22,32,0.88);
+      --bg-solid: #241a24;
+      --static-line: rgba(237,43,86,0.06);
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.2px;
       margin: 0;
       padding: 0;
       position: relative;
       overflow-x: hidden;
-      background: %%BACKGROUND_PATTERN%%;
+      background:
+        radial-gradient(circle at 80% 15%, rgba(237,43,86,0.16) 0%, transparent 42%),
+        radial-gradient(circle at 15% 85%, rgba(79,69,101,0.3) 0%, transparent 45%),
+        radial-gradient(circle at 50% 45%, #34233a 0%, #281c2c 55%, var(--bg-solid) 100%),
+        repeating-linear-gradient(0deg, var(--static-line) 0px, var(--static-line) 1px, transparent 1px, transparent 3px);
       background-color: var(--bg-solid);
       color: var(--text);
     }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at 50% 35%, transparent 45%, rgba(0,0,0,0.45) 100%);
+      mix-blend-mode: multiply;
+    }
 
-    /* Floating symbols container */
     #symbols-container {
       position: fixed;
       top: 0; left: 0;
@@ -39,7 +63,6 @@
       z-index: 0;
     }
 
-    /* ===== LAYOUT (unchanged from previous character page) ===== */
     .room-container {
       max-width: 900px;
       margin: 2rem auto;
@@ -57,13 +80,87 @@
       font-size: 1.2rem;
       transition: color 0.3s;
     }
+
+    /* ===== Blade-edge strip up top, standing in for a guarded threshold ===== */
+    .blade-strip {
+      width: 100%;
+      height: 18px;
+      margin: 0.25rem 0 1.5rem 0;
+      opacity: 0.8;
+      background:
+        linear-gradient(135deg, var(--slate) 25%, transparent 25%) 0 0,
+        linear-gradient(225deg, var(--mainpink) 25%, transparent 25%) 0 0;
+      background-size: 24px 24px;
+      background-repeat: repeat-x;
+      filter: drop-shadow(0 0 2px rgba(237,43,86,0.3));
+    }
+
+    /* ===== Single manifested wing + spear, worn like a guard rather than a crown ===== */
+    .title-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0.5rem 0 0.6rem 0;
+    }
+    .bow-guard {
+      width: 140px;
+      height: 70px;
+      margin-bottom: -14px;
+      opacity: 0.95;
+      pointer-events: none;
+      transform: rotate(-4deg);
+      animation: guard-glow 3.4s ease-in-out infinite;
+    }
+    @keyframes guard-glow {
+      0%, 100% { filter: drop-shadow(0 0 5px rgba(237,43,86,0.4)) drop-shadow(0 0 9px rgba(249,165,160,0.5)); }
+      50%      { filter: drop-shadow(0 0 12px rgba(237,43,86,0.7)) drop-shadow(0 0 18px rgba(249,165,160,0.8)); }
+    }
+    .title-wrap .room-title { position: relative; margin: 0; }
+
+    .room-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 0.4rem;
+      color: var(--heading);
+      text-align: center;
+      -webkit-text-stroke: 2px var(--slate);
+      text-stroke: 2px var(--slate);
+      text-shadow:
+        3px 3px 0 var(--slate),
+        0 0 20px var(--mainpink),
+        0 0 38px rgba(237,43,86,0.4);
+      letter-spacing: 1px;
+    }
+
+    /* ===== Guarded badge - tough exterior, soft underneath ===== */
+    .mood-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.6rem 0 1.2rem 0;
+      padding: 0.55rem 1.5rem;
+      border: 2px solid var(--mainpink);
+      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--coral);
+      background: rgba(24,17,26,0.75);
+      box-shadow: 0 0 14px rgba(237,43,86,0.3);
+      vertical-align: middle;
+    }
+
     .preview-wrapper {
       display: inline-block;
       overflow: hidden;
-      border-radius: 28px;
+      clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 22px);
       max-width: 450px;
       margin: 1rem 0 2.5rem 0;
-      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 80px var(--accent);
+      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 40px var(--accent-glow), 0 0 20px rgba(79,69,101,0.5) inset;
       border: 3px solid var(--accent);
     }
     .preview-wrapper img {
@@ -73,37 +170,81 @@
       transition: transform 0.2s ease-out;
       transform-origin: top left;
     }
+
     .vibe-section {
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      border-radius: 28px;
+      background: rgba(30,22,32,0.85);
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
       padding: 2rem;
-      margin-bottom: 2.5rem;
-      box-shadow: 0 0 35px rgba(0,0,0,0.8);
+      margin-bottom: 2rem;
+      box-shadow: 0 0 30px rgba(0,0,0,0.75), 0 0 16px rgba(79,69,101,0.4) inset;
       position: relative;
       overflow: hidden;
     }
     .vibe-quote {
       font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+      font-size: 1.6rem;
       font-style: italic;
       margin-bottom: 1rem;
-      color: var(--accent);
-      text-shadow: 0 0 15px currentColor;
+      color: var(--coral);
+      text-shadow: 0 0 10px rgba(249,165,160,0.3);
     }
     .vibe-desc {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       line-height: 1.7;
       color: var(--text);
     }
+
+    /* ===== Family photo frame - original decorative frame, not the actual artwork ===== */
+    .photo-frame-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      border-top: 2px solid rgba(237,43,86,0.2);
+    }
+    .photo-frame {
+      flex-shrink: 0;
+      width: 78px;
+      height: 92px;
+      background: linear-gradient(160deg, var(--dustyrose), #8f6f6e);
+      padding: 6px;
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 0 2px var(--slate) inset;
+      transform: rotate(-3deg);
+    }
+    .photo-frame-inner {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(160deg, #2a2236, #171320);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .photo-frame-caption {
+      font-size: 0.68rem;
+      color: var(--coral);
+      opacity: 0.85;
+      font-style: italic;
+      padding-bottom: 4px;
+    }
+    .photo-frame-note {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
     .control-panel {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      border-radius: 28px;
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
       padding: 2.5rem;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      box-shadow: 0 0 35px rgba(0,0,0,0.55);
     }
     .slider-group {
       display: flex;
@@ -116,69 +257,178 @@
       display: block;
       font-weight: 600;
       margin-bottom: 0.5rem;
-      font-family: 'Playfair Display', serif;
-      color: var(--accent);
-      font-size: 1.1rem;
+      font-family: 'Oswald', sans-serif;
+      color: var(--coral);
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
     }
     input[type="range"] {
       width: 240px;
       height: 8px;
-      accent-color: var(--accent);
+      accent-color: var(--mainpink);
       border-radius: 4px;
     }
+    .toggle-group { display: flex; gap: 0.75rem; }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover { opacity: 0.85; }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
     .summon-button {
       display: inline-block;
-      padding: 1.2rem 3.5rem;
+      padding: 1.1rem 3.2rem;
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      border-radius: 60px;
+      font-size: 1.6rem;
+      clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
       border: none;
       cursor: pointer;
       text-transform: uppercase;
       font-weight: 900;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       transition: all 0.3s;
       margin-top: 1.5rem;
       background: var(--button-bg);
       color: #fff;
-      border: 3px solid var(--accent);
-      box-shadow: 0 0 25px var(--accent);
-      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+      border: 3px solid var(--mainpink);
+      box-shadow: 0 0 15px var(--accent-glow);
+      text-shadow: 0 0 8px rgba(0,0,0,0.5);
     }
     .summon-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 45px var(--accent);
-      filter: brightness(1.2);
+      transform: scale(1.04);
+      box-shadow: 0 0 26px var(--accent-glow);
+      filter: brightness(1.1);
     }
 
-    /* Floating symbols styling (just in case you want to add them manually outside the container) */
+    /* ===== Bottom decoration: spear, single feather, watchful eye motif ===== */
+    .guard-banner {
+      width: 100%;
+      height: 130px;
+      margin-top: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .guard-banner svg { width: 100%; height: 100%; display: block; }
+    .twinkle { animation: twinkle-glow 2.8s ease-in-out infinite; }
+    .twinkle:nth-child(2) { animation-delay: 0.6s; }
+    .twinkle:nth-child(3) { animation-delay: 1.2s; }
+    @keyframes twinkle-glow {
+      0%, 100% { opacity: 0.25; }
+      50% { opacity: 0.9; }
+    }
+
+    /* ===== Drifting feathers ===== */
+    .feather-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .feather {
+      position: absolute;
+      top: -40px;
+      animation: feather-fall linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes feather-fall {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      50%  { transform: translate(25px, 55vh) rotate(160deg); }
+      100% { transform: translate(-10px, 115vh) rotate(320deg); }
+    }
+
+    /* ===== A little playful spark - her softer side, showing through ===== */
+    .dance-spark {
+      display: inline-block;
+      animation: dance-twirl 2.2s ease-in-out infinite;
+    }
+    @keyframes dance-twirl {
+      0%, 100% { transform: rotate(-8deg) scale(1); }
+      50%      { transform: rotate(8deg) scale(1.08); }
+    }
+
     .floating-symbol {
       position: absolute;
       pointer-events: none;
       user-select: none;
+      animation: drift-float 9s ease-in-out infinite;
+    }
+    @keyframes drift-float {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(6px, -12px) rotate(4deg); }
+      50%  { transform: translate(-5px, -22px) rotate(-3deg); }
+      75%  { transform: translate(8px, -12px) rotate(4deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
   </style>
 </head>
 <body>
-  <!-- Container for background symbols (filled by script) -->
   <div id="symbols-container"></div>
+  <div class="feather-layer" id="featherLayer" aria-hidden="true"></div>
 
   <div class="room-container">
     <a href="index.html" class="back-link">Back to the Hotel</a>
 
-    <h1 style="font-family:'Playfair Display'; font-size:3rem; margin-bottom:0.5rem; text-shadow:0 0 20px var(--accent); color:var(--heading);">
-      %%CHARACTER_NAME%%
-    </h1>
+    <div class="blade-strip" aria-hidden="true"></div>
 
-    <!-- Live preview image -->
-    <div class="preview-wrapper" id="previewWrapper">
-      <img id="charPreview" src="%%PREVIEW_IMAGE_PATH%%" alt="%%CHARACTER_NAME%%">
+    <div class="title-wrap">
+      <svg class="bow-guard" viewBox="0 0 140 66" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- left loop -->
+        <path d="M62,28 C55,10 30,4 12,10 C0,14 0,32 14,34 C32,36 52,34 62,28 Z"
+              fill="var(--mainpink)" stroke="var(--coral)" stroke-width="2" stroke-linejoin="round"/>
+        <!-- right loop -->
+        <path d="M78,28 C85,10 110,4 128,10 C140,14 140,32 126,34 C108,36 88,34 78,28 Z"
+              fill="var(--mainpink)" stroke="var(--coral)" stroke-width="2" stroke-linejoin="round"/>
+        <!-- center knot -->
+        <rect x="61" y="19" width="18" height="18" rx="4" fill="var(--slate)" stroke="var(--coral)" stroke-width="2"/>
+        <!-- trailing ribbon tails -->
+        <path d="M65,36 L56,58 L64,53 L70,60 Z" fill="var(--mainpink)" stroke="var(--coral)" stroke-width="1" opacity="0.95"/>
+        <path d="M75,36 L84,58 L76,53 L70,60 Z" fill="var(--mainpink)" stroke="var(--coral)" stroke-width="1" opacity="0.95"/>
+      </svg>
+      <h1 class="room-title">Vaggie</h1>
+    </div>
+
+    <div style="text-align:center;">
+      <span class="mood-badge">⚔ On Guard, As Always <span class="dance-spark">✨</span></span>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="preview-wrapper" id="previewWrapper">
+        <img id="charPreview" src="images/vaggie.png" alt="Vaggie Preview">
+      </div>
     </div>
 
     <!-- Vibe section (quote + description) -->
     <div class="vibe-section">
-      <p class="vibe-quote">%%QUOTE%%</p>
-      <p class="vibe-desc">%%DESCRIPTION%%</p>
+      <p class="vibe-quote">I don't trust easy. I trust earned.</p>
+      <p class="vibe-desc">I'm Vaggie. I run the day-to-day at the hotel, which mostly means keeping Charlie's big ideas from getting her hurt. I used to be an exorcist - I don't talk about that much. These days I'd rather spend my energy watching the door than dwelling on the past. Give me a good song, though, and I'll let my guard down enough to actually dance - Charlie says it's the only time I look like I'm having fun. If you're here to hurt anyone I care about, we're going to have a problem.</p>
+
+      <div class="photo-frame-row">
+        <div class="photo-frame">
+          <div class="photo-frame-inner">
+            <span class="photo-frame-caption">us</span>
+          </div>
+        </div>
+        <p class="photo-frame-note">I keep a photo of me and Charlie close by. She's the reason I stay soft, even when everything else tells me not to.</p>
+      </div>
     </div>
 
     <!-- Customisation controls -->
@@ -189,12 +439,51 @@
           <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
         </div>
         <div class="slider-item">
-          <label>Duplicates: <span id="countValue">1</span></label>
-          <input type="range" id="countSlider" min="1" max="10" step="1" value="1">
+          <label>Allow Duplication?</label>
+          <div class="toggle-group" id="duplicateToggle">
+            <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
+            <button type="button" class="toggle-btn" data-value="no">No</button>
+          </div>
         </div>
       </div>
-      <button class="summon-button" id="summonBtn">Summon Chaos</button>
+      <button class="summon-button" id="summonBtn">Summon Backup</button>
       <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
+    </div>
+
+    <!-- Bottom decoration: spear, single feather, watchful eye -->
+    <div class="guard-banner" aria-hidden="true">
+      <svg viewBox="0 0 900 130" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="spearGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <rect x="0" y="108" width="900" height="4" fill="var(--dustyrose)" opacity="0.5"/>
+
+        <!-- two spears crossed, center -->
+        <g transform="translate(450,55)">
+          <line x1="-70" y1="45" x2="70" y2="-45" stroke="var(--steelgray)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M64,-53 L84,-53 L74,-33 Z" fill="var(--silver)" stroke="var(--mainpink)" stroke-width="1" filter="url(#spearGlow)" class="twinkle"/>
+          <line x1="70" y1="45" x2="-70" y2="-45" stroke="var(--steelgray)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M-64,-53 L-84,-53 L-74,-33 Z" fill="var(--silver)" stroke="var(--mainpink)" stroke-width="1" filter="url(#spearGlow)" class="twinkle"/>
+        </g>
+
+        <!-- small twinkling accents either side, a bit of playfulness -->
+        <g class="twinkle" fill="var(--coral)">
+          <path d="M200,35 l2.5,7 l7,1 l-5,5 l1.5,7 l-6,-3.5 l-6,3.5 l1.5,-7 l-5,-5 l7,-1 Z"/>
+        </g>
+        <g class="twinkle" fill="var(--mainpink)">
+          <path d="M680,35 l2.5,7 l7,1 l-5,5 l1.5,7 l-6,-3.5 l-6,3.5 l1.5,-7 l-5,-5 l7,-1 Z"/>
+        </g>
+        <g class="twinkle" fill="var(--dustyrose)">
+          <path d="M580,20 l2,6 l6,0.8 l-4.3,4.3 l1.3,6 l-5.3,-3 l-5.3,3 l1.3,-6 l-4.3,-4.3 l6,-0.8 Z"/>
+        </g>
+      </svg>
     </div>
   </div>
 
@@ -203,11 +492,14 @@
     //  HARDCODED CHARACTER DATA (replace each field)
     // =============================================
     const CHARACTER = {
-      name: "%%CHARACTER_NAME%%",
-      zip: "%%ZIP_PATH%%",           // e.g., "downloads/Alastor.zip"
-      preview: "%%PREVIEW_IMAGE_PATH%%",
+      name: "Vaggie",
+      zip: "downloads/VaggieShimeji.zip",   // must match the exact filename on GitHub, including .zip
+      preview: "images/vaggie.png",
       backgroundSymbols: [
-        %%BACKGROUND_SYMBOLS_ARRAY%%
+       { "symbol": "\u2726", "color": "#f9a5a0", "size": "1.6rem", "opacity": 0.12 },
+       { "symbol": "\u2665", "color": "#ed2b56", "size": "1.3rem", "opacity": 0.1 },
+       { "symbol": "\u2727", "color": "#cab1af", "size": "1.3rem", "opacity": 0.1 },
+       { "symbol": "\u2694", "color": "#4f4565", "size": "1.5rem", "opacity": 0.09 }
       ]
     };
 
@@ -215,10 +507,18 @@
     const previewImg = document.getElementById('charPreview');
     const sizeSlider = document.getElementById('sizeSlider');
     const sizeValue = document.getElementById('sizeValue');
-    const countSlider = document.getElementById('countSlider');
-    const countValue = document.getElementById('countValue');
+    const duplicateToggle = document.getElementById('duplicateToggle');
+    let allowDuplication = true; // defaults to "Yes"
 
-    // Live size preview
+    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        allowDuplication = btn.dataset.value === 'yes';
+      });
+    });
+
+    previewImg.src = CHARACTER.preview;
     function updatePreviewSize(scale) {
       previewImg.style.transform = `scale(${scale})`;
     }
@@ -227,51 +527,75 @@
       sizeValue.textContent = val;
       updatePreviewSize(parseFloat(val));
     });
-    countSlider.addEventListener('input', () => {
-      countValue.textContent = countSlider.value;
-    });
-    updatePreviewSize(1.0); // initial
+    updatePreviewSize(1.0);
 
-    // Summon button
     document.getElementById('summonBtn').addEventListener('click', async () => {
       const scale = parseFloat(sizeSlider.value);
-      const count = parseInt(countSlider.value, 10);
-      await generateAndDownload(CHARACTER, scale, count);
+      await generateAndDownload(CHARACTER, scale, allowDuplication);
     });
+    sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1);
+    updatePreviewSize(parseFloat(sizeSlider.value));
 
-    // ========== ZIP GENERATION ==========
-    async function generateAndDownload(char, scale, count) {
+    function triggerDownload(blobOrUrl, filename) {
+      const a = document.createElement('a');
+      if (typeof blobOrUrl === 'string') {
+        a.href = blobOrUrl;
+      } else {
+        a.href = URL.createObjectURL(blobOrUrl);
+      }
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      if (typeof blobOrUrl !== 'string') {
+        setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+      }
+    }
+
+    async function generateAndDownload(char, scale, allowDuplication) {
+      const filename = `${char.name}_Shimeji_custom.zip`;
       try {
-        const resp = await fetch('../' + char.zip);
-        if (!resp.ok) throw new Error('Could not fetch ZIP.');
+        if (location.protocol === 'file:') {
+          throw new Error('This page is running as file://. Use a local web server.');
+        }
+        const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+        const resp = await fetch(zipUrl, { cache: 'no-store' });
+        if (!resp.ok) throw new Error(`Could not fetch ZIP (${resp.status}) at ${zipUrl}`);
+
         const zipBlob = await resp.blob();
         const zip = await JSZip.loadAsync(zipBlob);
 
-        // Locate configuration file
-        let configFile = zip.file('conf/設定.properties') || zip.file('conf/Actions.properties');
-        if (!configFile) {
-          const confs = Object.keys(zip.files).filter(f => f.startsWith('conf/') && f.endsWith('.properties'));
-          if (confs.length) configFile = zip.file(confs[0]);
+        const allPaths = Object.keys(zip.files);
+        let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
+        if (!configPath) {
+          configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
         }
+        const configFile = configPath ? zip.file(configPath) : null;
 
         if (configFile) {
           let text = await configFile.async('text');
-          text = setOrReplace(text, 'OnScreenCount', count.toString());
+          text = setOrReplace(text, 'OnScreenCount', '1');
           text = setOrReplace(text, 'Scale', scale.toFixed(1));
+          // NOTE: Shimeji-ee has no documented key that blocks the in-app
+          // right-click "Call Another" option, so this flag is written for
+          // reference only and won't itself prevent manual duplication.
+          text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
           zip.file(configFile.name, text);
+        } else {
+          console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
         }
 
         const newZip = await zip.generateAsync({ type: 'blob' });
-        const url = URL.createObjectURL(newZip);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${char.name}_Shimeji_custom.zip`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+        triggerDownload(newZip, filename);
       } catch (err) {
-        alert('Error generating ZIP: ' + err.message);
+        console.error('ZIP generation failed:', err);
+        try {
+          const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+          triggerDownload(zipUrl, `${char.name}_Shimeji.zip`);
+          alert('Custom edit failed, downloaded original ZIP instead.');
+        } catch (fallbackErr) {
+          alert('Error generating ZIP: ' + err.message);
+        }
       }
     }
 
@@ -289,7 +613,6 @@
       return updated.join('\n');
     }
 
-    // ========== FLOATING SYMBOLS ==========
     (function renderSymbols() {
       const container = document.getElementById('symbols-container');
       container.innerHTML = '';
@@ -307,10 +630,32 @@
               opacity:${sym.opacity};
               pointer-events:none;
               user-select:none;
+              animation-duration:${6 + Math.random() * 6}s;
+              animation-delay:${(Math.random() * 5).toFixed(2)}s;
             `;
             container.appendChild(span);
           }
         });
+      }
+    })();
+
+    // ========== DRIFTING FEATHERS ==========
+    (function renderFeathers() {
+      const layer = document.getElementById('featherLayer');
+      const FEATHER_COUNT = 8;
+      for (let i = 0; i < FEATHER_COUNT; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'feather';
+        wrapper.style.left = `${Math.random() * 95}%`;
+        wrapper.style.animationDuration = `${14 + Math.random() * 10}s`;
+        wrapper.style.animationDelay = `${(Math.random() * -20).toFixed(1)}s`;
+        wrapper.innerHTML = `
+          <svg width="${13 + Math.random() * 9}" height="${26 + Math.random() * 12}" viewBox="0 0 20 40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10,0 C2,10 2,28 10,40 C18,28 18,10 10,0 Z" fill="var(--slate)" stroke="var(--mainpink)" stroke-width="1"/>
+            <line x1="10" y1="2" x2="10" y2="38" stroke="var(--mainpink)" stroke-width="0.6" opacity="0.6"/>
+          </svg>
+        `;
+        layer.appendChild(wrapper);
       }
     })();
   </script>
