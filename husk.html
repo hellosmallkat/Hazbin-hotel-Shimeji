@@ -287,7 +287,7 @@
       filter: brightness(1.08);
     }
 
-    /* ===== Bottom decoration: fanned cards, wings, a tumbler of scotch ===== */
+    /* ===== Bottom decoration Bar back ===== */
     .finale-banner {
       width: 100%;
       height: 150px;
@@ -317,6 +317,129 @@
       75%  { transform: translate(8px, -12px) rotate(3deg); }
       100% { transform: translate(0, 0) rotate(0deg); }
     }
+     /*Spinning coin strip  */
+    .coin-strip {
+      width: 100%;
+      height: 80px;
+      margin: 0.5rem 0 .5rem 0;
+      overflow: hidden;
+    }
+    .coin-strip svg { width: 100%; height: 100%; display: block; }
+    .coin-spin {
+      animation: coin-flip 2.4s linear infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    .coin-spin > circle:first-of-type {
+      stroke: #9e1b26;
+      stroke-dasharray: 18 10;
+    }
+    .coin-spin > circle.coin-ring-black {
+      stroke: #111111;
+      stroke-dasharray: 18 10;
+      stroke-dashoffset: 18;
+    }
+    @keyframes coin-flip {
+      0%   { transform: scaleX(1) rotate(0deg); }
+      50%  { transform: scaleX(0.05) rotate(0deg); }
+      100% { transform: scaleX(1) rotate(0deg); }
+    }
+    @keyframes coin-ring-color {
+      0%, 100% { stroke: #9e1b26; }
+      50% { stroke: #111111; }
+    }
+    @keyframes coin-ring-color-alt {
+      0%, 100% { stroke: #111111; }
+      50% { stroke: #9e1b26; }
+    }
+       .deck-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      border-top: 2px dashed rgba(201,162,74,0.25);
+    }
+    .deck-stack {
+      position: relative;
+      flex-shrink: 0;
+      width: 70px;
+      height: 92px;
+    }
+    .deck-card {
+      position: absolute;
+      width: 62px;
+      height: 84px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.95), rgba(236,228,216,0.95));
+      border: 2px solid #0d0a08;
+      border-radius: 6px;
+      box-shadow:
+        0 3px 8px rgba(0,0,0,0.5),
+        inset 0 0 0 1px rgba(201,162,74,0.35),
+        inset 0 0 16px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .deck-card::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      border: 1px solid rgba(158,27,38,0.3);
+      border-radius: 3px;
+      pointer-events: none;
+    }
+    .deck-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.45) 0%, transparent 35%),
+        linear-gradient(315deg, rgba(0,0,0,0.06) 0%, transparent 30%);
+      pointer-events: none;
+    }
+    .deck-card:nth-child(1) { top: 8px; left: 6px; transform: rotate(-8deg); }
+    .deck-card:nth-child(2) { top: 4px; left: 3px; transform: rotate(-2deg); }
+    .deck-card:nth-child(3) { top: 0; left: 0; transform: rotate(4deg); }
+    .deck-card-rank,
+    .deck-card-suit {
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      line-height: 1;
+      font-weight: 900;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+      z-index: 1;
+    }
+    .deck-card-rank {
+      top: 6px;
+      left: 7px;
+      font-size: 1rem;
+      color: #111;
+    }
+    .deck-card-suit {
+      top: 22px;
+      left: 16px;
+      font-size: 1.55rem;
+      color: var(--wingred);
+    }
+    .deck-card.red .deck-card-suit,
+    .deck-card.red .deck-card-rank { color: var(--wingred); }
+    .deck-card.black .deck-card-suit,
+    .deck-card.black .deck-card-rank { color: #111; }
+    .deck-card.bottom .deck-card-rank,
+    .deck-card.bottom .deck-card-suit {
+      transform: rotate(180deg);
+      top: auto;
+      left: auto;
+      right: 7px;
+      bottom: 6px;
+    }
+    .deck-card.bottom .deck-card-suit { right: 16px; bottom: 22px; }
+    .deck-note {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -326,171 +449,164 @@
     <a href="index.html" class="back-link">Back to the Hotel</a>
 
     <!-- Rotating coin strip -->
-    <div class="coin-strip" aria-hidden="true">
-      <svg viewBox="0 0 2800 120" xmlns="http://www.w3.org/2000/svg">
-        <!-- Coin 1 -->
-        <g class="coin" transform="translate(70, 60)">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+ <div class="coin-strip" aria-hidden="true">
+        <svg viewBox="0 0 2800 120" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(70, 60)">
+          <g class="coin-spin" style="animation-delay: 0.0s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <!-- <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="12"/> -->
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 2 -->
-        <g class="coin" transform="translate(210, 60)" style="animation-delay: 0.05s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(210, 60)">
+          <g class="coin-spin" style="animation-delay: 0.05s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+            <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 3 -->
-        <g class="coin" transform="translate(350, 60)" style="animation-delay: 0.1s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(350, 60)">
+          <g class="coin-spin" style="animation-delay: 0.1s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 4 -->
-        <g class="coin" transform="translate(490, 60)" style="animation-delay: 0.15s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(490, 60)">
+          <g class="coin-spin" style="animation-delay: 0.15s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+            <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 5 -->
-        <g class="coin" transform="translate(630, 60)" style="animation-delay: 0.2s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(630, 60)">
+          <g class="coin-spin" style="animation-delay: 0.2s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 6 -->
-        <g class="coin" transform="translate(770, 60)" style="animation-delay: 0.25s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(770, 60)">
+          <g class="coin-spin" style="animation-delay: 0.25s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 7 -->
-        <g class="coin" transform="translate(910, 60)" style="animation-delay: 0.3s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(910, 60)">
+          <g class="coin-spin" style="animation-delay: 0.3s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 8 -->
-        <g class="coin" transform="translate(1050, 60)" style="animation-delay: 0.35s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(1050, 60)">
+          <g class="coin-spin" style="animation-delay: 0.35s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 9 -->
-        <g class="coin" transform="translate(1190, 60)" style="animation-delay: 0.4s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(1190, 60)">
+          <g class="coin-spin" style="animation-delay: 0.4s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 10 -->
-        <g class="coin" transform="translate(1330, 60)" style="animation-delay: 0.45s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(1330, 60)">
+          <g class="coin-spin" style="animation-delay: 0.45s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 11 -->
-        <g class="coin" transform="translate(1470, 60)" style="animation-delay: 0.5s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(1470, 60)">
+          <g class="coin-spin" style="animation-delay: 0.5s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 12 -->
-        <g class="coin" transform="translate(1610, 60)" style="animation-delay: 0.55s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(1610, 60)">
+          <g class="coin-spin" style="animation-delay: 0.55s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 13 -->
-        <g class="coin" transform="translate(1750, 60)" style="animation-delay: 0.6s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(1750, 60)">
+          <g class="coin-spin" style="animation-delay: 0.6s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 14 -->
-        <g class="coin" transform="translate(1890, 60)" style="animation-delay: 0.65s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(1890, 60)">
+          <g class="coin-spin" style="animation-delay: 0.65s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 15 -->
-        <g class="coin" transform="translate(2030, 60)" style="animation-delay: 0.7s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(2030, 60)">
+          <g class="coin-spin" style="animation-delay: 0.7s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 16 -->
-        <g class="coin" transform="translate(2170, 60)" style="animation-delay: 0.75s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(2170, 60)">
+          <g class="coin-spin" style="animation-delay: 0.75s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 17 -->
-        <g class="coin" transform="translate(2310, 60)" style="animation-delay: 0.8s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(2310, 60)">
+          <g class="coin-spin" style="animation-delay: 0.8s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 18 -->
-        <g class="coin" transform="translate(2450, 60)" style="animation-delay: 0.85s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(2450, 60)">
+          <g class="coin-spin" style="animation-delay: 0.85s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 19 -->
-        <g class="coin" transform="translate(2590, 60)" style="animation-delay: 0.9s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(2590, 60)">
+          <g class="coin-spin" style="animation-delay: 0.9s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-        <!-- Coin 20 -->
-        <g class="coin" transform="translate(2730, 60)" style="animation-delay: 0.95s;">
-          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
-          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        <g transform="translate(2730, 60)">
+          <g class="coin-spin" style="animation-delay: 0.95s;">
+            <circle cx="0" cy="0" r="50" fill="var(--cardwhite)" stroke-width="15"/>
+              <circle cx="0" cy="0" r="50" fill="none" class="coin-ring-black" stroke-width="15"/>
+            <text x="-27" y="25" font-size="90" font-weight="bold" fill="#F0AF5A">&#9829;</text>
+          </g>
         </g>
-      </svg>
-    </div>
+        </svg>
+      </div>
 
     <div class="title-wrap">
-      <svg class="hat-guard" viewBox="0 0 520 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- Casino Chip 1 (0° - Face on) -->
-        <circle cx="30" cy="50" r="20" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5"/>
-        <circle cx="30" cy="50" r="17" fill="none" stroke="var(--gold)" stroke-width="1"/>
-        <text x="25" y="55" font-size="16" font-weight="bold" fill="white">♥</text>
-        
-        <!-- Casino Chip 2 (15° angle) -->
-        <ellipse cx="100" cy="50" rx="20" ry="8" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5" transform="rotate(-15 100 50)"/>
-        <ellipse cx="100" cy="50" rx="17" ry="5" fill="none" stroke="var(--gold)" stroke-width="1" transform="rotate(-15 100 50)"/>
-        <text x="95" y="55" font-size="14" font-weight="bold" fill="white" transform="rotate(-15 100 50)">♥</text>
-        
-        <!-- Casino Chip 3 (30° angle) -->
-        <ellipse cx="170" cy="50" rx="20" ry="5" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5" transform="rotate(-30 170 50)"/>
-        <ellipse cx="170" cy="50" rx="17" ry="3" fill="none" stroke="var(--gold)" stroke-width="1" transform="rotate(-30 170 50)"/>
-        <text x="167" y="52" font-size="12" font-weight="bold" fill="white" transform="rotate(-30 170 50)">♥</text>
-        
-        <!-- Casino Chip 4 (45° angle - Side view) -->
-        <rect x="230" y="30" width="40" height="40" rx="4" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5"/>
-        <rect x="235" y="35" width="30" height="30" rx="2" fill="none" stroke="var(--gold)" stroke-width="1"/>
-        <text x="248" y="57" font-size="14" font-weight="bold" fill="white">♥</text>
-        
-        <!-- Casino Chip 5 (30° angle - other side) -->
-        <ellipse cx="310" cy="50" rx="20" ry="5" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5" transform="rotate(30 310 50)"/>
-        <ellipse cx="310" cy="50" rx="17" ry="3" fill="none" stroke="var(--gold)" stroke-width="1" transform="rotate(30 310 50)"/>
-        <text x="307" y="52" font-size="12" font-weight="bold" fill="white" transform="rotate(30 310 50)">♥</text>
-        
-        <!-- Casino Chip 6 (15° angle - other side) -->
-        <ellipse cx="380" cy="50" rx="20" ry="8" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5" transform="rotate(15 380 50)"/>
-        <ellipse cx="380" cy="50" rx="17" ry="5" fill="none" stroke="var(--gold)" stroke-width="1" transform="rotate(15 380 50)"/>
-        <text x="375" y="55" font-size="14" font-weight="bold" fill="white" transform="rotate(15 380 50)">♥</text>
-        
-        <!-- Casino Chip 7 (0° - Face on) -->
-        <circle cx="450" cy="50" r="20" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5"/>
-        <circle cx="450" cy="50" r="17" fill="none" stroke="var(--gold)" stroke-width="1"/>
-        <text x="445" y="55" font-size="16" font-weight="bold" fill="white">♥</text>
-      </svg>
-      <h1 class="room-title">Husk</h1>
+           <div class="deck-row">
+        <div class="deck-stack">
+
+          <div class="deck-card"><span class="deck-card-suit">♥</span></div>
+          <div class="deck-card"><span class="deck-card-suit">♠</span></div>
+        <div class="deck-card"><span class="deck-card-suit">H</span></div>
+        </div>
+      
     </div>
 
+        <h1 class="room-title">Husk</h1>
     <div style="text-align:center;">
       <span class="mood-badge">♠ Not Paid Enough For This ♠</span>
     </div>
