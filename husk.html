@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Husk - Hazbin Hotel</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CHARACTER-SPECIFIC THEME ===== */
+    /* Husk's canon signature palette */
+    :root {
+      --furbrown: #5a463c;   /* muted brown-grey fur */
+      --furgrey: #3a3430;    /* darker fur shadow */
+      --wingred: #9e1b26;    /* wings, main red */
+      --crimson: #c41e3a;    /* bowtie, hat band */
+      --gold: #c9a24a;       /* hat button, dim gold accent */
+      --cardwhite: #e8e0d5;  /* card suit markings, aged paper */
+
+      --accent: var(--wingred);
+      --accent-glow: rgba(158,27,38,0.4);
+      --text: #cbbfae;
+      --heading: var(--cardwhite);
+      --button-bg: linear-gradient(45deg, #1a1512, var(--wingred));
+      --card-bg: rgba(20,17,15,0.92);
+      --bg-solid: #14100d;
+      --static-line: rgba(158,27,38,0.05);
+    }
+
+    body {
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.2px;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 80% 15%, rgba(158,27,38,0.14) 0%, transparent 42%),
+        radial-gradient(circle at 15% 85%, rgba(90,70,60,0.25) 0%, transparent 45%),
+        radial-gradient(circle at 50% 45%, #211a16 0%, #1a1512 55%, var(--bg-solid) 100%),
+        repeating-linear-gradient(0deg, var(--static-line) 0px, var(--static-line) 1px, transparent 1px, transparent 3px);
+      background-color: var(--bg-solid);
+      color: var(--text);
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at 50% 40%, transparent 40%, rgba(0,0,0,0.6) 100%);
+      mix-blend-mode: multiply;
+    }
+
+    #symbols-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .room-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      transition: color 0.3s;
+    }
+
+    /* ===== Flickering neon bar sign, tired dive-bar energy ===== */
+    .bar-sign-strip {
+      width: 100%;
+      height: 34px;
+      margin: 0.25rem 0 1.2rem 0;
+      text-align: center;
+    }
+    .bar-sign-strip svg { height: 100%; display: inline-block; }
+    .neon-letter { animation: neon-tired-flicker 5s infinite; }
+    .neon-letter:nth-child(2) { animation-delay: 0.6s; }
+    .neon-letter:nth-child(3) { animation-delay: 1.3s; }
+    @keyframes neon-tired-flicker {
+      0%, 88%, 100% { opacity: 1; }
+      90% { opacity: 0.3; }
+      92% { opacity: 0.9; }
+      94% { opacity: 0.4; }
+    }
+
+    /* ===== Worn accessory - his top hat, tilted and a little dim ===== */
+    .title-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0.5rem 0 0.6rem 0;
+    }
+    .hat-guard {
+      width: 140px;
+      height: 80px;
+      margin-bottom: -18px;
+      opacity: 0.9;
+      pointer-events: none;
+      transform: rotate(-8deg);
+      animation: hat-glow 4s ease-in-out infinite;
+    }
+    @keyframes hat-glow {
+      0%, 100% { filter: drop-shadow(0 0 4px rgba(196,30,58,0.35)) drop-shadow(0 0 8px rgba(201,162,74,0.3)); }
+      50%      { filter: drop-shadow(0 0 8px rgba(196,30,58,0.55)) drop-shadow(0 0 14px rgba(201,162,74,0.5)); }
+    }
+    .title-wrap .room-title { position: relative; margin: 0; }
+
+    .room-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.1rem;
+      font-weight: 900;
+      margin-bottom: 0.4rem;
+      color: var(--heading);
+      text-align: center;
+      -webkit-text-stroke: 2px #0d0a08;
+      text-stroke: 2px #0d0a08;
+      text-shadow:
+        3px 3px 0 #0d0a08,
+        0 0 18px var(--wingred),
+        0 0 34px rgba(158,27,38,0.4);
+      letter-spacing: 1px;
+    }
+
+    /* ===== Tired badge - done with everyone's nonsense ===== */
+    .mood-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.6rem 0 1.2rem 0;
+      padding: 0.5rem 1.4rem;
+      border: 2px solid var(--gold);
+      outline: 1px solid var(--wingred);
+      outline-offset: -5px;
+      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--cardwhite);
+      background: rgba(20,17,15,0.8);
+      box-shadow: 0 0 10px rgba(201,162,74,0.3);
+      vertical-align: middle;
+    }
+
+    .preview-wrapper {
+      display: inline-block;
+      overflow: hidden;
+      clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% calc(100% - 22px), calc(100% - 22px) 100%, 22px 100%, 0 calc(100% - 22px), 0 22px);
+      max-width: 450px;
+      margin: 1rem 0 2.5rem 0;
+      box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 40px var(--accent-glow), 0 0 20px rgba(201,162,74,0.35) inset;
+      border: 3px solid var(--accent);
+      outline: 1px solid var(--gold);
+      outline-offset: -8px;
+    }
+    .preview-wrapper img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform 0.2s ease-out;
+      transform-origin: top left;
+    }
+
+    .vibe-section {
+      background: rgba(20,17,15,0.88);
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      outline: 1px solid var(--gold);
+      outline-offset: -7px;
+      clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8), 0 0 16px rgba(201,162,74,0.25) inset;
+      position: relative;
+      overflow: hidden;
+    }
+    .vibe-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      margin-bottom: 1rem;
+      color: var(--cardwhite);
+      text-shadow: 0 0 10px rgba(201,162,74,0.25);
+    }
+    .vibe-desc {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    /* ===== A worn deck of cards, instead of a photo - what he trusts more than people ===== */
+    .deck-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      border-top: 2px dashed rgba(201,162,74,0.25);
+    }
+    .deck-stack {
+      position: relative;
+      flex-shrink: 0;
+      width: 70px;
+      height: 92px;
+    }
+    .deck-card {
+      position: absolute;
+      width: 62px;
+      height: 84px;
+      background: var(--cardwhite);
+      border: 2px solid #0d0a08;
+      border-radius: 4px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+    }
+    .deck-card:nth-child(1) { top: 8px; left: 6px; transform: rotate(-8deg); }
+    .deck-card:nth-child(2) { top: 4px; left: 3px; transform: rotate(-2deg); }
+    .deck-card:nth-child(3) { top: 0; left: 0; transform: rotate(4deg); }
+    .deck-card-suit {
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      font-size: 1.1rem;
+      color: var(--wingred);
+      font-weight: 700;
+    }
+    .deck-note {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    .control-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      outline: 1px solid var(--gold);
+      outline-offset: -8px;
+      clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 18px, 100% calc(100% - 18px), calc(100% - 18px) 100%, 18px 100%, 0 calc(100% - 18px), 0 18px);
+      padding: 2.5rem;
+      box-shadow: 0 0 35px rgba(0,0,0,0.6);
+    }
+    .slider-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: center;
+      margin: 1.5rem 0;
+    }
+    .slider-item label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-family: 'Oswald', sans-serif;
+      color: var(--cardwhite);
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+    }
+    input[type="range"] {
+      width: 240px;
+      height: 8px;
+      accent-color: var(--wingred);
+      border-radius: 4px;
+    }
+    .toggle-group { display: flex; gap: 0.75rem; }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover { opacity: 0.85; }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .summon-button {
+      display: inline-block;
+      padding: 1.1rem 3.2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      transition: all 0.3s;
+      margin-top: 1.5rem;
+      background: var(--button-bg);
+      color: #fff;
+      border: 3px solid var(--gold);
+      outline: 1px solid var(--wingred);
+      outline-offset: -6px;
+      box-shadow: 0 0 15px var(--accent-glow);
+      text-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+    .summon-button:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 26px var(--accent-glow);
+      filter: brightness(1.08);
+    }
+
+    /* ===== Bottom decoration: fanned cards, wings, a tumbler of scotch ===== */
+    .finale-banner {
+      width: 100%;
+      height: 150px;
+      margin-top: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .finale-banner svg { width: 100%; height: 100%; display: block; }
+    .twinkle { animation: twinkle-glow 3s ease-in-out infinite; }
+    .twinkle:nth-child(2) { animation-delay: 0.7s; }
+    @keyframes twinkle-glow {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.85; }
+    }
+
+    .floating-symbol {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      animation: drift-float 10s ease-in-out infinite;
+    }
+    @keyframes drift-float {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(6px, -12px) rotate(3deg); }
+      50%  { transform: translate(-5px, -22px) rotate(-2deg); }
+      75%  { transform: translate(8px, -12px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="symbols-container"></div>
+
+  <div class="room-container">
+    <a href="index.html" class="back-link">Back to the Hotel</a>
+
+    <!-- Rotating coin strip -->
+    <div class="coin-strip" aria-hidden="true">
+      <svg viewBox="0 0 2800 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- Coin 1 -->
+        <g class="coin" transform="translate(70, 60)">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 2 -->
+        <g class="coin" transform="translate(210, 60)" style="animation-delay: 0.05s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 3 -->
+        <g class="coin" transform="translate(350, 60)" style="animation-delay: 0.1s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 4 -->
+        <g class="coin" transform="translate(490, 60)" style="animation-delay: 0.15s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 5 -->
+        <g class="coin" transform="translate(630, 60)" style="animation-delay: 0.2s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 6 -->
+        <g class="coin" transform="translate(770, 60)" style="animation-delay: 0.25s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 7 -->
+        <g class="coin" transform="translate(910, 60)" style="animation-delay: 0.3s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 8 -->
+        <g class="coin" transform="translate(1050, 60)" style="animation-delay: 0.35s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 9 -->
+        <g class="coin" transform="translate(1190, 60)" style="animation-delay: 0.4s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 10 -->
+        <g class="coin" transform="translate(1330, 60)" style="animation-delay: 0.45s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 11 -->
+        <g class="coin" transform="translate(1470, 60)" style="animation-delay: 0.5s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 12 -->
+        <g class="coin" transform="translate(1610, 60)" style="animation-delay: 0.55s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 13 -->
+        <g class="coin" transform="translate(1750, 60)" style="animation-delay: 0.6s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 14 -->
+        <g class="coin" transform="translate(1890, 60)" style="animation-delay: 0.65s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 15 -->
+        <g class="coin" transform="translate(2030, 60)" style="animation-delay: 0.7s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 16 -->
+        <g class="coin" transform="translate(2170, 60)" style="animation-delay: 0.75s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 17 -->
+        <g class="coin" transform="translate(2310, 60)" style="animation-delay: 0.8s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 18 -->
+        <g class="coin" transform="translate(2450, 60)" style="animation-delay: 0.85s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 19 -->
+        <g class="coin" transform="translate(2590, 60)" style="animation-delay: 0.9s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+        <!-- Coin 20 -->
+        <g class="coin" transform="translate(2730, 60)" style="animation-delay: 0.95s;">
+          <circle cx="0" cy="0" r="50" fill="var(--crimson)" stroke="var(--gold)" stroke-width="3"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          <text x="-15" y="10" font-size="40" font-weight="bold" fill="var(--cardwhite)">♥</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="title-wrap">
+      <svg class="hat-guard" viewBox="0 0 520 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Casino Chip 1 (0° - Face on) -->
+        <circle cx="30" cy="50" r="20" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5"/>
+        <circle cx="30" cy="50" r="17" fill="none" stroke="var(--gold)" stroke-width="1"/>
+        <text x="25" y="55" font-size="16" font-weight="bold" fill="white">♥</text>
+        
+        <!-- Casino Chip 2 (15° angle) -->
+        <ellipse cx="100" cy="50" rx="20" ry="8" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5" transform="rotate(-15 100 50)"/>
+        <ellipse cx="100" cy="50" rx="17" ry="5" fill="none" stroke="var(--gold)" stroke-width="1" transform="rotate(-15 100 50)"/>
+        <text x="95" y="55" font-size="14" font-weight="bold" fill="white" transform="rotate(-15 100 50)">♥</text>
+        
+        <!-- Casino Chip 3 (30° angle) -->
+        <ellipse cx="170" cy="50" rx="20" ry="5" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5" transform="rotate(-30 170 50)"/>
+        <ellipse cx="170" cy="50" rx="17" ry="3" fill="none" stroke="var(--gold)" stroke-width="1" transform="rotate(-30 170 50)"/>
+        <text x="167" y="52" font-size="12" font-weight="bold" fill="white" transform="rotate(-30 170 50)">♥</text>
+        
+        <!-- Casino Chip 4 (45° angle - Side view) -->
+        <rect x="230" y="30" width="40" height="40" rx="4" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5"/>
+        <rect x="235" y="35" width="30" height="30" rx="2" fill="none" stroke="var(--gold)" stroke-width="1"/>
+        <text x="248" y="57" font-size="14" font-weight="bold" fill="white">♥</text>
+        
+        <!-- Casino Chip 5 (30° angle - other side) -->
+        <ellipse cx="310" cy="50" rx="20" ry="5" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5" transform="rotate(30 310 50)"/>
+        <ellipse cx="310" cy="50" rx="17" ry="3" fill="none" stroke="var(--gold)" stroke-width="1" transform="rotate(30 310 50)"/>
+        <text x="307" y="52" font-size="12" font-weight="bold" fill="white" transform="rotate(30 310 50)">♥</text>
+        
+        <!-- Casino Chip 6 (15° angle - other side) -->
+        <ellipse cx="380" cy="50" rx="20" ry="8" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5" transform="rotate(15 380 50)"/>
+        <ellipse cx="380" cy="50" rx="17" ry="5" fill="none" stroke="var(--gold)" stroke-width="1" transform="rotate(15 380 50)"/>
+        <text x="375" y="55" font-size="14" font-weight="bold" fill="white" transform="rotate(15 380 50)">♥</text>
+        
+        <!-- Casino Chip 7 (0° - Face on) -->
+        <circle cx="450" cy="50" r="20" fill="var(--crimson)" stroke="var(--gold)" stroke-width="2.5"/>
+        <circle cx="450" cy="50" r="17" fill="none" stroke="var(--gold)" stroke-width="1"/>
+        <text x="445" y="55" font-size="16" font-weight="bold" fill="white">♥</text>
+      </svg>
+      <h1 class="room-title">Husk</h1>
+    </div>
+
+    <div style="text-align:center;">
+      <span class="mood-badge">♠ Not Paid Enough For This ♠</span>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="preview-wrapper" id="previewWrapper">
+        <img id="charPreview" src="images/husk.png" alt="Husk Preview">
+      </div>
+    </div>
+
+    <!-- Vibe section (quote + description) -->
+    <div class="vibe-section">
+      <p class="vibe-quote">Kid, I've seen worse hands than this. Doesn't mean I like dealing 'em.</p>
+      <p class="vibe-desc">Husk. Bartender, receptionist, whatever else needs doing around here that nobody wants to do. Used to be somebody, once - ran a table nobody could beat, until I bet the wrong thing to the wrong demon. Now I pour drinks and keep my mouth shut, mostly. I've got a good read on people - too good, honestly - so don't bother lying to me, I'll know before you finish the sentence. Just don't expect me to care out loud about it.</p>
+
+      <div class="deck-row">
+        <div class="deck-stack">
+          <div class="deck-card"><span class="deck-card-suit">♣</span></div>
+          <div class="deck-card"><span class="deck-card-suit">♥</span></div>
+          <div class="deck-card"><span class="deck-card-suit">♠</span></div>
+        </div>
+        <p class="deck-note">This deck's older than most of the sinners in this hotel. Cards don't lie to you. People do. That's why I trust the deck more.</p>
+      </div>
+    </div>
+
+    <!-- Customisation controls -->
+    <div class="control-panel">
+      <div class="slider-group">
+        <div class="slider-item">
+          <label>Size: <span id="sizeValue">1.0</span></label>
+          <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
+        </div>
+        <div class="slider-item">
+          <label>Allow Duplication?</label>
+          <div class="toggle-group" id="duplicateToggle">
+            <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
+            <button type="button" class="toggle-btn" data-value="no">No</button>
+          </div>
+        </div>
+      </div>
+      <button class="summon-button" id="summonBtn">Pour One Out</button>
+      <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
+    </div>
+
+    <!-- Bottom decoration: fanned cards, wings, a tumbler of scotch -->
+    <div class="finale-banner" aria-hidden="true">
+      <svg viewBox="0 0 900 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- upper shelf line -->
+        <rect x="0" y="20" width="900" height="4" fill="#3a2e22" opacity="0.8"/>
+        <!-- lower shelf line / bar counter -->
+        <rect x="0" y="128" width="900" height="5" fill="#3a2e22" opacity="0.9"/>
+
+        <!-- dim string lights along the upper shelf edge -->
+        <g fill="var(--gold)">
+          <circle class="twinkle" cx="40" cy="16" r="2.5"/>
+          <circle class="twinkle" cx="140" cy="16" r="2.5"/>
+          <circle class="twinkle" cx="240" cy="16" r="2.5"/>
+          <circle class="twinkle" cx="340" cy="16" r="2.5"/>
+          <circle class="twinkle" cx="440" cy="16" r="2.5"/>
+          <circle class="twinkle" cx="540" cy="16" r="2.5"/>
+          <circle class="twinkle" cx="640" cy="16" r="2.5"/>
+          <circle class="twinkle" cx="740" cy="16" r="2.5"/>
+          <circle class="twinkle" cx="840" cy="16" r="2.5"/>
+        </g>
+
+        <!-- hanging glowing lights along the top -->
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <g stroke="var(--gold)" stroke-width="2" fill="var(--gold)" opacity="0.9" filter="url(#glow)">
+          <line x1="75" y1="19" x2="75" y2="35" stroke="var(--gold)" stroke-width="1" opacity="0.6"/>
+          <circle cx="75" cy="40" r="3.5"/>
+          <line x1="310" y1="19" x2="310" y2="35" stroke="var(--gold)" stroke-width="1" opacity="0.6"/>
+          <circle cx="310" cy="40" r="3.5"/>
+          <line x1="585" y1="19" x2="585" y2="35" stroke="var(--gold)" stroke-width="1" opacity="0.6"/>
+          <circle cx="585" cy="40" r="3.5"/>
+          <line x1="800" y1="19" x2="800" y2="35" stroke="var(--gold)" stroke-width="1" opacity="0.6"/>
+          <circle cx="800" cy="40" r="3.5"/>
+        </g>
+
+        <!-- back row of bottles, varied shapes/heights, muted (expanded with overlaps) -->
+        <g opacity="0.75">
+          <rect x="20" y="62" width="18" height="58" rx="2" fill="#4a3020"/>
+          <rect x="24" y="54" width="8" height="12" fill="#4a3020"/>
+
+          <rect x="48" y="66" width="14" height="54" rx="2" fill="#5a3b2d"/>
+          <rect x="52" y="58" width="6" height="10" fill="#5a3b2d"/>
+
+          <!-- overlapping bottles -->
+          <rect x="70" y="60" width="20" height="60" rx="3" fill="#6b1f28"/>
+          <rect x="76" y="50" width="8" height="12" fill="#6b1f28"/>
+          <rect x="82" y="72" width="12" height="40" rx="2" fill="#8b4b3a" opacity="0.9"/>
+
+          <rect x="110" y="64" width="16" height="56" rx="2" fill="#3a2a2a"/>
+          <rect x="114" y="54" width="8" height="12" fill="#3a2a2a"/>
+
+          <rect x="320" y="62" width="14" height="58" rx="3" fill="#274136"/>
+          <rect x="324" y="52" width="6" height="12" fill="#274136"/>
+
+          <rect x="470" y="64" width="16" height="56" rx="2" fill="#2f2a22"/>
+          <rect x="474" y="54" width="8" height="12" fill="#2f2a22"/>
+
+          <!-- small bitters clustered, overlapping each other -->
+          <rect x="720" y="72" width="12" height="44" rx="2" fill="#7a2b2b"/>
+          <rect x="728" y="66" width="8" height="10" fill="#7a2b2b"/>
+          <rect x="734" y="76" width="10" height="38" rx="2" fill="#b36b2b" opacity="0.95"/>
+
+          <rect x="810" y="66" width="17" height="54" rx="2" fill="#4a3020"/>
+          <rect x="815" y="56" width="8" height="12" fill="#4a3020"/>
+
+          <!-- extra back-row filler bottles -->
+          <rect x="150" y="68" width="12" height="50" rx="2" fill="#3c2a1c"/>
+          <rect x="154" y="60" width="5" height="10" fill="#3c2a1c"/>
+
+          <rect x="188" y="70" width="10" height="48" rx="2" fill="#5e2a2f"/>
+          <rect x="191" y="62" width="4" height="9" fill="#5e2a2f"/>
+
+          <rect x="362" y="66" width="12" height="54" rx="2" fill="#2b3038"/>
+          <rect x="365" y="56" width="5" height="11" fill="#2b3038"/>
+
+          <rect x="536" y="70" width="12" height="50" rx="2" fill="#3e2a26"/>
+          <rect x="540" y="60" width="5" height="10" fill="#3e2a26"/>
+
+          <rect x="618" y="68" width="14" height="52" rx="2" fill="#24332f"/>
+          <rect x="622" y="58" width="6" height="10" fill="#24332f"/>
+
+          <rect x="770" y="70" width="12" height="48" rx="2" fill="#4f3722"/>
+          <rect x="773" y="62" width="5" height="9" fill="#4f3722"/>
+
+          <rect x="850" y="64" width="16" height="56" rx="2" fill="#30261f"/>
+          <rect x="855" y="54" width="7" height="11" fill="#30261f"/>
+
+          <rect x="876" y="72" width="11" height="46" rx="2" fill="#6b2d24"/>
+          <rect x="879" y="64" width="5" height="9" fill="#6b2d24"/>
+
+          <!-- additional back-row filler bottles -->
+          <rect x="260" y="68" width="11" height="50" rx="2" fill="#4a2f26"/>
+          <rect x="263" y="60" width="5" height="10" fill="#4a2f26"/>
+
+          <rect x="292" y="70" width="10" height="48" rx="2" fill="#6a3a2a"/>
+          <rect x="295" y="62" width="4" height="9" fill="#6a3a2a"/>
+
+          <rect x="402" y="68" width="12" height="52" rx="2" fill="#2f3a2f"/>
+          <rect x="406" y="58" width="5" height="10" fill="#2f3a2f"/>
+
+          <rect x="438" y="70" width="10" height="48" rx="2" fill="#5b2428"/>
+          <rect x="441" y="62" width="4" height="9" fill="#5b2428"/>
+
+          <rect x="666" y="68" width="13" height="52" rx="2" fill="#3b2f24"/>
+          <rect x="670" y="58" width="5" height="10" fill="#3b2f24"/>
+
+          <rect x="696" y="72" width="10" height="46" rx="2" fill="#2b2f3e"/>
+          <rect x="699" y="64" width="4" height="9" fill="#2b2f3e"/>
+
+          <rect x="792" y="68" width="11" height="50" rx="2" fill="#5a2f20"/>
+          <rect x="795" y="60" width="5" height="10" fill="#5a2f20"/>
+
+          <rect x="832" y="70" width="10" height="48" rx="2" fill="#3a2622"/>
+          <rect x="835" y="62" width="4" height="9" fill="#3a2622"/>
+        </g>
+
+        <!-- front row of bottles, varied colors, clearer -->
+        <g>
+          <!-- amber whiskey bottle -->
+          <rect x="120" y="72" width="22" height="56" rx="3" fill="var(--gold)" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="126" y="58" width="10" height="16" fill="var(--gold)" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="122" y="90" width="18" height="14" fill="var(--cardwhite)" opacity="0.5"/>
+
+          <!-- dark rum bottle -->
+          <rect x="165" y="76" width="20" height="52" rx="3" fill="#3a2416" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="171" y="62" width="8" height="16" fill="#3a2416" stroke="#0d0a08" stroke-width="1.5"/>
+
+          <!-- red liqueur bottle -->
+          <rect x="205" y="80" width="18" height="48" rx="8" fill="var(--wingred)" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="210" y="66" width="8" height="16" fill="var(--wingred)" stroke="#0d0a08" stroke-width="1.5"/>
+
+          <!-- clear gin bottle -->
+          <rect x="245" y="74" width="20" height="54" rx="3" fill="none" stroke="var(--cardwhite)" stroke-width="1.8" opacity="0.7"/>
+          <rect x="251" y="60" width="8" height="16" fill="none" stroke="var(--cardwhite)" stroke-width="1.8" opacity="0.7"/>
+          <rect x="247" y="102" width="16" height="24" rx="2" fill="#b6d7df" opacity="0.45"/>
+
+          <!-- squat green bottle, half full -->
+          <rect x="280" y="86" width="24" height="42" rx="4" fill="#20372c" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="288" y="72" width="8" height="14" fill="#20372c" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="283" y="106" width="18" height="20" rx="2" fill="#7fb36a" opacity="0.75"/>
+
+          <!-- tall blue bottle, mostly full -->
+          <rect x="318" y="62" width="18" height="66" rx="3" fill="#1f2d4e" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="323" y="46" width="8" height="16" fill="#1f2d4e" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="321" y="74" width="12" height="52" rx="2" fill="#5a86c9" opacity="0.7"/>
+
+          <!-- short cordial bottle, nearly empty -->
+          <rect x="352" y="94" width="16" height="34" rx="3" fill="#4a1f1f" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="356" y="84" width="8" height="10" fill="#4a1f1f" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="355" y="118" width="10" height="8" rx="2" fill="#c86f53" opacity="0.8"/>
+
+          <!-- clear bottle, low fill line -->
+          <rect x="382" y="70" width="20" height="58" rx="3" fill="none" stroke="var(--cardwhite)" stroke-width="1.8" opacity="0.7"/>
+          <rect x="388" y="56" width="8" height="14" fill="none" stroke="var(--cardwhite)" stroke-width="1.8" opacity="0.7"/>
+          <rect x="385" y="114" width="14" height="12" rx="2" fill="#d8b16a" opacity="0.55"/>
+
+          <!-- medium violet bottle, three-quarters full -->
+          <rect x="418" y="76" width="18" height="52" rx="3" fill="#2b1f36" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="423" y="62" width="8" height="14" fill="#2b1f36" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="421" y="90" width="12" height="36" rx="2" fill="#8d5ca8" opacity="0.72"/>
+
+          <!-- broad amber bottle, low-mid fill -->
+          <rect x="452" y="82" width="24" height="46" rx="3" fill="#4a3018" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="460" y="68" width="8" height="14" fill="#4a3018" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="455" y="106" width="18" height="20" rx="2" fill="#cf8a3b" opacity="0.75"/>
+
+          <!-- slim dark bottle, very full -->
+          <rect x="486" y="68" width="14" height="60" rx="3" fill="#1f1a18" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="490" y="52" width="6" height="16" fill="#1f1a18" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="488" y="76" width="10" height="50" rx="2" fill="#6d2e1f" opacity="0.65"/>
+
+          <!-- short apothecary bottle, half full -->
+          <rect x="512" y="92" width="18" height="36" rx="3" fill="#2a3220" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="517" y="82" width="8" height="10" fill="#2a3220" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="515" y="110" width="12" height="16" rx="2" fill="#9aa85f" opacity="0.78"/>
+
+          <!-- tall ruby bottle, partly filled -->
+          <rect x="542" y="64" width="16" height="64" rx="3" fill="#33161d" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="546" y="48" width="8" height="16" fill="#33161d" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="544" y="98" width="12" height="28" rx="2" fill="#b94359" opacity="0.72"/>
+
+          <!-- dusty brown bottle, almost empty -->
+          <rect x="570" y="80" width="20" height="48" rx="3" fill="#3a2a20" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="576" y="66" width="8" height="14" fill="#3a2a20" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="573" y="118" width="14" height="8" rx="2" fill="#b27b4e" opacity="0.75"/>
+
+          <!-- small cobalt bottle, high fill -->
+          <rect x="600" y="90" width="14" height="38" rx="2" fill="#1a2b46" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="604" y="80" width="6" height="10" fill="#1a2b46" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="602" y="98" width="10" height="28" rx="2" fill="#4f79b8" opacity="0.75"/>
+
+          <!-- wine bottle, tall and slender -->
+          <rect x="640" y="66" width="16" height="62" rx="3" fill="#2e0f14" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="644" y="48" width="8" height="20" fill="#2e0f14" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="642" y="88" width="12" height="38" rx="2" fill="#6e2a36" opacity="0.62"/>
+
+          <!-- amber bitters, small -->
+          <rect x="680" y="90" width="12" height="38" rx="2" fill="var(--gold)" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="684" y="80" width="4" height="12" fill="var(--gold)" stroke="#0d0a08" stroke-width="1.3"/>
+
+          <!-- dark stout bottle -->
+          <rect x="720" y="78" width="18" height="50" rx="3" fill="#1e1712" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="725" y="64" width="8" height="16" fill="#1e1712" stroke="#0d0a08" stroke-width="1.5"/>
+          <rect x="722" y="92" width="14" height="34" rx="2" fill="#4f3423" opacity="0.68"/>
+
+          <!-- tiny tonic bottle, mostly empty -->
+          <rect x="750" y="94" width="12" height="34" rx="2" fill="#2a3a34" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="753" y="86" width="6" height="8" fill="#2a3a34" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="752" y="120" width="8" height="6" rx="2" fill="#95c7bb" opacity="0.75"/>
+
+          <!-- extra front-row bottles to fill the bar -->
+          <rect x="32" y="84" width="18" height="44" rx="3" fill="#3e281a" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="37" y="72" width="8" height="12" fill="#3e281a" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="35" y="108" width="12" height="18" rx="2" fill="#b67c44" opacity="0.7"/>
+
+          <rect x="88" y="88" width="14" height="40" rx="3" fill="#2d1f31" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="92" y="78" width="6" height="10" fill="#2d1f31" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="90" y="104" width="10" height="22" rx="2" fill="#8456a5" opacity="0.68"/>
+
+          <rect x="145" y="86" width="14" height="42" rx="3" fill="#2c3a2c" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="149" y="76" width="6" height="10" fill="#2c3a2c" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="147" y="108" width="10" height="18" rx="2" fill="#8fbf75" opacity="0.72"/>
+
+          <rect x="668" y="82" width="10" height="46" rx="2" fill="#3a1616" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="671" y="72" width="4" height="10" fill="#3a1616" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="670" y="100" width="6" height="26" rx="2" fill="#a63f45" opacity="0.72"/>
+
+          <rect x="772" y="86" width="14" height="42" rx="2" fill="#2b2220" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="776" y="76" width="6" height="10" fill="#2b2220" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="774" y="108" width="10" height="18" rx="2" fill="#b57e55" opacity="0.7"/>
+
+          <rect x="796" y="80" width="16" height="48" rx="3" fill="#1f2d3e" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="801" y="68" width="6" height="12" fill="#1f2d3e" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="798" y="94" width="12" height="32" rx="2" fill="#5f8abf" opacity="0.7"/>
+
+          <rect x="826" y="88" width="12" height="40" rx="2" fill="#36251c" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="829" y="78" width="6" height="10" fill="#36251c" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="828" y="112" width="8" height="14" rx="2" fill="#c28646" opacity="0.72"/>
+
+          <rect x="846" y="78" width="18" height="50" rx="3" fill="#27171e" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="851" y="64" width="8" height="14" fill="#27171e" stroke="#0d0a08" stroke-width="1.4"/>
+          <rect x="848" y="98" width="14" height="28" rx="2" fill="#7f3247" opacity="0.7"/>
+
+          <rect x="870" y="90" width="12" height="38" rx="2" fill="#2b3530" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="873" y="82" width="6" height="8" fill="#2b3530" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="872" y="114" width="8" height="12" rx="2" fill="#9bc7ba" opacity="0.7"/>
+
+          <!-- extra bottles to make the front row feel fuller -->
+          <rect x="612" y="88" width="14" height="40" rx="2" fill="#4b2a1d" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="616" y="78" width="6" height="10" fill="#4b2a1d" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="614" y="104" width="10" height="22" rx="2" fill="#b87a3d" opacity="0.72"/>
+
+          <rect x="636" y="82" width="16" height="46" rx="3" fill="#1d3a2d" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="641" y="70" width="6" height="12" fill="#1d3a2d" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="638" y="100" width="12" height="24" rx="2" fill="#6aa66d" opacity="0.7"/>
+
+          <rect x="706" y="92" width="12" height="36" rx="2" fill="#3f1d2d" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="709" y="82" width="6" height="10" fill="#3f1d2d" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="708" y="108" width="8" height="18" rx="2" fill="#b44e72" opacity="0.7"/>
+
+          <rect x="732" y="96" width="12" height="32" rx="2" fill="#2c2a31" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="735" y="86" width="6" height="10" fill="#2c2a31" stroke="#0d0a08" stroke-width="1.3"/>
+          <rect x="734" y="112" width="8" height="12" rx="2" fill="#8c6b6b" opacity="0.72"/>
+        </g>
+
+
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    // =============================================
+    //  HARDCODED CHARACTER DATA (replace each field)
+    // =============================================
+    const CHARACTER = {
+      name: "Husk",
+      zip: "downloads/HuskShimeji.zip",   // must match the exact filename on GitHub, including .zip
+      preview: "images/husk.png",
+      backgroundSymbols: [
+       { "symbol": "\u2660", "color": "#c9a24a", "size": "1.6rem", "opacity": 0.1 },
+       { "symbol": "\u2665", "color": "#9e1b26", "size": "1.4rem", "opacity": 0.1 },
+       { "symbol": "\u2663", "color": "#e8e0d5", "size": "1.3rem", "opacity": 0.08 },
+       { "symbol": "\u2666", "color": "#c41e3a", "size": "1.3rem", "opacity": 0.09 }
+      ]
+    };
+
+    // ============== FUNCTIONALITY ==============
+    const previewImg = document.getElementById('charPreview');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const sizeValue = document.getElementById('sizeValue');
+    const duplicateToggle = document.getElementById('duplicateToggle');
+    let allowDuplication = true; // defaults to "Yes"
+
+    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        allowDuplication = btn.dataset.value === 'yes';
+      });
+    });
+
+    previewImg.src = CHARACTER.preview;
+    function updatePreviewSize(scale) {
+      previewImg.style.transform = `scale(${scale})`;
+    }
+    sizeSlider.addEventListener('input', () => {
+      const val = parseFloat(sizeSlider.value).toFixed(1);
+      sizeValue.textContent = val;
+      updatePreviewSize(parseFloat(val));
+    });
+    updatePreviewSize(1.0);
+
+    document.getElementById('summonBtn').addEventListener('click', async () => {
+      const scale = parseFloat(sizeSlider.value);
+      await generateAndDownload(CHARACTER, scale, allowDuplication);
+    });
+    sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1);
+    updatePreviewSize(parseFloat(sizeSlider.value));
+
+    function triggerDownload(blobOrUrl, filename) {
+      const a = document.createElement('a');
+      if (typeof blobOrUrl === 'string') {
+        a.href = blobOrUrl;
+      } else {
+        a.href = URL.createObjectURL(blobOrUrl);
+      }
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      if (typeof blobOrUrl !== 'string') {
+        setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+      }
+    }
+
+    async function generateAndDownload(char, scale, allowDuplication) {
+      const filename = `${char.name}_Shimeji_custom.zip`;
+      try {
+        if (location.protocol === 'file:') {
+          throw new Error('This page is running as file://. Use a local web server.');
+        }
+        const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+        const resp = await fetch(zipUrl, { cache: 'no-store' });
+        if (!resp.ok) throw new Error(`Could not fetch ZIP (${resp.status}) at ${zipUrl}`);
+
+        const zipBlob = await resp.blob();
+        const zip = await JSZip.loadAsync(zipBlob);
+
+        const allPaths = Object.keys(zip.files);
+        let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
+        if (!configPath) {
+          configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
+        }
+        const configFile = configPath ? zip.file(configPath) : null;
+
+        if (configFile) {
+          let text = await configFile.async('text');
+          text = setOrReplace(text, 'OnScreenCount', '1');
+          text = setOrReplace(text, 'Scale', scale.toFixed(1));
+          // NOTE: Shimeji-ee has no documented key that blocks the in-app
+          // right-click "Call Another" option, so this flag is written for
+          // reference only and won't itself prevent manual duplication.
+          text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
+          zip.file(configFile.name, text);
+        } else {
+          console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
+        }
+
+        const newZip = await zip.generateAsync({ type: 'blob' });
+        triggerDownload(newZip, filename);
+      } catch (err) {
+        console.error('ZIP generation failed:', err);
+        try {
+          const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+          triggerDownload(zipUrl, `${char.name}_Shimeji.zip`);
+          alert('Custom edit failed, downloaded original ZIP instead.');
+        } catch (fallbackErr) {
+          alert('Error generating ZIP: ' + err.message);
+        }
+      }
+    }
+
+    function setOrReplace(text, key, val) {
+      const lines = text.split('\n');
+      let found = false;
+      const updated = lines.map(line => {
+        if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
+          found = true;
+          return `${key}=${val}`;
+        }
+        return line;
+      });
+      if (!found) updated.push(`${key}=${val}`);
+      return updated.join('\n');
+    }
+
+    (function renderSymbols() {
+      const container = document.getElementById('symbols-container');
+      container.innerHTML = '';
+      if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
+        CHARACTER.backgroundSymbols.forEach(sym => {
+          for (let i = 0; i < 8; i++) {
+            const span = document.createElement('span');
+            span.textContent = sym.symbol;
+            span.style.cssText = `
+              position:absolute;
+              left:${Math.random() * 95}%;
+              top:${Math.random() * 95}%;
+              font-size:${sym.size};
+              color:${sym.color};
+              opacity:${sym.opacity};
+              pointer-events:none;
+              user-select:none;
+              animation-duration:${6 + Math.random() * 6}s;
+              animation-delay:${(Math.random() * 5).toFixed(2)}s;
+            `;
+            container.appendChild(span);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
