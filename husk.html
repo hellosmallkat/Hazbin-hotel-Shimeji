@@ -137,7 +137,7 @@
       letter-spacing: 1px;
     }
 
-    /* ===== Tired badge - done with everyone's nonsense ===== */
+    /* Tired badge*/
     .mood-badge {
       display: inline-flex;
       align-items: center;
@@ -204,47 +204,6 @@
       color: var(--text);
     }
 
-    /* ===== A worn deck of cards, instead of a photo - what he trusts more than people ===== */
-    .deck-row {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-      margin-top: 1.4rem;
-      padding-top: 1.2rem;
-      border-top: 2px dashed rgba(201,162,74,0.25);
-    }
-    .deck-stack {
-      position: relative;
-      flex-shrink: 0;
-      width: 70px;
-      height: 92px;
-    }
-    .deck-card {
-      position: absolute;
-      width: 62px;
-      height: 84px;
-      background: var(--cardwhite);
-      border: 2px solid #0d0a08;
-      border-radius: 4px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.5);
-    }
-    .deck-card:nth-child(1) { top: 8px; left: 6px; transform: rotate(-8deg); }
-    .deck-card:nth-child(2) { top: 4px; left: 3px; transform: rotate(-2deg); }
-    .deck-card:nth-child(3) { top: 0; left: 0; transform: rotate(4deg); }
-    .deck-card-suit {
-      position: absolute;
-      top: 6px;
-      left: 8px;
-      font-size: 1.1rem;
-      color: var(--wingred);
-      font-weight: 700;
-    }
-    .deck-note {
-      font-size: 0.9rem;
-      color: var(--text);
-      opacity: 0.9;
-      line-height: 1.4;
-    }
 
     .control-panel {
       background: var(--card-bg);
@@ -547,14 +506,6 @@
       <p class="vibe-quote">Kid, I've seen worse hands than this. Doesn't mean I like dealing 'em.</p>
       <p class="vibe-desc">Husk. Bartender, receptionist, whatever else needs doing around here that nobody wants to do. Used to be somebody, once - ran a table nobody could beat, until I bet the wrong thing to the wrong demon. Now I pour drinks and keep my mouth shut, mostly. I've got a good read on people - too good, honestly - so don't bother lying to me, I'll know before you finish the sentence. Just don't expect me to care out loud about it.</p>
 
-      <div class="deck-row">
-        <div class="deck-stack">
-          <div class="deck-card"><span class="deck-card-suit">♣</span></div>
-          <div class="deck-card"><span class="deck-card-suit">♥</span></div>
-          <div class="deck-card"><span class="deck-card-suit">♠</span></div>
-        </div>
-        <p class="deck-note">This deck's older than most of the sinners in this hotel. Cards don't lie to you. People do. That's why I trust the deck more.</p>
-      </div>
     </div>
 
     <!-- Customisation controls -->
