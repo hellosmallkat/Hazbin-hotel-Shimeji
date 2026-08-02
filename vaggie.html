@@ -592,9 +592,7 @@
     </div>
 
     <script>
-        // ============================================================
         //  HARDCODED CHARACTER DATA
-        // ============================================================
         const CHARACTER = {
             name: "Vaggie",
             zip: "downloads/VaggieShimeji.zip",
@@ -607,9 +605,7 @@
             ]
         };
 
-        // ============================================================
         //  DOM REFS
-        // ============================================================
         const previewImg = document.getElementById('charPreview');
         const sizeSlider = document.getElementById('sizeSlider');
         const sizeValue = document.getElementById('sizeValue');
@@ -618,7 +614,7 @@
 
         let allowDuplication = true; // "Yes" by default
 
-        // ---- Duplication toggle ----
+        // Duplication toggle 
         duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
@@ -627,10 +623,10 @@
             });
         });
 
-        // ---- Preview image ----
+        // Preview image
         previewImg.src = CHARACTER.preview;
 
-        // ---- Size slider: updates the displayed value, but does NOT scale the preview ----
+        //  Size slider
         function updateSliderDisplay() {
             const val = parseFloat(sizeSlider.value).toFixed(1);
             sizeValue.textContent = val;
@@ -639,9 +635,9 @@
         sizeSlider.addEventListener('input', updateSliderDisplay);
         updateSliderDisplay();
 
-        // ============================================================
+
         //  DOWNLOAD LOGIC
-        // ============================================================
+
         function triggerDownload(blobOrUrl, filename) {
             const a = document.createElement('a');
             if (typeof blobOrUrl === 'string') {
@@ -732,9 +728,7 @@
             await generateAndDownload(CHARACTER, scale, allowDuplication);
         });
 
-        // ============================================================
         //  BACKGROUND SYMBOLS
-        // ============================================================
         (function renderSymbols() {
             const container = document.getElementById('symbols-container');
             container.innerHTML = '';
@@ -761,9 +755,8 @@
             }
         })();
 
-        // ============================================================
+
         //  DRIFTING FEATHERS
-        // ============================================================
         (function renderFeathers() {
             const layer = document.getElementById('featherLayer');
             const FEATHER_COUNT = 8;
