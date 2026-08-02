@@ -516,141 +516,155 @@
       ]
     };
 
-    // ============== FUNCTIONALITY ==============
-    const previewImg = document.getElementById('charPreview');
-    const sizeSlider = document.getElementById('sizeSlider');
-    const sizeValue = document.getElementById('sizeValue');
-    const duplicateToggle = document.getElementById('duplicateToggle');
-    let allowDuplication = true; // defaults to "Yes"
+//  DOM REFS
+        const previewImg = document.getElementById('charPreview');
+        const sizeSlider = document.getElementById('sizeSlider');
+        const sizeValue = document.getElementById('sizeValue');
+        const duplicateToggle = document.getElementById('duplicateToggle');
+        const summonBtn = document.getElementById('summonBtn');
 
-    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        allowDuplication = btn.dataset.value === 'yes';
-      });
-    });
+        let allowDuplication = true; // "Yes" by default
 
-    previewImg.src = CHARACTER.preview;
-    function updatePreviewSize(scale) {
-      previewImg.style.transform = `scale(${scale})`;
-    }
-    sizeSlider.addEventListener('input', () => {
-      const val = parseFloat(sizeSlider.value).toFixed(1);
-      sizeValue.textContent = val;
-      updatePreviewSize(parseFloat(val));
-    });
-    updatePreviewSize(1.0);
-
-    document.getElementById('summonBtn').addEventListener('click', async () => {
-      const scale = parseFloat(sizeSlider.value);
-      await generateAndDownload(CHARACTER, scale, allowDuplication);
-    });
-    sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1);
-    updatePreviewSize(parseFloat(sizeSlider.value));
-
-    function triggerDownload(blobOrUrl, filename) {
-      const a = document.createElement('a');
-      if (typeof blobOrUrl === 'string') {
-        a.href = blobOrUrl;
-      } else {
-        a.href = URL.createObjectURL(blobOrUrl);
-      }
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      if (typeof blobOrUrl !== 'string') {
-        setTimeout(() => URL.revokeObjectURL(a.href), 1500);
-      }
-    }
-
-    async function generateAndDownload(char, scale, allowDuplication) {
-      const filename = `${char.name}_Shimeji_custom.zip`;
-      try {
-        if (location.protocol === 'file:') {
-          throw new Error('This page is running as file://. Use a local web server.');
-        }
-        const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
-        const resp = await fetch(zipUrl, { cache: 'no-store' });
-        if (!resp.ok) throw new Error(`Could not fetch ZIP (${resp.status}) at ${zipUrl}`);
-
-        const zipBlob = await resp.blob();
-        const zip = await JSZip.loadAsync(zipBlob);
-
-        const allPaths = Object.keys(zip.files);
-        let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
-        if (!configPath) {
-          configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
-        }
-        const configFile = configPath ? zip.file(configPath) : null;
-
-        if (configFile) {
-          let text = await configFile.async('text');
-          text = setOrReplace(text, 'OnScreenCount', '1');
-          text = setOrReplace(text, 'Scale', scale.toFixed(1));
-          // NOTE: Shimeji-ee has no documented key that blocks the in-app
-          // right-click "Call Another" option, so this flag is written for
-          // reference only and won't itself prevent manual duplication.
-          text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
-          zip.file(configFile.name, text);
-        } else {
-          console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
-        }
-
-        const newZip = await zip.generateAsync({ type: 'blob' });
-        triggerDownload(newZip, filename);
-      } catch (err) {
-        console.error('ZIP generation failed:', err);
-        try {
-          const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
-          triggerDownload(zipUrl, `${char.name}_Shimeji.zip`);
-          alert('Custom edit failed, downloaded original ZIP instead.');
-        } catch (fallbackErr) {
-          alert('Error generating ZIP: ' + err.message);
-        }
-      }
-    }
-
-    function setOrReplace(text, key, val) {
-      const lines = text.split('\n');
-      let found = false;
-      const updated = lines.map(line => {
-        if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
-          found = true;
-          return `${key}=${val}`;
-        }
-        return line;
-      });
-      if (!found) updated.push(`${key}=${val}`);
-      return updated.join('\n');
-    }
-
-    (function renderSymbols() {
-      const container = document.getElementById('symbols-container');
-      container.innerHTML = '';
-      if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
-        CHARACTER.backgroundSymbols.forEach(sym => {
-          for (let i = 0; i < 8; i++) {
-            const span = document.createElement('span');
-            span.textContent = sym.symbol;
-            span.style.cssText = `
-              position:absolute;
-              left:${Math.random() * 95}%;
-              top:${Math.random() * 95}%;
-              font-size:${sym.size};
-              color:${sym.color};
-              opacity:${sym.opacity};
-              pointer-events:none;
-              user-select:none;
-              animation-duration:${6 + Math.random() * 6}s;
-              animation-delay:${(Math.random() * 5).toFixed(2)}s;
-            `;
-            container.appendChild(span);
-          }
+        // Duplication toggle 
+        duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                allowDuplication = btn.dataset.value === 'yes';
+            });
         });
-      }
-    })();
+
+        // Preview image
+        previewImg.src = CHARACTER.preview;
+
+        //  Size slider
+        function updateSliderDisplay() {
+            const val = parseFloat(sizeSlider.value).toFixed(1);
+            sizeValue.textContent = val;
+        }
+
+        sizeSlider.addEventListener('input', updateSliderDisplay);
+        updateSliderDisplay();
+
+
+        //  DOWNLOAD LOGIC
+
+        function triggerDownload(blobOrUrl, filename) {
+            const a = document.createElement('a');
+            if (typeof blobOrUrl === 'string') {
+                a.href = blobOrUrl;
+            } else {
+                a.href = URL.createObjectURL(blobOrUrl);
+            }
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            if (typeof blobOrUrl !== 'string') {
+                setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+            }
+        }
+
+        function setOrReplace(text, key, val) {
+            const lines = text.split('\n');
+            let found = false;
+            const updated = lines.map(line => {
+                if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
+                    found = true;
+                    return key + '=' + val;
+                }
+                return line;
+            });
+            if (!found) updated.push(key + '=' + val);
+            return updated.join('\n');
+        }
+
+        async function generateAndDownload(char, scale, allowDuplication) {
+            const filename = char.name + '_Shimeji_custom.zip';
+            try {
+                if (location.protocol === 'file:') {
+                    throw new Error('This page is running as file://. Use a local web server.');
+                }
+
+                const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+                const resp = await fetch(zipUrl, { cache: 'no-store' });
+                if (!resp.ok) throw new Error('Could not fetch ZIP (' + resp.status + ') at ' + zipUrl);
+
+                const zipBlob = await resp.blob();
+                const zip = await JSZip.loadAsync(zipBlob);
+
+                // Locate the config file
+                const allPaths = Object.keys(zip.files);
+                let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
+                if (!configPath) {
+                    configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
+                }
+
+                const configFile = configPath ? zip.file(configPath) : null;
+
+                if (configFile) {
+                    let text = await configFile.async('text');
+
+                    // Always keep OnScreenCount
+                    text = setOrReplace(text, 'OnScreenCount', '1');
+
+                    // Scale from slider
+                    text = setOrReplace(text, 'Scale', scale.toFixed(1));
+
+                    // Duplication from toggle
+                    text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
+
+                    zip.file(configFile.name, text);
+                } else {
+                    console.warn('No conf/*.properties file found in zip — shipping settings unchanged.');
+                }
+
+                const newZip = await zip.generateAsync({ type: 'blob' });
+                triggerDownload(newZip, filename);
+
+            } catch (err) {
+                console.error('ZIP generation failed:', err);
+                try {
+                    const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+                    triggerDownload(zipUrl, char.name + '_Shimeji.zip');
+                    alert('Custom edit failed, downloaded original ZIP instead.');
+                } catch (fallbackErr) {
+                    alert('Error generating ZIP: ' + err.message);
+                }
+            }
+        }
+
+        summonBtn.addEventListener('click', async () => {
+            const scale = parseFloat(sizeSlider.value);
+            await generateAndDownload(CHARACTER, scale, allowDuplication);
+        });
+
+        //  BACKGROUND SYMBOLS
+        (function renderSymbols() {
+            const container = document.getElementById('symbols-container');
+            container.innerHTML = '';
+            if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
+                CHARACTER.backgroundSymbols.forEach(sym => {
+                    for (let i = 0; i < 8; i++) {
+                        const span = document.createElement('span');
+                        span.textContent = sym.symbol;
+                        span.style.cssText = `
+                            position:absolute;
+                            left:${Math.random() * 95}%;
+                            top:${Math.random() * 95}%;
+                            font-size:${sym.size};
+                            color:${sym.color};
+                            opacity:${sym.opacity};
+                            pointer-events:none;
+                            user-select:none;
+                            animation-duration:${6 + Math.random() * 6}s;
+                            animation-delay:${(Math.random() * 5).toFixed(2)}s;
+                        `;
+                        container.appendChild(span);
+                    }
+                });
+            }
+        })();
   </script>
 </body>
 </html>
