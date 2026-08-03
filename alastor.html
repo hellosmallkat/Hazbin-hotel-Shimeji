@@ -13,11 +13,14 @@
     /* ===== CHARACTER-SPECIFIC THEME ===== */
     /* Alastor's canon signature palette */
     :root {
-      --scarlet: #EE2B48;        /* hair, shirt, jacket highlights */
-      --crimson: #8D181F;        /* main coat */
-      --onyx: #050505;           /* antlers, mic staff, bowtie */
-      --caramel: #FAA742;        /* teeth, monocle glow, mic details */
-      --sepia: #DAB39D;          /* skin tone */
+      --scarlet: #EE2B48;
+      --crimson: #8D181F;
+      --onyx: #050505;
+      --caramel: #FAA742;
+      --sepia: #DAB39D;
+      --maroon: #2b0509;      /* deep art-deco maroon, from the "thank you" card influence */
+      --wood: #4a2f1f;        /* warm wood-brown radio cabinet */
+      --panelgold: #e0b84a;   /* bright gold speaker panel */
 
       --accent: var(--caramel);
       --accent-glow: rgba(250,167,66,0.45);
@@ -37,18 +40,23 @@
       position: relative;
       overflow-x: hidden;
       background:
-        /* swamp fog/glow gathering toward the bottom of the page */
         radial-gradient(ellipse at 50% 100%, rgba(38,74,58,0.55) 0%, transparent 50%),
         radial-gradient(ellipse at 15% 97%, rgba(70,90,40,0.35) 0%, transparent 40%),
         radial-gradient(ellipse at 85% 95%, rgba(30,60,70,0.3) 0%, transparent 40%),
-        /* overall top(radio-red) -> bottom(swamp) vertical shift, held lower */
         linear-gradient(180deg, transparent 0%, transparent 68%, rgba(24,48,38,0.35) 85%, rgba(14,36,30,0.65) 94%, rgba(8,26,22,0.9) 100%),
         radial-gradient(circle at 75% 15%, rgba(141,24,31,0.35) 0%, transparent 40%),
-        repeating-conic-gradient(from 0deg at 50% -10%, rgba(250,167,66,0.05) 0deg 6deg, transparent 6deg 12deg),
-        radial-gradient(circle at 20% 30%, #3a0509 0%, #150102 55%, var(--onyx) 100%),
-        repeating-linear-gradient(0deg, var(--static-line) 0px, var(--static-line) 1px, transparent 1px, transparent 3px);
+        radial-gradient(circle at 20% 30%, #3a0509 0%, #150102 55%, var(--onyx) 100%);
       background-color: var(--bg-solid);
       color: var(--text);
+    }
+    /* ===== Radio static noise overlay - his medium, not generic stripes ===== */
+    .static-noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.14;
+      mix-blend-mode: overlay;
     }
     body::after {
       content: "";
@@ -60,7 +68,6 @@
       mix-blend-mode: multiply;
     }
 
-    /* Floating symbols container */
     #symbols-container {
       position: fixed;
       top: 0; left: 0;
@@ -69,7 +76,53 @@
       z-index: 0;
     }
 
-    /* ===== LAYOUT (unchanged from previous character page) ===== */
+    /* ===== Collected souls, rising slowly through the background ===== */
+    .soul-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .soul {
+      position: absolute;
+      bottom: -60px;
+      animation: soul-rise linear infinite;
+    }
+    @keyframes soul-rise {
+      0%   { opacity: 0; transform: translate(0, 0); }
+      10%  { opacity: 0.5; }
+      85%  { opacity: 0.35; }
+      100% { opacity: 0; transform: translate(var(--drift, 30px), -115vh); }
+    }
+
+    /* ===== His radio-dial symbol, rising rarer and larger, like the souls but distinctly him ===== */
+    .symbol-rise {
+      position: absolute;
+      bottom: -80px;
+      animation: symbol-rise-anim linear infinite;
+    }
+    @keyframes symbol-rise-anim {
+      0%   { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+      12%  { opacity: 0.6; }
+      88%  { opacity: 0.4; }
+      100% { opacity: 0; transform: translate(var(--drift, -20px), -120vh) rotate(8deg); }
+    }
+
+    /* ===== Dead swamp trees, climbing up either side of the whole page ===== */
+    .swamp-tree-side {
+      position: fixed;
+      top: 0;
+      width: 130px;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .swamp-tree-side.left { left: 0; }
+    .swamp-tree-side.right { right: 0; transform: scaleX(-1); }
+    .swamp-tree-side svg { width: 100%; height: 100%; }
+
     .room-container {
       max-width: 900px;
       margin: 2rem auto;
@@ -77,7 +130,6 @@
       position: relative;
       z-index: 1;
     }
-   
     .back-link {
       display: inline-block;
       margin-bottom: 1.5rem;
@@ -88,130 +140,60 @@
       font-size: 1.2rem;
       transition: color 0.3s;
     }
-    .preview-wrapper {
-      display: inline-block;
-      overflow: hidden;
-      clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%, 0 calc(100% - 24px), 0 24px);
-      max-width: 450px;
-      margin: 1rem 0 2.5rem 0;
-      box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 45px var(--accent-glow), 0 0 25px rgba(141,24,31,0.5) inset;
-      border: 3px solid var(--accent);
-    }
-    .preview-wrapper img {
-      display: block;
-      width: 100%;
-      height: auto;
-      transition: transform 0.2s ease-out;
-      transform-origin: top left;
-    }
-    .vibe-section {
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      outline: 1px solid rgba(212,162,78,0.35);
-      outline-offset: -6px;
-      clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
-      padding: 2rem;
-      margin-bottom: 2.5rem;
-      box-shadow: 0 0 35px rgba(0,0,0,0.85), 0 0 18px rgba(141,24,31,0.45) inset;
+
+    /* ===== Art deco corner-bracket header banner, maroon-and-gold ===== */
+    .deco-banner {
       position: relative;
+      width: 100%;
+      background: linear-gradient(180deg, #3a0509 0%, var(--maroon) 100%);
+      border-top: 2px solid var(--caramel);
+      border-bottom: 2px solid var(--caramel);
+      padding: 1.6rem 1rem 1.4rem 1rem;
+      margin-bottom: 1.5rem;
       overflow: hidden;
     }
-    .vibe-quote {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-style: italic;
-      margin-bottom: 1rem;
-      color: var(--accent);
-      text-shadow: 0 0 15px currentColor;
-    }
-    .vibe-desc {
-      font-size: 1.1rem;
-      line-height: 1.7;
-      color: var(--text);
-    }
-    .control-panel {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      outline: 1px solid rgba(212,162,78,0.35);
-      outline-offset: -7px;
-      clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
-      padding: 2.5rem;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
-    }
-    .slider-group {
+    .deco-banner svg { width: 100%; height: 100px; display: block; }
+
+    /* ===== Chevron strip ===== */
+    /* (chevron strip removed) */
+
+    /* ===== Worn accessory - antlers wrapped around a tuning dial, glowing dimly like static ===== */
+    .title-wrap {
+      position: relative;
       display: flex;
-      flex-wrap: wrap;
-      gap: 2.5rem;
+      flex-direction: column;
       align-items: center;
-      margin: 1.5rem 0;
+      margin: 0.5rem 0 0.6rem 0;
     }
-    .slider-item label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+    .radio-emblem {
+      width: 150px;
+      height: 172px;
+      margin-bottom: -22px;
+      opacity: 0.95;
+      pointer-events: none;
+      animation: emblem-rise 4.2s ease-in-out infinite;
+    }
+    @keyframes emblem-rise {
+      0%   { transform: translateY(6px); filter: drop-shadow(0 0 4px rgba(250,167,66,0.4)) drop-shadow(0 0 8px rgba(238,43,72,0.3)); }
+      50%  { transform: translateY(-8px); filter: drop-shadow(0 0 10px rgba(250,167,66,0.75)) drop-shadow(0 0 18px rgba(238,43,72,0.55)); }
+      100% { transform: translateY(6px); filter: drop-shadow(0 0 4px rgba(250,167,66,0.4)) drop-shadow(0 0 8px rgba(238,43,72,0.3)); }
+    }
+    .title-wrap .room-title { position: relative; margin: 0; }
+
+    .room-title {
       font-family: 'Playfair Display', serif;
-      color: var(--accent);
-      font-size: 1.1rem;
-    }
-    input[type="range"] {
-      width: 240px;
-      height: 8px;
-      accent-color: var(--accent);
-      border-radius: 4px;
-    }
-    .toggle-group {
-      display: flex;
-      gap: 0.75rem;
-    }
-    .toggle-btn {
-      padding: 0.5rem 1.4rem;
-      font-family: 'Oswald', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background: rgba(5,5,5,0.7);
-      color: var(--text);
-      border: 2px solid var(--accent);
-      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
-      cursor: pointer;
-      transition: all 0.2s;
-      opacity: 0.55;
-    }
-    .toggle-btn:hover {
-      opacity: 0.85;
-    }
-    .toggle-btn.active {
-      background: var(--button-bg);
-      color: #fff;
-      opacity: 1;
-      box-shadow: 0 0 12px var(--accent-glow);
-    }
-    .summon-button {
-      display: inline-block;
-      padding: 1.2rem 3.5rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
-      border: none;
-      cursor: pointer;
-      text-transform: uppercase;
+      font-size: 3.4rem;
       font-weight: 900;
-      letter-spacing: 2px;
-      transition: all 0.3s;
-      margin-top: 1.5rem;
-      background: var(--button-bg);
-      color: #fff;
-      border: 3px solid var(--accent);
-      box-shadow: 0 0 15px var(--accent-glow);
-      text-shadow: 0 0 8px rgba(0,0,0,0.6);
-    }
-    .summon-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 28px var(--accent-glow);
-      filter: brightness(1.2);
+      margin-bottom: 0.5rem;
+      color: var(--heading);
+      text-align: center;
+      -webkit-text-stroke: 2px var(--onyx);
+      text-stroke: 2px var(--onyx);
+      text-shadow:
+        3px 3px 0 var(--onyx),
+        0 0 24px var(--crimson),
+        0 0 45px rgba(238,43,72,0.5);
+      letter-spacing: 1px;
     }
 
     /* ===== ON AIR badge ===== */
@@ -222,6 +204,8 @@
       margin: 0.75rem 0 1.5rem 0;
       padding: 0.55rem 1.6rem;
       border: 3px solid var(--scarlet);
+      outline: 1px solid var(--caramel);
+      outline-offset: -6px;
       clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
       font-family: 'Playfair Display', serif;
       font-size: 1.6rem;
@@ -241,86 +225,197 @@
       display: inline-block;
     }
     @keyframes neon-flicker {
-      0%, 3%, 6%, 100% {
-        opacity: 1;
-        text-shadow: 0 0 8px var(--scarlet), 0 0 20px var(--scarlet), 0 0 34px var(--crimson);
-        box-shadow: 0 0 14px rgba(238,43,72,0.7), 0 0 28px rgba(141,24,31,0.5) inset;
-      }
-      4% {
-        opacity: 0.35;
-        text-shadow: none;
-        box-shadow: 0 0 4px rgba(238,43,72,0.25) inset;
-      }
-      5% {
-        opacity: 0.85;
-        text-shadow: 0 0 4px var(--scarlet);
-        box-shadow: 0 0 8px rgba(238,43,72,0.4) inset;
-      }
-      41%, 44% {
-        opacity: 1;
-        text-shadow: 0 0 8px var(--scarlet), 0 0 20px var(--scarlet), 0 0 34px var(--crimson);
-        box-shadow: 0 0 14px rgba(238,43,72,0.7), 0 0 28px rgba(141,24,31,0.5) inset;
-      }
-      42% {
-        opacity: 0.5;
-        text-shadow: none;
-        box-shadow: 0 0 5px rgba(238,43,72,0.3) inset;
-      }
-      43% {
-        opacity: 0.9;
-        text-shadow: 0 0 6px var(--scarlet);
-        box-shadow: 0 0 10px rgba(238,43,72,0.5) inset;
-      }
-      78%, 100% {
-        opacity: 1;
-        text-shadow: 0 0 8px var(--scarlet), 0 0 20px var(--scarlet), 0 0 34px var(--crimson);
-        box-shadow: 0 0 14px rgba(238,43,72,0.7), 0 0 28px rgba(141,24,31,0.5) inset;
-      }
-      79% {
-        opacity: 0.3;
-        text-shadow: none;
-        box-shadow: 0 0 3px rgba(238,43,72,0.2) inset;
-      }
+      0%, 3%, 6%, 100% { opacity: 1; text-shadow: 0 0 8px var(--scarlet), 0 0 20px var(--scarlet), 0 0 34px var(--crimson); box-shadow: 0 0 14px rgba(238,43,72,0.7), 0 0 28px rgba(141,24,31,0.5) inset; }
+      4% { opacity: 0.35; text-shadow: none; box-shadow: 0 0 4px rgba(238,43,72,0.25) inset; }
+      5% { opacity: 0.85; text-shadow: 0 0 4px var(--scarlet); box-shadow: 0 0 8px rgba(238,43,72,0.4) inset; }
+      41%, 44% { opacity: 1; text-shadow: 0 0 8px var(--scarlet), 0 0 20px var(--scarlet), 0 0 34px var(--crimson); box-shadow: 0 0 14px rgba(238,43,72,0.7), 0 0 28px rgba(141,24,31,0.5) inset; }
+      42% { opacity: 0.5; text-shadow: none; box-shadow: 0 0 5px rgba(238,43,72,0.3) inset; }
+      43% { opacity: 0.9; text-shadow: 0 0 6px var(--scarlet); box-shadow: 0 0 10px rgba(238,43,72,0.5) inset; }
+      78%, 100% { opacity: 1; text-shadow: 0 0 8px var(--scarlet), 0 0 20px var(--scarlet), 0 0 34px var(--crimson); box-shadow: 0 0 14px rgba(238,43,72,0.7), 0 0 28px rgba(141,24,31,0.5) inset; }
+      79% { opacity: 0.3; text-shadow: none; box-shadow: 0 0 3px rgba(238,43,72,0.2) inset; }
     }
 
+    .preview-wrapper {
+      display: inline-block;
+      overflow: hidden;
+      clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%, 0 calc(100% - 24px), 0 24px);
+      max-width: 450px;
+      margin: 1rem 0 2.5rem 0;
+      box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 45px var(--accent-glow), 0 0 25px rgba(141,24,31,0.5) inset;
+      border: 3px solid var(--accent);
+      outline: 1px solid var(--scarlet);
+      outline-offset: -8px;
+    }
+    .preview-wrapper img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform 0.2s ease-out;
+      transform-origin: top left;
+    }
 
-    /* poster-style header */
-    .room-title {
+    .vibe-section {
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(12px);
+      border: 2px solid var(--accent);
+      outline: 1px solid rgba(212,162,78,0.35);
+      outline-offset: -6px;
+      clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 35px rgba(0,0,0,0.85), 0 0 18px rgba(141,24,31,0.45) inset;
+      position: relative;
+      overflow: hidden;
+    }
+    .vibe-quote {
       font-family: 'Playfair Display', serif;
-      font-size: 3.4rem;
-      font-weight: 900;
-      margin-bottom: 0.5rem;
-      color: var(--heading);
-      -webkit-text-stroke: 2px var(--onyx);
-      text-stroke: 2px var(--onyx);
-      text-shadow:
-        3px 3px 0 var(--onyx),
-        0 0 24px var(--crimson),
-        0 0 45px rgba(238,43,72,0.5);
-      letter-spacing: 1px;
+      font-size: 2rem;
+      font-style: italic;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      text-shadow: 0 0 15px currentColor;
+    }
+    .vibe-desc {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--text);
     }
 
- 
+    /* ===== A keepsake, instead of a photo - his radio staff, always within reach ===== */
+    .keepsake-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      border-top: 2px dashed rgba(250,167,66,0.25);
+    }
+    .keepsake {
+      flex-shrink: 0;
+      width: 76px;
+      height: 76px;
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 2px solid var(--caramel);
+      box-shadow: 0 0 10px rgba(250,167,66,0.35);
+    }
+    .keepsake img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .keepsake-note {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
 
-    /* Louisiana swamp banner */
+    .control-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 2px solid var(--accent);
+      outline: 1px solid rgba(212,162,78,0.35);
+      outline-offset: -7px;
+      clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
+      padding: 2.5rem;
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    }
+    .slider-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+    .slider-item label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-family: 'Playfair Display', serif;
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+    input[type="range"] {
+      width: 240px;
+      height: 8px;
+      accent-color: var(--accent);
+      border-radius: 4px;
+    }
+    .toggle-group { display: flex; gap: 0.75rem; justify-content: center; }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(5,5,5,0.7);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover { opacity: 0.85; }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .summon-button {
+      display: inline-block;
+      padding: 1.2rem 3.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 2px;
+      transition: all 0.3s;
+      margin-top: 1.5rem;
+      background: var(--button-bg);
+      color: #fff;
+      border: 3px solid var(--accent);
+      outline: 1px solid var(--scarlet);
+      outline-offset: -6px;
+      box-shadow: 0 0 15px var(--accent-glow);
+      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+    }
+    .summon-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 28px var(--accent-glow);
+      filter: brightness(1.2);
+    }
+    .support-links {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      opacity: 0.75;
+      line-height: 1.6;
+    }
+    .support-links a { color: var(--accent); }
+
+    /* ===== Louisiana swamp banner ===== */
     .swamp-banner {
       width: 100vw;
-      height: 400px;
-      margin: 20px 0 0 0;
+      height: 280px;
+      margin: 1.5rem 0 0 0;
       margin-left: calc(50% - 50vw);
       position: relative;
       z-index: 1;
       overflow: hidden;
       pointer-events: none;
     }
-    .swamp-banner svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    .firefly {
-      animation: firefly-glow 3s ease-in-out infinite;
-    }
+    .swamp-banner svg { width: 100%; height: 100%; display: block; }
+    .firefly { animation: firefly-glow 3s ease-in-out infinite; }
     .firefly:nth-child(2) { animation-delay: 0.7s; }
     .firefly:nth-child(3) { animation-delay: 1.5s; }
     .firefly:nth-child(4) { animation-delay: 2.1s; }
@@ -330,51 +425,346 @@
       50% { opacity: 1; }
     }
 
-    /* Floating symbols styling  */
     .floating-symbol {
       position: absolute;
       pointer-events: none;
       user-select: none;
+      animation: drift-float 9s ease-in-out infinite;
+    }
+    @keyframes drift-float {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(8px, -14px) rotate(6deg); }
+      50%  { transform: translate(-6px, -26px) rotate(-4deg); }
+      75%  { transform: translate(10px, -14px) rotate(5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
   </style>
 </head>
 <body>
-  <!-- Container for background symbols (filled by script) -->
+  <!-- Radio static texture overlay, replacing the generic background stripes -->
+  <svg class="static-noise" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <filter id="staticNoise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.1 0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#staticNoise)"/>
+  </svg>
+
+  <!-- Dead swamp trees, climbing up either side of the page -->
+  <div class="swamp-tree-side left" aria-hidden="true">
+    <svg viewBox="0 0 130 1000" preserveAspectRatio="xMinYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <!-- jagged, twisted trunk - sharper angles instead of smooth curves -->
+      <path d="M20,1000 L28,900 L12,860 L30,790 L10,740 L32,690 L14,630 L34,580
+               L16,520 L36,460 L18,410 L38,360 L20,310 L40,265 L22,220 L42,175
+               L26,135 L44,95 L30,55 L46,20 L38,0"
+            fill="none" stroke="#080808" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- gnarled branches, sharper zigzag angles -->
+      <path d="M32,580 L-5,555 L-30,565 L-55,540" fill="none" stroke="#080808" stroke-width="5" stroke-linecap="round"/>
+      <path d="M38,360 L70,335 L88,345 L112,315" fill="none" stroke="#080808" stroke-width="5" stroke-linecap="round"/>
+      <path d="M22,740 L-8,720 L-28,730 L-48,700" fill="none" stroke="#080808" stroke-width="4" stroke-linecap="round"/>
+      <path d="M42,175 L65,145 L80,150 L100,115" fill="none" stroke="#080808" stroke-width="4" stroke-linecap="round"/>
+      <path d="M-55,540 L-70,515 L-64,490 L-80,468" fill="none" stroke="#080808" stroke-width="3" stroke-linecap="round"/>
+      <path d="M112,315 L128,295 L122,272 L138,255" fill="none" stroke="#080808" stroke-width="3" stroke-linecap="round"/>
+      <path d="M-48,700 L-62,682 L-56,660 L-70,642" fill="none" stroke="#080808" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- sharp thorn spikes jutting off the trunk at odd angles -->
+      <g stroke="#080808" stroke-width="2" stroke-linecap="round">
+        <path d="M28,900 L48,888"/>
+        <path d="M12,860 L-8,850"/>
+        <path d="M32,690 L54,678"/>
+        <path d="M14,630 L-6,618"/>
+        <path d="M20,310 L2,296"/>
+        <path d="M26,135 L6,124"/>
+      </g>
+
+      <!-- clawed, forked branch tips instead of round caps -->
+      <g stroke="#080808" stroke-width="2.5" stroke-linecap="round">
+        <path d="M-80,468 L-90,458 M-80,468 L-86,480"/>
+        <path d="M138,255 L148,246 M138,255 L146,266"/>
+        <path d="M-70,642 L-80,632 M-70,642 L-76,654"/>
+        <path d="M38,0 L28,-8 M38,0 L46,-10"/>
+      </g>
+
+      <!-- gnarled knot bulges along the trunk -->
+      <g fill="#050505" opacity="0.85">
+        <ellipse cx="16" cy="820" rx="7" ry="5" transform="rotate(-15 16 820)"/>
+        <ellipse cx="38" cy="520" rx="6" ry="4.5" transform="rotate(10 38 520)"/>
+        <ellipse cx="22" cy="260" rx="5.5" ry="4" transform="rotate(-8 22 260)"/>
+      </g>
+
+      <!-- thin hanging dead tendrils, like moss with no life left -->
+      <g stroke="#080808" stroke-width="1" opacity="0.55" stroke-linecap="round" fill="none">
+        <path d="M-40,540 C-42,558 -38,572 -42,588"/>
+        <path d="M-30,565 C-32,580 -28,592 -31,606"/>
+        <path d="M95,340 C98,356 94,368 97,382"/>
+        <path d="M-15,700 C-17,715 -13,726 -16,740"/>
+      </g>
+
+      <!-- a crow, perched on one of the upper branches, watching -->
+      <g transform="translate(96,318)" fill="#050505">
+        <ellipse cx="0" cy="0" rx="10" ry="7"/>
+        <circle cx="9" cy="-4" r="4.5"/>
+        <path d="M13,-4 L19,-2 L13,-1 Z" fill="#050505"/>
+        <circle cx="10" cy="-5" r="0.8" fill="var(--scarlet)"/>
+        <path d="M-8,4 L-14,10 M2,6 L0,13" stroke="#050505" stroke-width="1.2"/>
+      </g>
+
+      <!-- hidden glowing red eyes, tucked in the branches -->
+      <g class="firefly" fill="var(--scarlet)">
+        <circle cx="-30" cy="560" r="2"/>
+        <circle cx="-22" cy="562" r="2"/>
+      </g>
+      <g class="firefly" fill="var(--scarlet)" style="animation-delay: 1.2s;">
+        <circle cx="82" cy="342" r="1.8"/>
+        <circle cx="90" cy="342" r="1.8"/>
+      </g>
+    </svg>
+  </div>
+  <div class="swamp-tree-side right" aria-hidden="true">
+    <svg viewBox="0 0 130 1000" preserveAspectRatio="xMinYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20,1000 L28,900 L12,860 L30,790 L10,740 L32,690 L14,630 L34,580
+               L16,520 L36,460 L18,410 L38,360 L20,310 L40,265 L22,220 L42,175
+               L26,135 L44,95 L30,55 L46,20 L38,0"
+            fill="none" stroke="#080808" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <path d="M32,580 L-5,555 L-30,565 L-55,540" fill="none" stroke="#080808" stroke-width="5" stroke-linecap="round"/>
+      <path d="M38,360 L70,335 L88,345 L112,315" fill="none" stroke="#080808" stroke-width="5" stroke-linecap="round"/>
+      <path d="M22,740 L-8,720 L-28,730 L-48,700" fill="none" stroke="#080808" stroke-width="4" stroke-linecap="round"/>
+      <path d="M42,175 L65,145 L80,150 L100,115" fill="none" stroke="#080808" stroke-width="4" stroke-linecap="round"/>
+      <path d="M-55,540 L-70,515 L-64,490 L-80,468" fill="none" stroke="#080808" stroke-width="3" stroke-linecap="round"/>
+      <path d="M112,315 L128,295 L122,272 L138,255" fill="none" stroke="#080808" stroke-width="3" stroke-linecap="round"/>
+      <path d="M-48,700 L-62,682 L-56,660 L-70,642" fill="none" stroke="#080808" stroke-width="3" stroke-linecap="round"/>
+
+      <g stroke="#080808" stroke-width="2" stroke-linecap="round">
+        <path d="M28,900 L48,888"/>
+        <path d="M12,860 L-8,850"/>
+        <path d="M32,690 L54,678"/>
+        <path d="M14,630 L-6,618"/>
+        <path d="M20,310 L2,296"/>
+        <path d="M26,135 L6,124"/>
+      </g>
+
+      <g stroke="#080808" stroke-width="2.5" stroke-linecap="round">
+        <path d="M-80,468 L-90,458 M-80,468 L-86,480"/>
+        <path d="M138,255 L148,246 M138,255 L146,266"/>
+        <path d="M-70,642 L-80,632 M-70,642 L-76,654"/>
+        <path d="M38,0 L28,-8 M38,0 L46,-10"/>
+      </g>
+
+      <!-- gnarled knot bulges along the trunk -->
+      <g fill="#050505" opacity="0.85">
+        <ellipse cx="16" cy="820" rx="7" ry="5" transform="rotate(-15 16 820)"/>
+        <ellipse cx="38" cy="520" rx="6" ry="4.5" transform="rotate(10 38 520)"/>
+        <ellipse cx="22" cy="260" rx="5.5" ry="4" transform="rotate(-8 22 260)"/>
+      </g>
+
+      <!-- thin hanging dead tendrils -->
+      <g stroke="#080808" stroke-width="1" opacity="0.55" stroke-linecap="round" fill="none">
+        <path d="M-40,540 C-42,558 -38,572 -42,588"/>
+        <path d="M-30,565 C-32,580 -28,592 -31,606"/>
+        <path d="M95,340 C98,356 94,368 97,382"/>
+        <path d="M-15,700 C-17,715 -13,726 -16,740"/>
+      </g>
+
+      <!-- a small bat, roosting upside down on a low branch -->
+      <g transform="translate(-45,698)" fill="#050505">
+        <path d="M0,0 C-14,-4 -22,4 -26,14 C-18,10 -12,10 -8,16 C-6,10 -2,8 0,14
+                 C2,8 6,10 8,16 C12,10 18,10 26,14 C22,4 14,-4 0,0 Z"/>
+        <circle cx="0" cy="-3" r="2" fill="var(--scarlet)" opacity="0.7"/>
+      </g>
+
+      <g class="firefly" fill="var(--scarlet)" style="animation-delay: 0.6s;">
+        <circle cx="-30" cy="560" r="2"/>
+        <circle cx="-22" cy="562" r="2"/>
+      </g>
+      <g class="firefly" fill="var(--scarlet)" style="animation-delay: 1.8s;">
+        <circle cx="82" cy="342" r="1.8"/>
+        <circle cx="90" cy="342" r="1.8"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Rising souls and radio-symbol layers, filled by script -->
+  <div class="soul-layer" id="soulLayer" aria-hidden="true"></div>
+
   <div id="symbols-container"></div>
 
   <div class="room-container">
-    <div class="deco-sunburst" aria-hidden="true"></div>
+
+    <!-- Art deco maroon-and-gold header banner, corner brackets + fan burst -->
+    <div class="deco-banner" aria-hidden="true">
+      <svg viewBox="0 0 900 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- spotlight rays sweeping from the center -->
+        <g stroke="var(--panelgold)" stroke-width="1" opacity="0.25">
+          <path d="M450,100 L200,0 M450,100 L320,0 M450,100 L580,0 M450,100 L700,0"/>
+        </g>
+
+        <!-- corner brackets -->
+        <g stroke="var(--caramel)" stroke-width="2.5" fill="none">
+          <path d="M10,10 L80,10 M10,10 L10,55"/>
+          <path d="M22,22 L52,22 M22,22 L22,45"/>
+        </g>
+        <g stroke="var(--caramel)" stroke-width="2.5" fill="none">
+          <path d="M890,10 L820,10 M890,10 L890,55"/>
+          <path d="M878,22 L848,22 M878,22 L878,45"/>
+        </g>
+
+        
+          <ellipse cx="-93" cy="-1" rx="5" ry="16" fill="#0a0705" stroke="var(--panelgold)" stroke-width="1.5"/>
+          <!-- fluted ribbing inside the bell -->
+          <g stroke="#0a0705" stroke-width="0.8" opacity="0.4">
+            <path d="M-80,-14 C-56,-19 -28,-19 -6,-11"/>
+            <path d="M-78,2 C-52,-4 -24,-6 -5,-1"/>
+          </g>
+          <!-- curved elbow tube down to the base -->
+          <path d="M-4,-10 C8,-8 14,2 12,14" fill="none" stroke="#0d0b0c" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="12" cy="18" r="4" fill="var(--panelgold)"/>
+        </g>
+
+       
+
+        <!-- floating musical notes -->
+        <g fill="var(--caramel)" opacity="0.7">
+          <g transform="translate(220,25)">
+            <circle cx="0" cy="16" r="4"/>
+            <rect x="3" y="-6" width="1.6" height="22"/>
+            <path d="M4.6,-6 L14,-9 L14,-3 L4.6,0 Z"/>
+          </g>
+          <g transform="translate(680,55)">
+            <circle cx="0" cy="10" r="3.5"/>
+            <rect x="3" y="-8" width="1.4" height="18"/>
+          </g>
+        </g>
+
+        <!-- center gold sunburst -->
+        <g transform="translate(450,15)" fill="var(--caramel)">
+          <path d="M0,45 L-4,10 L4,10 Z"/>
+          <path d="M0,45 L-14,14 L-6,10 Z"/>
+          <path d="M0,45 L-24,22 L-16,14 Z"/>
+          <path d="M0,45 L14,14 L6,10 Z"/>
+          <path d="M0,45 L24,22 L16,14 Z"/>
+          <path d="M0,45 L-30,34 L-24,26 Z"/>
+          <path d="M0,45 L30,34 L24,26 Z"/>
+        </g>
+      </svg>
+    </div>
+
     <a href="index.html" class="back-link">Back to the Hotel</a>
 
-    <h1 class="room-title" style="text-align:center;">
-      Alastor
-    </h1>
+
+    <div class="title-wrap">
+      <svg class="radio-emblem" viewBox="0 -22 150 172" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+
+
+
+        <!-- base plinth -->
+        <rect x="8" y="136" width="134" height="10" rx="1" fill="var(--wood)" stroke="#0d0b0c" stroke-width="1.5"/>
+
+        <!-- pointed gothic-arch cabinet body -->
+          <path d="M24,138 L24,20 Q75,-50 126,20 L126,138 Z"
+              fill="var(--wood)" stroke="#0d0b0c" stroke-width="2.5"/>
+        <!-- pointed top -->
+          <path d="M75,10 L72,20 L78,20 Z"
+              fill="var(--wood)" stroke="#0d0b0c" stroke-width="2.5"/>
+        <!-- subtle wood grain lines across the cabinet -->
+        <g stroke="#2e1c11" stroke-width="0.5" opacity="0.4" fill="none">
+          <path d="M26,120 C35,90 50,40 75,10"/>
+          <path d="M123,120 C114,90 100,40 75,10"/>
+          <path d="M28,120 C38,92 52,45 75,12"/>
+          <path d="M122,120 C112,92 98,45 75,12"/>
+        </g>
+        <!-- inner gold trim tracing the same arch, inset -->
+            <path d="M32,132 L32,56 C32,26 45,10 75,-7 C105,10 118,26 118,56 L118,132 Z"
+              fill="none" stroke="#F5C9A5" stroke-width="2" stroke-linejoin="round" opacity="0.85"/>
+        <!-- decorative rivets along the inner trim -->
+        <g fill="var(--panelgold)" opacity="0.8">
+          <circle cx="32" cy="90" r="1.4"/>
+          <circle cx="32" cy="120" r="1.4"/>
+          <circle cx="118" cy="90" r="1.4"/>
+          <circle cx="118" cy="120" r="1.4"/>
+          <circle cx="75" cy="13" r="1.4"/>
+        </g>
+
+        <!-- small brass nameplate, upper cabinet -->
+        <rect x="58" y="20" width="34" height="9" rx="1.5" fill="var(--panelgold)" stroke="#0d0b0c" stroke-width="1"/>
+        <text x="75" y="27" font-family="Playfair Display, serif" font-size="6" font-weight="700" fill="#2e1c11" text-anchor="middle" letter-spacing="1">WVIP</text>
+
+        <!-- black mesh scrollwork, twin gothic loops merging at center -->
+        <path d="M75,104 C50,98 34,76 38,50 C40,34 54,26 60,38 C64,46 52,50 56,62 C60,76 68,86 75,104"
+              fill="#0a0705" stroke="#0d0b0c" stroke-width="2" stroke-linecap="round"/>
+        <path d="M75,104 C100,98 116,76 112,50 C110,34 96,26 90,38 C86,46 98,50 94,62 C90,76 82,86 75,104"
+              fill="#0a0705" stroke="#0d0b0c" stroke-width="2" stroke-linecap="round"/>
+        <!-- speaker mesh texture, faint crosshatch -->
+        <g stroke="#0d0b0c" stroke-width="0.4" opacity="0.3">
+          <path d="M45,45 L45,95 M55,38 L55,100 M95,38 L95,100 M105,45 L105,95"/>
+        </g>
+
+        <!-- gold triangular shield panel, bottom center -->
+        <path d="M75,132 L48,98 L58,58 L92,58 L102,98 Z" fill="var(--panelgold)" stroke="#0d0b0c" stroke-width="2"/>
+        <!-- black zigzag lines across the gold panel -->
+        <g stroke="#0a0705" stroke-width="1.5" fill="none" opacity="0.8">
+          <path d="M55,100 L62,88 L67,100 L72,86 L77,100 L82,86 L87,100 L93,88 L98,100"/>
+          <path d="M58,112 L64,102 L69,112 L74,100 L79,112 L84,100 L89,112 L95,102"/>
+        </g>
+        <!-- gauge dial, center of the shield -->
+        <circle cx="75" cy="76" r="11" fill="#0a0705" stroke="#0d0b0c" stroke-width="2"/>
+        <circle cx="75" cy="76" r="7" fill="none" stroke="#0d0b0c" stroke-width="0.8" opacity="0.6"/>
+        <g stroke="#0d0b0c" stroke-width="0.8" opacity="0.7">
+          <line x1="75" y1="66" x2="75" y2="68.5"/>
+          <line x1="83" y1="70" x2="81.2" y2="71.5"/>
+          <line x1="85" y1="76" x2="82.5" y2="76"/>
+          <line x1="83" y1="82" x2="81.2" y2="80.5"/>
+          <line x1="67" y1="70" x2="68.8" y2="71.5"/>
+          <line x1="65" y1="76" x2="67.5" y2="76"/>
+          <line x1="67" y1="82" x2="68.8" y2="80.5"/>
+        </g>
+        <line x1="75" y1="76" x2="80" y2="70" stroke="#0d0b0c" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- two tuning knobs, flanking the shield -->
+        <circle cx="54" cy="108" r="5" fill="#0a0705" stroke="#0d0b0c" stroke-width="1.5"/>
+        <circle cx="96" cy="108" r="5" fill="#0a0705" stroke="#0d0b0c" stroke-width="1.5"/>
+                <!-- fluted side pillars -->
+        <rect x="14" y="100" width="20" height="38" fill="var(--wood)" stroke="#0d0b0c" stroke-width="1"/>
+        <rect x="116" y="100" width="20" height="38" fill="var(--wood)" stroke="#0d0b0c" stroke-width="1"/>
+        <g stroke="var(--caramel)" stroke-width="0.6" opacity="0.5">
+          <path d="M17,102 L17,136 M20,102 L20,136 M23,102 L23,136"/>
+          <path d="M129,102 L129,136 M132,102 L132,136 M135,102 L135,136"/>
+        </g>
+      </svg>
+      <h1 class="room-title">Alastor</h1>
+    </div>
 
     <div style="text-align:center;">
       <span class="on-air-badge">ON AIR</span>
     </div>
 
-    <!-- Live preview image -->
     <div style="text-align:center;">
       <div class="preview-wrapper" id="previewWrapper">
-        <img id="charPreview" src="images/alastor.png" alt="Alastor Preview ">
+        <img id="charPreview" src="images/alastor.png" alt="Alastor Preview">
       </div>
     </div>
 
     <!-- Vibe section -->
-    <div class="vibe-section">
-      <p class="vibe-quote">"A smile is a valuable tool, my dear. It inspires your friends, keeps your enemies guessing, and ensures that, no matter what comes your way, you are the one in control</p>
-      <p class="vibe-desc">Alastor! Pleasure to be meeting you, quite a pleasure. </p>
+      <div class="vibe-section">
+      <p class="vibe-quote">"A smile is a valuable tool, my dear. It inspires your friends, keeps your enemies guessing, and ensures that, no matter what comes your way, you are the one in control</p>
+      <p class="vibe-desc">Alastor! Pleasure to be meeting you, quite a pleasure. </p>
+      <div class="keepsake-row">
+        <div class="keepsake">
+          <img src="images/alastor-staff.jpg" alt="Alastor's staff"> <!-- make an image of Alastor's staff -->
+        </div>
+        <p class="keepsake-note">Don't touch my staff</p>
+      </div>
     </div>
 
     <!-- Customisation controls -->
-    <div class="control-panel" style="text-align:center;" >
+    <div class="control-panel" style="text-align:center;">
       <div class="slider-group">
-        <div class="slider-item" style="margin-left: auto; margin-right: auto;">
+        <div class="slider-item">
           <label>Size: <span id="sizeValue">1.0</span></label>
           <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
         </div>
-        <div class="slider-item" style="margin-left: auto; margin-right: auto;">
+        <div class="slider-item">
           <label>Allow Duplication?</label>
           <div class="toggle-group" id="duplicateToggle">
             <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
@@ -384,255 +774,313 @@
       </div>
       <button class="summon-button" id="summonBtn">Summon Chaos</button>
       <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
-            <p style="margin-top:0.8rem; opacity:0.8;"> Please and go support the original artist here <a href="https://ko-fi.com/spiritboxfm">spiritboxfm</a> </p>
-            <p style="margin-top:0.8rem; opacity:0.8;"> I just made the website if you want to support me do it here <a href="https://ko-fi.com/mikmonvibes">Ko-Fi</a> </p>
+      <p class="support-links">Please go support the original artist here: <a href="https://ko-fi.com/spiritboxfm">spiritboxfm</a></p>
+      <p class="support-links">I just made the website - if you want to support me, do it here: <a href="https://ko-fi.com/mikmonvibes">Ko-Fi</a></p>
     </div>
+
 
     <!-- Louisiana swamp banner -->
     <div class="swamp-banner" aria-hidden="true">
-      <svg viewBox="0 0 900 100" xmlns="http://www.w3.org/2000/svg">
-        <!-- water line -->
-        <rect x="0" y="150" width="900" height="140" fill="#0c231d" opacity="0.9" />
-        <path d="M0,120 Q50,112 100,120 T200,120 T300,120 T400,120 T500,120 T600,120 T700,120 T800,120 T900,120 V200 H0 Z"
-              fill="#123329" opacity="0.85" />
-
-        <!-- distant mossy tree, left -->
-        <g opacity="0.8">
-          <path d="M60,130 C55,90 70,70 65,30" stroke="#1f2e22" stroke-width="6" fill="none" stroke-linecap="round"/>
-          <path d="M65,50 C40,45 25,55 15,45" stroke="#1f2e22" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <path d="M65,65 C95,58 100,70 115,62" stroke="#1f2e22" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <!-- hanging moss -->
-          <path d="M20,48 C18,65 22,78 17,92" stroke="#3a4a30" stroke-width="2" fill="none" opacity="0.7" stroke-linecap="round"/>
-          <path d="M30,50 C28,70 33,85 29,100" stroke="#3a4a30" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round"/>
-          <path d="M105,64 C108,80 103,92 108,105" stroke="#3a4a30" stroke-width="2" fill="none" opacity="0.65" stroke-linecap="round"/>
+      <svg viewBox="0 -60 900 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- water body -->
+        <rect x="0" y="130" width="900" height="90" fill="#0c231d" opacity="0.9"/>
+        <path d="M0,130 Q50,120 100,130 T200,130 T300,130 T400,130 T500,130 T600,130 T700,130 T800,130 T900,130 V220 H0 Z"
+              fill="#123329" opacity="0.85"/>
+        <!-- faint rippled reflections -->
+        <g stroke="#1a4536" stroke-width="1.5" opacity="0.35" fill="none">
+          <path d="M60,150 Q90,146 120,150 T180,150"/>
+          <path d="M320,160 Q350,156 380,160 T440,160"/>
+          <path d="M560,148 Q590,144 620,148 T680,148"/>
+          <path d="M760,158 Q790,154 820,158 T880,158"/>
         </g>
 
-        <!-- distant mossy tree, right -->
-        <g opacity="0.7">
-          <path d="M840,132 C846,95 832,75 838,40" stroke="#1a281d" stroke-width="6" fill="none" stroke-linecap="round"/>
-          <path d="M838,58 C862,52 875,60 888,52" stroke="#1a281d" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <path d="M838,72 C812,66 802,76 788,70" stroke="#1a281d" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <path d="M878,54 C881,72 876,86 881,100" stroke="#33422a" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round"/>
-          <path d="M800,72 C797,90 802,102 798,114" stroke="#33422a" stroke-width="2" fill="none" opacity="0.65" stroke-linecap="round"/>
+        <!-- his radio tower - taller, more detailed lattice, broadcasting his show and the souls caught in the signal -->
+        <g transform="translate(450,130)" opacity="0.7">
+          <!-- base legs, splayed -->
+          <line x1="-26" y1="0" x2="-8" y2="-140" stroke="#16211a" stroke-width="4"/>
+          <line x1="26" y1="0" x2="8" y2="-140" stroke="#16211a" stroke-width="4"/>
+          <line x1="-30" y1="0" x2="30" y2="0" stroke="#16211a" stroke-width="4"/>
+          <!-- lattice cross-braces, stacked -->
+          <g stroke="#16211a" stroke-width="2.2">
+            <line x1="-24" y1="-14" x2="6" y2="-30"/>
+            <line x1="6" y1="-14" x2="-24" y2="-30"/>
+            <line x1="-19" y1="-42" x2="5" y2="-58"/>
+            <line x1="5" y1="-42" x2="-19" y2="-58"/>
+            <line x1="-15" y1="-70" x2="4" y2="-86"/>
+            <line x1="4" y1="-70" x2="-15" y2="-86"/>
+            <line x1="-12" y1="-98" x2="3" y2="-112"/>
+            <line x1="3" y1="-98" x2="-12" y2="-112"/>
+            <line x1="-10" y1="-118" x2="2" y2="-132"/>
+            <line x1="2" y1="-118" x2="-10" y2="-132"/>
+          </g>
+          <!-- platform near the top -->
+          <line x1="-14" y1="-134" x2="14" y2="-134" stroke="#16211a" stroke-width="3"/>
+          <!-- antenna mast -->
+          <line x1="-1" y1="-140" x2="0" y2="-172" stroke="#16211a" stroke-width="2.5"/>
+          <!-- blinking warning light at the very top -->
+          <circle cx="0" cy="-174" r="4" fill="var(--scarlet)" class="firefly"/>
+
+          <!-- broadcasting sound waves, radiating outward -->
+          <g fill="none" stroke="var(--scarlet)" opacity="0.28">
+            <path d="M0,-160 A40,40 0 0 1 -38,-140" stroke-width="1.5"/>
+            <path d="M0,-160 A70,70 0 0 1 -66,-125" stroke-width="1.2"/>
+            <path d="M0,-160 A100,100 0 0 1 -95,-108" stroke-width="1"/>
+            <path d="M0,-160 A40,40 0 0 0 38,-140" stroke-width="1.5"/>
+            <path d="M0,-160 A70,70 0 0 0 66,-125" stroke-width="1.2"/>
+            <path d="M0,-160 A100,100 0 0 0 95,-108" stroke-width="1"/>
+          </g>
+
+          <!-- faint screaming souls, carried in the outermost broadcast wave -->
+          <g fill="#050505" opacity="0.4">
+            <path d="M-95,-108 C-99,-102 -99,-95 -95,-90 C-92,-94 -91,-98 -95,-108 Z"/>
+            <circle cx="-97" cy="-98" r="0.8" fill="var(--scarlet)"/>
+            <path d="M95,-108 C99,-102 99,-95 95,-90 C92,-94 91,-98 95,-108 Z"/>
+            <circle cx="97" cy="-98" r="0.8" fill="var(--scarlet)"/>
+          </g>
         </g>
 
-        <!-- cattails, scattered -->
+        <!-- tangled roots along the waterline -->
+        <g stroke="#1f2e22" stroke-width="3" fill="none" opacity="0.7" stroke-linecap="round">
+          <path d="M70,132 C90,120 110,128 130,118"/>
+          <path d="M700,134 C680,122 660,130 640,120"/>
+          <path d="M250,136 C265,126 280,132 295,124"/>
+        </g>
+
+        <!-- cattails, denser now that the banner has more room -->
         <g fill="#2d3a24" opacity="0.85">
-          <g transform="translate(180,95)">
-            <rect x="-1.5" y="0" width="3" height="35" />
-            <ellipse cx="0" cy="-8" rx="4" ry="12" fill="#4a3524"/>
-          </g>
-          <g transform="translate(195,100) rotate(8)">
-            <rect x="-1.5" y="0" width="3" height="30" />
-            <ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/>
-          </g>
-          <g transform="translate(430,92) rotate(-6)">
-            <rect x="-1.5" y="0" width="3" height="38" />
-            <ellipse cx="0" cy="-9" rx="4" ry="13" fill="#4a3524"/>
-          </g>
-          <g transform="translate(445,98) rotate(4)">
-            <rect x="-1.5" y="0" width="3" height="32" />
-            <ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/>
-          </g>
-          <g transform="translate(650,94) rotate(-4)">
-            <rect x="-1.5" y="0" width="3" height="36" />
-            <ellipse cx="0" cy="-8" rx="4" ry="12" fill="#4a3524"/>
-          </g>
-          <g transform="translate(700,100) rotate(7)">
-            <rect x="-1.5" y="0" width="3" height="30" />
-            <ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/>
-          </g>
+          <g transform="translate(140,105)"><rect x="-1.5" y="0" width="3" height="35"/><ellipse cx="0" cy="-8" rx="4" ry="12" fill="#4a3524"/></g>
+          <g transform="translate(158,110) rotate(6)"><rect x="-1.5" y="0" width="3" height="30"/><ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/></g>
+          <g transform="translate(330,100) rotate(-6)"><rect x="-1.5" y="0" width="3" height="38"/><ellipse cx="0" cy="-9" rx="4" ry="13" fill="#4a3524"/></g>
+          <g transform="translate(348,106) rotate(4)"><rect x="-1.5" y="0" width="3" height="32"/><ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/></g>
+          <g transform="translate(560,102) rotate(-4)"><rect x="-1.5" y="0" width="3" height="36"/><ellipse cx="0" cy="-8" rx="4" ry="12" fill="#4a3524"/></g>
+          <g transform="translate(578,108) rotate(7)"><rect x="-1.5" y="0" width="3" height="30"/><ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/></g>
+          <g transform="translate(760,104) rotate(-5)"><rect x="-1.5" y="0" width="3" height="34"/><ellipse cx="0" cy="-8" rx="4" ry="11" fill="#4a3524"/></g>
+          <g transform="translate(778,109) rotate(5)"><rect x="-1.5" y="0" width="3" height="28"/><ellipse cx="0" cy="-7" rx="3.5" ry="9" fill="#4a3524"/></g>
         </g>
 
-        <!-- reed blades among the cattails -->
         <g stroke="#354528" stroke-width="1.5" opacity="0.6" fill="none">
-          <path d="M185,130 C182,110 190,95 187,80"/>
-          <path d="M440,132 C443,112 435,98 439,84"/>
-          <path d="M660,128 C657,108 665,94 661,78"/>
+          <path d="M145,140 C142,120 150,105 147,90"/>
+          <path d="M340,142 C343,122 335,108 339,94"/>
+          <path d="M565,138 C562,118 570,104 567,88"/>
+          <path d="M765,144 C762,124 770,110 767,96"/>
         </g>
 
-        <!-- fireflies -->
         <g fill="var(--caramel)">
-          <circle class="firefly" cx="150" cy="60" r="2.5"/>
-          <circle class="firefly" cx="400" cy="45" r="2"/>
-          <circle class="firefly" cx="500" cy="70" r="2.5"/>
-          <circle class="firefly" cx="620" cy="50" r="2"/>
-          <circle class="firefly" cx="750" cy="65" r="2.5"/>
+          <circle class="firefly" cx="110" cy="60" r="2.5"/>
+          <circle class="firefly" cx="260" cy="45" r="2"/>
+          <circle class="firefly" cx="380" cy="70" r="2.5"/>
+          <circle class="firefly" cx="520" cy="50" r="2"/>
+          <circle class="firefly" cx="650" cy="65" r="2.5"/>
+          <circle class="firefly" cx="800" cy="55" r="2"/>
         </g>
       </svg>
     </div>
   </div>
 
   <script>
-    // =============================================
-    //  HARDCODED CHARACTER DATA (replace each field)
-    // =============================================
+    //  HARDCODED CHARACTER DATA 
     const CHARACTER = {
       name: "Alastor",
-      zip: "downloads/AlastorShimeji.zip",   // must match the exact filename on GitHub, including .zip
+      zip: "downloads/AlastorShimeji.zip", 
       preview: "images/alastor.png",
       backgroundSymbols: [
-       { "symbol": "\u266B", "color": "#FAA742", "size": "2.2rem", "opacity": 0.14 },
+       { "symbol": "\u25C6", "color": "#FAA742", "size": "1.3rem", "opacity": 0.12 },
        { "symbol": "\u2727", "color": "#EE2B48", "size": "1.5rem", "opacity": 0.12 },
-       { "symbol": "\uD83C\uDF99", "color": "#DAB39D", "size": "1.8rem", "opacity": 0.08 },
+       { "symbol": "\u26A1", "color": "#DAB39D", "size": "1.4rem", "opacity": 0.08 },
        { "symbol": "\u2728", "color": "#8D181F", "size": "1.2rem", "opacity": 0.1 }
       ]
     };
 
-    // ============== FUNCTIONALITY ==============
-    const previewImg = document.getElementById('charPreview');
-    const sizeSlider = document.getElementById('sizeSlider');
-    const sizeValue = document.getElementById('sizeValue');
-    const duplicateToggle = document.getElementById('duplicateToggle');
-    let allowDuplication = true; // defaults to "Yes"
+        //  DOM REFS
+        const previewImg = document.getElementById('charPreview');
+        const sizeSlider = document.getElementById('sizeSlider');
+        const sizeValue = document.getElementById('sizeValue');
+        const duplicateToggle = document.getElementById('duplicateToggle');
+        const summonBtn = document.getElementById('summonBtn');
 
-    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        allowDuplication = btn.dataset.value === 'yes';
-      });
-    });
+        let allowDuplication = true; // "Yes" by default
 
-    // Ensure preview comes from CHARACTER config
-    previewImg.src = CHARACTER.preview;
-    // Live size preview
-    function updatePreviewSize(scale) {
-      previewImg.style.transform = `scale(${scale})`;
-    }
-    sizeSlider.addEventListener('input', () => {
-      const val = parseFloat(sizeSlider.value).toFixed(1);
-      sizeValue.textContent = val;
-      updatePreviewSize(parseFloat(val));
-    });
-    updatePreviewSize(1.0); // initial
-
-    // Summon button
-    document.getElementById('summonBtn').addEventListener('click', async () => {
-      const scale = parseFloat(sizeSlider.value);
-      await generateAndDownload(CHARACTER, scale, allowDuplication);
-    });
-      // Keep UI values in sync on initial load
-    sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1);
-    updatePreviewSize(parseFloat(sizeSlider.value));
-
-     function triggerDownload(blobOrUrl, filename) {
-    const a = document.createElement('a');
-    if (typeof blobOrUrl === 'string') {
-      a.href = blobOrUrl;
-    } else {
-      a.href = URL.createObjectURL(blobOrUrl);
-    }
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    if (typeof blobOrUrl !== 'string') {
-      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
-    }
-  }
-
-  // ========== ZIP GENERATION ==========
-  async function generateAndDownload(char, scale, allowDuplication) {
-    const filename = `${char.name}_Shimeji_custom.zip`;
-
-    try {
-      if (location.protocol === 'file:') {
-        throw new Error('This page is running as file://. Use a local web server.');
-      }
-
-      // Build absolute URL safely, encoding spaces/special characters in the path
-      const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
-
-      const resp = await fetch(zipUrl, { cache: 'no-store' });
-      if (!resp.ok) throw new Error(`Could not fetch ZIP (${resp.status}) at ${zipUrl}`);
-
-      const zipBlob = await resp.blob();
-      const zip = await JSZip.loadAsync(zipBlob);
-
-      // Locate configuration file anywhere inside the zip, regardless of nesting
-      // (handles zips where everything sits inside an extra top-level folder,
-      // and different config filenames used across Shimeji-ee builds)
-      const allPaths = Object.keys(zip.files);
-
-      let configPath = allPaths.find(p =>
-        /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p)
-      );
-
-      if (!configPath) {
-        configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
-      }
-
-      const configFile = configPath ? zip.file(configPath) : null;
-
-      if (configFile) {
-        let text = await configFile.async('text');
-        // Starting count on launch: 1 if duplication is disallowed, otherwise a
-        // small default so it doesn't spawn a crowd immediately.
-        text = setOrReplace(text, 'OnScreenCount', allowDuplication ? '1' : '1');
-        text = setOrReplace(text, 'Scale', scale.toFixed(1));
-        // NOTE: Shimeji-ee's config format doesn't have a documented key that
-        // blocks the in-app right-click "Call Another" menu option, so this
-        // flag is written for reference/future use but won't itself stop
-        // someone from manually spawning more once the mascot is running.
-        text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
-        zip.file(configFile.name, text);
-      } else {
-        console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
-      }
-
-      const newZip = await zip.generateAsync({ type: 'blob' });
-      triggerDownload(newZip, filename);
-    } catch (err) {
-      console.error('ZIP generation failed:', err);
-      // Fallback: still let user download the original zip file
-      try {
-        const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
-        triggerDownload(zipUrl, `${char.name}_Shimeji.zip`);
-        alert('Custom edit failed, downloaded original ZIP instead.');
-      } catch (fallbackErr) {
-        alert('Error generating ZIP: ' + err.message);
-      }
-    }
-  }
-
-    function setOrReplace(text, key, val) {
-      const lines = text.split('\n');
-      let found = false;
-      const updated = lines.map(line => {
-        if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
-          found = true;
-          return `${key}=${val}`;
-        }
-        return line;
-      });
-      if (!found) updated.push(`${key}=${val}`);
-      return updated.join('\n');
-    }
-
-    // ========== FLOATING SYMBOLS ==========
-    (function renderSymbols() {
-      const container = document.getElementById('symbols-container');
-      container.innerHTML = '';
-      if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
-        CHARACTER.backgroundSymbols.forEach(sym => {
-          for (let i = 0; i < 8; i++) {
-            const span = document.createElement('span');
-            span.textContent = sym.symbol;
-            span.style.cssText = `
-              position:absolute;
-              left:${Math.random() * 95}%;
-              top:${Math.random() * 95}%;
-              font-size:${sym.size};
-              color:${sym.color};
-              opacity:${sym.opacity};
-              pointer-events:none;
-              user-select:none;
-            `;
-            container.appendChild(span);
-          }
+        // Duplication toggle 
+        duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                allowDuplication = btn.dataset.value === 'yes';
+            });
         });
+
+        // Preview image
+        previewImg.src = CHARACTER.preview;
+
+        //  Size slider
+        function updateSliderDisplay() {
+            const val = parseFloat(sizeSlider.value).toFixed(1);
+            sizeValue.textContent = val;
+        }
+
+        sizeSlider.addEventListener('input', updateSliderDisplay);
+        updateSliderDisplay();
+
+
+        //  DOWNLOAD LOGIC
+
+        function triggerDownload(blobOrUrl, filename) {
+            const a = document.createElement('a');
+            if (typeof blobOrUrl === 'string') {
+                a.href = blobOrUrl;
+            } else {
+                a.href = URL.createObjectURL(blobOrUrl);
+            }
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            if (typeof blobOrUrl !== 'string') {
+                setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+            }
+        }
+
+        function setOrReplace(text, key, val) {
+            const lines = text.split('\n');
+            let found = false;
+            const updated = lines.map(line => {
+                if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
+                    found = true;
+                    return key + '=' + val;
+                }
+                return line;
+            });
+            if (!found) updated.push(key + '=' + val);
+            return updated.join('\n');
+        }
+
+        async function generateAndDownload(char, scale, allowDuplication) {
+            const filename = char.name + '_Shimeji_custom.zip';
+            try {
+                if (location.protocol === 'file:') {
+                    throw new Error('This page is running as file://. Use a local web server.');
+                }
+
+                const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+                const resp = await fetch(zipUrl, { cache: 'no-store' });
+                if (!resp.ok) throw new Error('Could not fetch ZIP (' + resp.status + ') at ' + zipUrl);
+
+                const zipBlob = await resp.blob();
+                const zip = await JSZip.loadAsync(zipBlob);
+
+                // Locate the config file
+                const allPaths = Object.keys(zip.files);
+                let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
+                if (!configPath) {
+                    configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
+                }
+
+                const configFile = configPath ? zip.file(configPath) : null;
+
+                if (configFile) {
+                    let text = await configFile.async('text');
+
+                    // Always keep OnScreenCount = 1
+                    text = setOrReplace(text, 'OnScreenCount', '1');
+
+                    // Scale from slider → controls Shimeji size in the downloaded ZIP
+                    text = setOrReplace(text, 'Scale', scale.toFixed(1));
+
+                    // Duplication from toggle → controls whether Shimeji can duplicate
+                    text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
+
+                    zip.file(configFile.name, text);
+                } else {
+                    console.warn('No conf/*.properties file found in zip — shipping settings unchanged.');
+                }
+
+                const newZip = await zip.generateAsync({ type: 'blob' });
+                triggerDownload(newZip, filename);
+
+            } catch (err) {
+                console.error('ZIP generation failed:', err);
+                try {
+                    const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+                    triggerDownload(zipUrl, char.name + '_Shimeji.zip');
+                    alert('Custom edit failed, downloaded original ZIP instead.');
+                } catch (fallbackErr) {
+                    alert('Error generating ZIP: ' + err.message);
+                }
+            }
+        }
+
+        summonBtn.addEventListener('click', async () => {
+            const scale = parseFloat(sizeSlider.value);
+            await generateAndDownload(CHARACTER, scale, allowDuplication);
+        });
+
+        //  BACKGROUND SYMBOLS
+        (function renderSymbols() {
+            const container = document.getElementById('symbols-container');
+            container.innerHTML = '';
+            if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
+                CHARACTER.backgroundSymbols.forEach(sym => {
+                    for (let i = 0; i < 8; i++) {
+                        const span = document.createElement('span');
+                        span.textContent = sym.symbol;
+                        span.style.cssText = `
+                            position:absolute;
+                            left:${Math.random() * 95}%;
+                            top:${Math.random() * 95}%;
+                            font-size:${sym.size};
+                            color:${sym.color};
+                            opacity:${sym.opacity};
+                            pointer-events:none;
+                            user-select:none;
+                            animation-duration:${6 + Math.random() * 6}s;
+                            animation-delay:${(Math.random() * 5).toFixed(2)}s;
+                        `;
+                        container.appendChild(span);
+                    }
+                });
+            }
+        })();
+
+    // RISING SOULS 
+    (function renderSouls() {
+      const layer = document.getElementById('soulLayer');
+      const SOUL_COUNT = 10;
+      for (let i = 0; i < SOUL_COUNT; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'soul';
+        const size = 18 + Math.random() * 14;
+        wrapper.style.left = `${Math.random() * 96}%`;
+        wrapper.style.setProperty('--drift', `${(Math.random() * 60 - 30).toFixed(0)}px`);
+        wrapper.style.animationDuration = `${16 + Math.random() * 12}s`;
+        wrapper.style.animationDelay = `${(Math.random() * -25).toFixed(1)}s`;
+        wrapper.innerHTML = `
+          <svg width="${size}" height="${size * 2.2}" viewBox="0 0 30 66" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15,0 C6,4 2,12 2,20 C2,28 8,32 8,40 C8,50 11,58 15,66 C19,58 22,50 22,40 C22,32 28,28 28,20 C28,12 24,4 15,0 Z"
+                  fill="#050505" stroke="rgba(238,43,72,0.35)" stroke-width="0.6" opacity="0.7"/>
+            <circle cx="11" cy="17" r="1.4" fill="var(--scarlet)" opacity="0.6"/>
+            <circle cx="19" cy="17" r="1.4" fill="var(--scarlet)" opacity="0.6"/>
+          </svg>
+        `;
+        layer.appendChild(wrapper);
+      }
+
+      // his radio-dial symbol, rising rarer and larger among the souls
+      const SYMBOL_COUNT = 3;
+      for (let i = 0; i < SYMBOL_COUNT; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'symbol-rise';
+        wrapper.style.left = `${10 + Math.random() * 80}%`;
+        wrapper.style.setProperty('--drift', `${(Math.random() * 50 - 25).toFixed(0)}px`);
+        wrapper.style.animationDuration = `${26 + Math.random() * 10}s`;
+        wrapper.style.animationDelay = `${(Math.random() * -30).toFixed(1)}s`;
+        wrapper.innerHTML = `
+          <svg width="46" height="46" viewBox="0 0 46 46" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23,2 L37,23 L23,44 L9,23 Z" fill="none" stroke="var(--scarlet)" stroke-width="2" opacity="0.7"/>
+            <circle cx="23" cy="23" r="6" fill="var(--caramel)" opacity="0.6"/>
+            <line x1="23" y1="23" x2="23" y2="14" stroke="var(--onyx)" stroke-width="1.5"/>
+          </svg>
+        `;
+        layer.appendChild(wrapper);
       }
     })();
   </script>
