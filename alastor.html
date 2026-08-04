@@ -281,7 +281,7 @@
       color: var(--text);
     }
 
-    /* ===== A keepsake, instead of a photo - his radio staff, always within reach ===== */
+    /* his radio staff */
     .keepsake-row {
       display: flex;
       align-items: center;
@@ -403,7 +403,7 @@
     }
     .support-links a { color: var(--accent); }
 
-    /* ===== Louisiana swamp banner ===== */
+    /* Louisiana swamp banner */
     .swamp-banner {
       width: 100vw;
       height: 280px;
@@ -441,7 +441,7 @@
   </style>
 </head>
 <body>
-  <!-- Radio static texture overlay, replacing the generic background stripes -->
+  <!-- Radio static texture overlay -->
   <svg class="static-noise" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
     <filter id="staticNoise">
       <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
@@ -665,16 +665,10 @@
         <!-- pointed gothic-arch cabinet body -->
           <path d="M24,138 L24,20 Q75,-50 126,20 L126,138 Z"
               fill="var(--wood)" stroke="#0d0b0c" stroke-width="2.5"/>
-        <!-- pointed top -->
-          <path d="M75,10 L72,20 L78,20 Z"
-              fill="var(--wood)" stroke="#0d0b0c" stroke-width="2.5"/>
+      
+
         <!-- subtle wood grain lines across the cabinet -->
-        <g stroke="#2e1c11" stroke-width="0.5" opacity="0.4" fill="none">
-          <path d="M26,120 C35,90 50,40 75,10"/>
-          <path d="M123,120 C114,90 100,40 75,10"/>
-          <path d="M28,120 C38,92 52,45 75,12"/>
-          <path d="M122,120 C112,92 98,45 75,12"/>
-        </g>
+
         <!-- inner gold trim tracing the same arch, inset -->
             <path d="M32,132 L32,56 C32,26 45,10 75,-7 C105,10 118,26 118,56 L118,132 Z"
               fill="none" stroke="#F5C9A5" stroke-width="2" stroke-linejoin="round" opacity="0.85"/>
@@ -684,46 +678,34 @@
           <circle cx="32" cy="120" r="1.4"/>
           <circle cx="118" cy="90" r="1.4"/>
           <circle cx="118" cy="120" r="1.4"/>
-          <circle cx="75" cy="13" r="1.4"/>
         </g>
 
-        <!-- small brass nameplate, upper cabinet -->
-        <rect x="58" y="20" width="34" height="9" rx="1.5" fill="var(--panelgold)" stroke="#0d0b0c" stroke-width="1"/>
-        <text x="75" y="27" font-family="Playfair Display, serif" font-size="6" font-weight="700" fill="#2e1c11" text-anchor="middle" letter-spacing="1">WVIP</text>
 
-        <!-- black mesh scrollwork, twin gothic loops merging at center -->
-        <path d="M75,104 C50,98 34,76 38,50 C40,34 54,26 60,38 C64,46 52,50 56,62 C60,76 68,86 75,104"
-              fill="#0a0705" stroke="#0d0b0c" stroke-width="2" stroke-linecap="round"/>
-        <path d="M75,104 C100,98 116,76 112,50 C110,34 96,26 90,38 C86,46 98,50 94,62 C90,76 82,86 75,104"
-              fill="#0a0705" stroke="#0d0b0c" stroke-width="2" stroke-linecap="round"/>
-        <!-- speaker mesh texture, faint crosshatch -->
-        <g stroke="#0d0b0c" stroke-width="0.4" opacity="0.3">
-          <path d="M45,45 L45,95 M55,38 L55,100 M95,38 L95,100 M105,45 L105,95"/>
-        </g>
+        <!-- black mesh scrollwork, -->
+          <polygon points="68,1, 37,75 40,38 48,18"
+            fill="#0a0705" stroke="#0d0b0c" stroke-width="2"/>
+          <polygon points="82,1, 113,75 110,38 102,18"
+            fill="#0a0705" stroke="#0d0b0c" stroke-width="2"/>
 
-        <!-- gold triangular shield panel, bottom center -->
-        <path d="M75,132 L48,98 L58,58 L92,58 L102,98 Z" fill="var(--panelgold)" stroke="#0d0b0c" stroke-width="2"/>
-        <!-- black zigzag lines across the gold panel -->
-        <g stroke="#0a0705" stroke-width="1.5" fill="none" opacity="0.8">
-          <path d="M55,100 L62,88 L67,100 L72,86 L77,100 L82,86 L87,100 L93,88 L98,100"/>
-          <path d="M58,112 L64,102 L69,112 L74,100 L79,112 L84,100 L89,112 L95,102"/>
-        </g>
+
+            
+          <polygon points="75,0, 60,55 92,55"
+            fill="#0a0705" stroke="#0d0b0c" stroke-width="2"/>
+
+
+        <!-- gold base panel stretched across bottom with a zig-zag smiling top, lowest point centered -->
+      <path d="M37,130 L114,130 L114,78 L104,86 L94,94 L84,90 L75,100 L66,90 L56,94 L46,86 L37,78 Z" fill="var(--panelgold)" stroke="#0d0b0c" stroke-width="2"/>
+        <!-- single black zigzag line across the gold panel -->
+        <path d="M37,124 L47,86 L57,130 L67,92 L77,128 L87,92 L97,129 L107,85 L114,124"
+              stroke="#0a0705" stroke-width="1.5" fill="none" opacity="0.8"/>
         <!-- gauge dial, center of the shield -->
-        <circle cx="75" cy="76" r="11" fill="#0a0705" stroke="#0d0b0c" stroke-width="2"/>
+        <circle cx="75" cy="76" r="11" fill="var(--panelgold)" stroke="#0d0b0c" stroke-width="2"/>
         <circle cx="75" cy="76" r="7" fill="none" stroke="#0d0b0c" stroke-width="0.8" opacity="0.6"/>
-        <g stroke="#0d0b0c" stroke-width="0.8" opacity="0.7">
-          <line x1="75" y1="66" x2="75" y2="68.5"/>
-          <line x1="83" y1="70" x2="81.2" y2="71.5"/>
-          <line x1="85" y1="76" x2="82.5" y2="76"/>
-          <line x1="83" y1="82" x2="81.2" y2="80.5"/>
-          <line x1="67" y1="70" x2="68.8" y2="71.5"/>
-          <line x1="65" y1="76" x2="67.5" y2="76"/>
-          <line x1="67" y1="82" x2="68.8" y2="80.5"/>
-        </g>
+
         <line x1="75" y1="76" x2="80" y2="70" stroke="#0d0b0c" stroke-width="1.6" stroke-linecap="round"/>
         <!-- two tuning knobs, flanking the shield -->
-        <circle cx="54" cy="108" r="5" fill="#0a0705" stroke="#0d0b0c" stroke-width="1.5"/>
-        <circle cx="96" cy="108" r="5" fill="#0a0705" stroke="#0d0b0c" stroke-width="1.5"/>
+        <circle cx="54" cy="75" r="7" fill="#0a0705" stroke="#0d0b0c" stroke-width="1.5"/>
+        <circle cx="96" cy="75" r="7" fill="#0a0705" stroke="#0d0b0c" stroke-width="1.5"/>
                 <!-- fluted side pillars -->
         <rect x="14" y="100" width="20" height="38" fill="var(--wood)" stroke="#0d0b0c" stroke-width="1"/>
         <rect x="116" y="100" width="20" height="38" fill="var(--wood)" stroke="#0d0b0c" stroke-width="1"/>
