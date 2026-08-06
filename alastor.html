@@ -96,7 +96,7 @@
       100% { opacity: 0; transform: translate(var(--drift, 30px), -115vh); }
     }
 
-    /*His radio-dial symbol, rising rarer and larger, like the souls but distinctly him */
+    /*His radio-dial symbol, rising rarer and larger */
     .symbol-rise {
       position: absolute;
       bottom: -80px;
@@ -303,13 +303,13 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      cursor: pointer;
+      transition: filter 0.2s;
     }
-    .keepsake-note {
-      font-size: 0.9rem;
-      color: var(--text);
-      opacity: 0.9;
-      line-height: 1.4;
+    .keepsake img:hover {
+      filter: brightness(1.15) drop-shadow(0 0 8px var(--scarlet));
     }
+ 
      /*Jump-scare overlay, triggered by clicking the staff */
     .jumpscare-overlay {
       position: fixed;
@@ -596,7 +596,7 @@
 </head>
 <body>
   <!-- Radio static texture overlay (again not the ship) -->
-  <svg class="static-noise" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <svg class="static-noise" id="staticNoiseLayer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
     <filter id="staticNoise">
       <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
       <feColorMatrix in="noise" type="matrix"
@@ -765,19 +765,6 @@
           <path d="M878,22 L848,22 M878,22 L878,45"/>
         </g>
 
-        
-          <ellipse cx="-93" cy="-1" rx="5" ry="16" fill="#0a0705" stroke="var(--panelgold)" stroke-width="1.5"/>
-          <!-- fluted ribbing inside the bell -->
-          <g stroke="#0a0705" stroke-width="0.8" opacity="0.4">
-            <path d="M-80,-14 C-56,-19 -28,-19 -6,-11"/>
-            <path d="M-78,2 C-52,-4 -24,-6 -5,-1"/>
-          </g>
-          <!-- curved elbow tube down to the base -->
-          <path d="M-4,-10 C8,-8 14,2 12,14" fill="none" stroke="#0d0b0c" stroke-width="4" stroke-linecap="round"/>
-          <circle cx="12" cy="18" r="4" fill="var(--panelgold)"/>
-        </g>
-
-       
 
         <!-- floating musical notes -->
         <g fill="var(--caramel)" opacity="0.7">
@@ -981,7 +968,7 @@
           <path d="M250,136 C265,126 280,132 295,124"/>
         </g>
 
-        <!-- cattails, denser now that the banner has more room -->
+        <!-- cattails-->
         <g fill="#2d3a24" opacity="0.85">
           <g transform="translate(140,105)"><rect x="-1.5" y="0" width="3" height="35"/><ellipse cx="0" cy="-8" rx="4" ry="12" fill="#4a3524"/></g>
           <g transform="translate(158,110) rotate(6)"><rect x="-1.5" y="0" width="3" height="30"/><ellipse cx="0" cy="-7" rx="3.5" ry="10" fill="#4a3524"/></g>
@@ -1033,7 +1020,7 @@
         const duplicateToggle = document.getElementById('duplicateToggle');
         const summonBtn = document.getElementById('summonBtn');
 
-        let allowDuplication = true; // "Yes" by default
+        let allowDuplication = true; 
 
         // Duplication toggle 
         duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -1056,6 +1043,7 @@
         sizeSlider.addEventListener('input', updateSliderDisplay);
         updateSliderDisplay();
 
+        
 
         //  DOWNLOAD LOGIC
 
@@ -1149,34 +1137,7 @@
             await generateAndDownload(CHARACTER, scale, allowDuplication);
         });
  
-    (function renderSymbols() {
-      const container = document.getElementById('symbols-container');
-      container.innerHTML = '';
-      if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
-        CHARACTER.backgroundSymbols.forEach(sym => {
-          for (let i = 0; i < 8; i++) {
-            const span = document.createElement('span');
-            span.textContent = sym.symbol;
-            span.style.cssText = `
-              position:absolute;
-              left:${Math.random() * 95}%;
-              top:${Math.random() * 95}%;
-              font-size:${sym.size};
-              color:${sym.color};
-              opacity:${sym.opacity};
-              pointer-events:none;
-              user-select:none;
-              animation-duration:${6 + Math.random() * 6}s;
-              animation-delay:${(Math.random() * 5).toFixed(2)}s;
-            `;
-            container.appendChild(span);
-          }
-        });
-      }
-    })();
- 
-    // RISING SOULS 
-    (function renderSouls() {
+  (function renderSouls() {
       const layer = document.getElementById('soulLayer');
       const SOUL_COUNT = 10;
       for (let i = 0; i < SOUL_COUNT; i++) {
