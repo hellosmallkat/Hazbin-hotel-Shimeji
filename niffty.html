@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Niffty - Hazbin Hotel</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CHARACTER-SPECIFIC THEME ===== */
+    /* Niffty's canon signature palette */
+    :root {
+      --pink: #DA194C;       /* dress */
+      --deeppink: #990022;   /* dress shading, trim */
+      --cream: #fff8f0;      /* apron, kerchief */
+      --red: #d81e3f;        /* bow, lips, blood */
+      --ink: #1E0B13;        /* eye pupil, knife, hair */
+      --eyeiris: #FAF0A3;        /* eye iris */
+      --eyesclera: #DB1A4E;      /* eye sclera */
+
+      --accent: var(--deeppink);
+      --accent-glow: rgba(232,98,143,0.5);
+      --text: #6b2f42;
+      --heading: var(--red);
+      --button-bg: linear-gradient(45deg, var(--deeppink), var(--red));
+      --card-bg: rgba(250,230,235,0.9);
+      --bg-solid: #CCD0EC;
+      --static-line: rgba(216,30,63,0.06);
+    }
+
+body{
+
+    background-color:#2a0712;
+
+    background-image:
+
+    /* soft lighting */
+    radial-gradient(circle at top,
+        rgba(180,40,70,.35),
+        rgba(0,0,0,.85)),
+
+    /* wallpaper pattern */
+    repeating-radial-gradient(
+        circle at center,
+        rgba(255,255,255,.02) 0px,
+        rgba(255,255,255,.02) 2px,
+        transparent 2px,
+        transparent 70px
+    ),
+
+    /* vertical decorative stripes */
+    repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 115px,
+        rgba(255,220,170,.08) 118px,
+        rgba(255,220,170,.12) 120px,
+        transparent 123px
+    ),
+
+    /* horizontal trim */
+    repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 110px,
+        rgba(255,220,170,.06) 112px,
+        rgba(255,220,170,.12) 114px
+    );
+
+    animation:
+        wallpaperMove 18s ease-in-out infinite,
+        wallpaperGlow 6s ease-in-out infinite;
+
+}
+
+/* OVERLAY */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+    inset:0;
+
+    pointer-events:none;
+
+    background:
+
+        radial-gradient(circle at 20% 20%,
+            rgba(255,255,255,.05),
+            transparent 25%),
+
+        radial-gradient(circle at 80% 65%,
+            rgba(0,0,0,.25),
+            transparent 30%),
+
+        repeating-radial-gradient(
+            circle,
+            rgba(0,0,0,.03) 0,
+            rgba(0,0,0,.03) 2px,
+            transparent 2px,
+            transparent 12px
+        );
+
+    mix-blend-mode:multiply;
+
+    animation:grainMove 22s ease-in-out infinite;
+
+}
+    body::after{
+
+    content:"";
+
+    position:fixed;
+    inset:0;
+
+    pointer-events:none;
+
+    background:
+        radial-gradient(circle,
+        transparent 45%,
+        rgba(0,0,0,.55));
+
+}
+
+/*  ANIMATIONS */
+
+@keyframes wallpaperMove{
+
+    0%{
+        background-position:
+        center,
+        0 0,
+        0 0,
+        0 0;
+    }
+
+    50%{
+        background-position:
+        center,
+        10px -6px,
+        4px 0,
+        0 5px;
+    }
+
+    100%{
+        background-position:
+        center,
+        0 0,
+        0 0,
+        0 0;
+    }
+
+}
+
+@keyframes wallpaperGlow{
+
+    0%,100%{
+
+        filter:
+        brightness(1)
+        saturate(1);
+
+    }
+
+    50%{
+
+        filter:
+        brightness(1.08)
+        saturate(1.18);
+
+    }
+
+}
+
+@keyframes grainMove{
+
+    0%{
+
+        transform:
+        translate(0,0);
+
+    }
+
+    50%{
+
+        transform:
+        translate(-12px,-6px);
+
+    }
+
+    100%{
+
+        transform:
+        translate(0,0);
+
+    }
+
+}
+
+    #symbols-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .room-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      color: var(--red);
+      text-decoration: none;
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      transition: color 0.3s;
+    }
+
+    /* ===== Gingham checkered strip, retro kitchen feel ===== */
+    .gingham-strip {
+      width: 100%;
+      height: 20px;
+      margin: 0.25rem 0 1.2rem 0;
+      background:
+        linear-gradient(45deg, var(--pink) 25%, transparent 25%, transparent 75%, var(--pink) 75%),
+        linear-gradient(45deg, var(--pink) 25%, transparent 25%, transparent 75%, var(--pink) 75%);
+      background-size: 14px 14px;
+      background-position: 0 0, 7px 7px;
+      opacity: 0.6;
+    }
+
+    /* ===== Her little cockroach friends, dancing along the top ===== */
+    .roach-strip {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 3.5rem;
+      margin: 0.5rem 0 0.8rem 0;
+    }
+    .roach {
+      width: 34px;
+      height: 34px;
+      animation: roach-dance 0.6s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+    .roach:nth-child(2) { animation-delay: 0.1s; }
+    .roach:nth-child(3) { animation-delay: 0.2s; }
+    .roach:nth-child(4) { animation-delay: 0.05s; }
+    .roach:nth-child(5) { animation-delay: 0.15s; }
+    @keyframes roach-dance {
+      0%, 100% { transform: rotate(-8deg) translateY(0); }
+      25%      { transform: rotate(6deg) translateY(-3px); }
+      50%      { transform: rotate(-10deg) translateY(0); }
+      75%      { transform: rotate(8deg) translateY(-4px); }
+    }
+
+    /*Her giant cyclops eye, worn above her name, blinking rapidly */
+    .title-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0.5rem 0 0.6rem 0;
+    }
+    .niffty-eye {
+      width: 100px;
+      height: 100px;
+      margin-bottom: -14px;
+      transform: rotate(-4deg);
+      animation: eye-blink 3.2s ease-in-out infinite;
+    }
+    @keyframes eye-blink {
+      0%, 88%, 100% { transform: rotate(-4deg) scaleY(1); }
+      90%           { transform: rotate(-4deg) scaleY(0.1); }
+      92%           { transform: rotate(-4deg) scaleY(1); }
+      94%           { transform: rotate(-4deg) scaleY(0.1); }
+      96%           { transform: rotate(-4deg) scaleY(1); }
+    }
+    .title-wrap .room-title { position: relative; margin: 0; }
+
+    .room-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 0.4rem;
+      color: var(--heading);
+      text-align: center;
+      -webkit-text-stroke: 2px var(--ink);
+      text-stroke: 2px var(--ink);
+      text-shadow:
+        3px 3px 0 var(--ink),
+        0 0 20px var(--pink),
+        0 0 38px rgba(244,166,193,0.6);
+      letter-spacing: 1px;
+    }
+
+    /*Jittery badge */
+    .mood-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.6rem 0 1.2rem 0;
+      padding: 0.5rem 1.4rem;
+      border: 3px dashed var(--red);
+      border-radius: 40px;
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--red);
+      background: rgba(255,248,240,0.85);
+      box-shadow: 0 0 14px rgba(216,30,63,0.3);
+      vertical-align: middle;
+      animation: jitter 0.35s ease-in-out infinite;
+    }
+    @keyframes jitter {
+      0%, 100% { transform: translate(0,0) rotate(-1deg); }
+      25%      { transform: translate(1px,-1px) rotate(1deg); }
+      50%      { transform: translate(-1px,1px) rotate(-1.5deg); }
+      75%      { transform: translate(1px,1px) rotate(1.5deg); }
+    }
+
+    .preview-wrapper {
+      display: inline-block;
+      overflow: hidden;
+      border-radius: 40px 12px 40px 12px;
+      max-width: 450px;
+      margin: 1rem 0 2.5rem 0;
+      box-shadow: 0 0 40px rgba(0,0,0,0.15), 0 0 45px var(--accent-glow), 0 0 22px rgba(216,30,63,0.3) inset;
+      border: 3px solid var(--accent);
+    }
+    .preview-wrapper img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: transform 0.2s ease-out;
+      transform-origin: top left;
+    }
+
+    .vibe-section {
+      background: rgba(255,248,240,0.88);
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      border-radius: 32px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 30px rgba(216,30,63,0.12), 0 0 16px rgba(244,166,193,0.4) inset;
+      position: relative;
+      overflow: hidden;
+    }
+    .vibe-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-style: italic;
+      margin-bottom: 1rem;
+      color: var(--red);
+      text-shadow: 0 0 10px rgba(216,30,63,0.2);
+    }
+    .vibe-desc {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    /* Sewing kit */
+    .sewing-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      border-top: 2px dashed rgba(216,30,63,0.25);
+    }
+    .sewing-kit {
+      flex-shrink: 0;
+      width: 76px;
+      height: 76px;
+    }
+    .sewing-kit svg { width: 100%; height: 100%; }
+    .sewing-note {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    .control-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      border-radius: 32px;
+      padding: 2.5rem;
+      box-shadow: 0 0 35px rgba(216,30,63,0.1);
+    }
+    .slider-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+    .slider-item label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-family: 'Baloo 2', sans-serif;
+      color: var(--red);
+      font-size: 1.1rem;
+    }
+    input[type="range"] {
+      width: 240px;
+      height: 8px;
+      accent-color: var(--red);
+      border-radius: 4px;
+    }
+    .toggle-group { display: flex; gap: 0.75rem; justify-content: center; }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: rgba(216,30,63,0.06);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover { opacity: 0.85; }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .summon-button {
+      display: inline-block;
+      padding: 1.1rem 3.2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      transition: all 0.3s;
+      margin-top: 1.5rem;
+      background: var(--button-bg);
+      color: #fff;
+      border: 3px solid var(--cream);
+      box-shadow: 0 0 15px var(--accent-glow);
+      text-shadow: 0 0 8px rgba(0,0,0,0.25);
+    }
+    .summon-button:hover {
+      transform: scale(1.06) rotate(-2deg);
+      box-shadow: 0 0 28px var(--accent-glow);
+      filter: brightness(1.08);
+    }
+
+    /* Bottom decoration: cleaning supplies with a hidden edge */
+    .cleaning-banner {
+      width: 100%;
+      height: 130px;
+      margin-top: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .cleaning-banner svg { width: 100%; height: 100%; display: block; }
+    .sparkle { animation: sparkle-twinkle 1.4s ease-in-out infinite; }
+    .sparkle:nth-child(2) { animation-delay: 0.3s; }
+    .sparkle:nth-child(3) { animation-delay: 0.6s; }
+    .sparkle:nth-child(4) { animation-delay: 0.9s; }
+    @keyframes sparkle-twinkle {
+      0%, 100% { opacity: 0.25; transform: scale(0.8); }
+      50%      { opacity: 1; transform: scale(1.15); }
+    }
+    .knife-glint {
+      animation: glint-flash 2.5s ease-in-out infinite;
+    }
+    @keyframes glint-flash {
+      0%, 82%, 100% { opacity: 0; }
+      85%           { opacity: 1; }
+      88%           { opacity: 0.3; }
+      91%           { opacity: 1; }
+      94%           { opacity: 0; }
+    }
+
+    .floating-symbol {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      animation: drift-float 6s ease-in-out infinite;
+    }
+    @keyframes drift-float {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(6px, -12px) rotate(8deg); }
+      50%  { transform: translate(-5px, -20px) rotate(-6deg); }
+      75%  { transform: translate(8px, -12px) rotate(7deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    @keyframes wallMove {
+
+    0%{
+        background-position:
+            center,
+            center,
+            0 0,
+            0 0,
+            41px 39px,
+            0 0,
+            0 0,
+            0 0;
+    }
+
+    50%{
+        background-position:
+            center,
+            center,
+            -8px 3px,
+            4px -2px,
+            45px 39px,
+            -25px -10px,
+            15px 12px,
+            -20px 8px;
+    }
+
+    100%{
+        background-position:
+            center,
+            center,
+            0 0,
+            0 0,
+            41px 39px,
+            0 0,
+            0 0,
+            0 0;
+    }
+}
+@keyframes grimeMove{
+
+    0%{
+        transform:translate(0,0);
+    }
+
+    50%{
+        transform:translate(-10px,-6px);
+    }
+
+    100%{
+        transform:translate(0,0);
+    }
+
+}
+    @keyframes bug-wander {
+      0%, 100% {
+        transform: translate3d(0,0,0);
+        opacity: 0.95;
+      }
+      25% {
+        transform: translate3d(10px,-8px,0);
+        opacity: 0.82;
+      }
+      50% {
+        transform: translate3d(-8px,10px,0);
+        opacity: 0.9;
+      }
+      75% {
+        transform: translate3d(6px,4px,0);
+        opacity: 0.76;
+      }
+    }
+
+    .wall-bugs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .wall-bug {
+      position: absolute;
+      width: 20px;
+      height: 13px;
+      border-radius: 50% 50% 42% 42%;
+      background: #211116;
+      box-shadow: 0 0 0 1px rgba(255,248,240,0.08) inset;
+      transform-origin: center;
+      animation: bug-crawl 8s linear infinite;
+    }
+    .wall-bug::before,
+    .wall-bug::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      width: 1.5px;
+      height: 9px;
+      background: #211116;
+      top: -6px;
+      transform-origin: bottom center;
+      border-radius: 999px;
+    }
+    .wall-bug::before { transform: translateX(-4px) rotate(-28deg); }
+    .wall-bug::after { transform: translateX(2px) rotate(28deg); }
+    .bug-1 { top: 18%; left: 10%; animation-duration: 9s; }
+    .bug-2 { top: 33%; left: 81%; animation-duration: 11s; animation-direction: reverse; }
+    .bug-3 { top: 62%; left: 18%; animation-duration: 8s; animation-delay: -2s; }
+    .bug-4 { top: 74%; left: 72%; animation-duration: 10s; animation-delay: -4s; }
+    .bug-5 { top: 47%; left: 49%; animation-duration: 12s; animation-delay: -6s; }
+    .bug-6 { top: 14%; left: 58%; animation-duration: 9s; animation-delay: -1s; }
+    .bug-7 { top: 28%; left: 34%; animation-duration: 13s; animation-delay: -5s; animation-direction: reverse; }
+    .bug-8 { top: 58%; left: 84%; animation-duration: 10s; animation-delay: -3s; }
+    .bug-9 { top: 83%; left: 29%; animation-duration: 11s; animation-delay: -7s; }
+    .bug-10 { top: 41%; left: 7%; animation-duration: 14s; animation-delay: -4s; animation-direction: reverse; }
+
+    @keyframes bug-crawl {
+      0%   { transform: translate(0,0) rotate(0deg); }
+      25%  { transform: translate(18px,-6px) rotate(8deg); }
+      50%  { transform: translate(34px,4px) rotate(-6deg); }
+      75%  { transform: translate(16px,12px) rotate(10deg); }
+      100% { transform: translate(0,0) rotate(0deg); }
+    }
+    .sewing-kit{
+    width:90px;
+    height:90px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    animation:needleFloat 3.5s ease-in-out infinite;
+}
+
+.sewing-kit svg{
+    overflow:visible;
+}
+
+.thread{
+
+    stroke-dasharray:220;
+
+    animation:
+        threadFlow 4s linear infinite;
+
+}
+
+@keyframes threadFlow{
+
+    from{
+        stroke-dashoffset:220;
+    }
+
+    to{
+        stroke-dashoffset:0;
+    }
+
+}
+
+@keyframes needleFloat{
+
+    0%,100%{
+        transform:
+            rotate(-6deg)
+            translateY(0px);
+    }
+
+    50%{
+        transform:
+            rotate(4deg)
+            translateY(-5px);
+    }
+
+}
+  </style>
+</head>
+<body>
+  <div id="symbols-container"></div>
+  <div class="wall-bugs" aria-hidden="true">
+    <span class="wall-bug bug-1"></span>
+    <span class="wall-bug bug-2"></span>
+    <span class="wall-bug bug-3"></span>
+    <span class="wall-bug bug-4"></span>
+    <span class="wall-bug bug-5"></span>
+    <span class="wall-bug bug-6"></span>
+    <span class="wall-bug bug-7"></span>
+    <span class="wall-bug bug-8"></span>
+    <span class="wall-bug bug-9"></span>
+    <span class="wall-bug bug-10"></span>
+  </div>
+
+  <div class="room-container">
+    <a href="index.html" class="back-link">Back to the Hotel</a>
+
+    <div class="gingham-strip" aria-hidden="true"></div>
+
+    <div class="roach-strip" aria-hidden="true">
+      <svg class="roach" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="17" cy="20" rx="9" ry="13" fill="var(--ink)"/>
+        <ellipse cx="17" cy="20" rx="6" ry="10" fill="#3a2a2a"/>
+        <path d="M13,7 L8,1 M21,7 L26,1" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+        <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9,14 L2,10 M9,20 L1,20 M9,26 L2,30"/>
+          <path d="M25,14 L32,10 M25,20 L33,20 M25,26 L32,30"/>
+        </g>
+      </svg>
+      <svg class="roach" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="17" cy="20" rx="9" ry="13" fill="var(--ink)"/>
+        <ellipse cx="17" cy="20" rx="6" ry="10" fill="#3a2a2a"/>
+        <path d="M13,7 L8,1 M21,7 L26,1" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+        <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9,14 L2,10 M9,20 L1,20 M9,26 L2,30"/>
+          <path d="M25,14 L32,10 M25,20 L33,20 M25,26 L32,30"/>
+        </g>
+      </svg>
+      <svg class="roach" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="17" cy="20" rx="9" ry="13" fill="var(--ink)"/>
+        <ellipse cx="17" cy="20" rx="6" ry="10" fill="#3a2a2a"/>
+        <path d="M13,7 L8,1 M21,7 L26,1" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+        <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9,14 L2,10 M9,20 L1,20 M9,26 L2,30"/>
+          <path d="M25,14 L32,10 M25,20 L33,20 M25,26 L32,30"/>
+        </g>
+      </svg>
+      <svg class="roach" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="17" cy="20" rx="9" ry="13" fill="var(--ink)"/>
+        <ellipse cx="17" cy="20" rx="6" ry="10" fill="#3a2a2a"/>
+        <path d="M13,7 L8,1 M21,7 L26,1" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+        <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9,14 L2,10 M9,20 L1,20 M9,26 L2,30"/>
+          <path d="M25,14 L32,10 M25,20 L33,20 M25,26 L32,30"/>
+        </g>
+      </svg>
+      <svg class="roach" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="17" cy="20" rx="9" ry="13" fill="var(--ink)"/>
+        <ellipse cx="17" cy="20" rx="6" ry="10" fill="#3a2a2a"/>
+        <path d="M13,7 L8,1 M21,7 L26,1" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+        <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9,14 L2,10 M9,20 L1,20 M9,26 L2,30"/>
+          <path d="M25,14 L32,10 M25,20 L33,20 M25,26 L32,30"/>
+        </g>
+      </svg>
+      <svg class="roach" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="17" cy="20" rx="9" ry="13" fill="var(--ink)"/>
+        <ellipse cx="17" cy="20" rx="6" ry="10" fill="#3a2a2a"/>
+        <path d="M13,7 L8,1 M21,7 L26,1" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+        <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9,14 L2,10 M9,20 L1,20 M9,26 L2,30"/>
+          <path d="M25,14 L32,10 M25,20 L33,20 M25,26 L32,30"/>
+        </g>
+      </svg>
+      <svg class="roach" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="17" cy="20" rx="9" ry="13" fill="var(--ink)"/>
+        <ellipse cx="17" cy="20" rx="6" ry="10" fill="#3a2a2a"/>
+        <path d="M13,7 L8,1 M21,7 L26,1" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+        <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9,14 L2,10 M9,20 L1,20 M9,26 L2,30"/>
+          <path d="M25,14 L32,10 M25,20 L33,20 M25,26 L32,30"/>
+        </g>
+      </svg>
+      <svg class="roach" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="17" cy="20" rx="9" ry="13" fill="var(--ink)"/>
+        <ellipse cx="17" cy="20" rx="6" ry="10" fill="#3a2a2a"/>
+        <path d="M13,7 L8,1 M21,7 L26,1" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+        <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9,14 L2,10 M9,20 L1,20 M9,26 L2,30"/>
+          <path d="M25,14 L32,10 M25,20 L33,20 M25,26 L32,30"/>
+        </g>
+      </svg>
+      <svg class="roach" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="17" cy="20" rx="9" ry="13" fill="var(--ink)"/>
+        <ellipse cx="17" cy="20" rx="6" ry="10" fill="#3a2a2a"/>
+        <path d="M13,7 L8,1 M21,7 L26,1" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"/>
+        <g stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9,14 L2,10 M9,20 L1,20 M9,26 L2,30"/>
+          <path d="M25,14 L32,10 M25,20 L33,20 M25,26 L32,30"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="title-wrap">
+      <svg class="niffty-eye" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <radialGradient id="nifftyEyeGradient" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#f9ec6d"/>
+            <stop offset="60%" stop-color="#f2d24a"/>
+            <stop offset="100%" stop-color="var(--eyesclera)"/>
+          </radialGradient>
+        </defs>
+        <ellipse cx="50" cy="52" rx="48" ry="38" fill="url(#nifftyEyeGradient)" stroke="var(--ink)" stroke-width="3"/>
+       
+        <circle cx="50" cy="52" r="12" fill="var(--ink)"/>
+        <circle cx="44" cy="46" r="4" fill="#fff" opacity="0.85"/>
+
+      </svg>
+      <h1 class="room-title">Niffty</h1>
+    </div>
+
+    <div style="text-align:center;">
+      <span class="mood-badge">✧ Stab! Stab! Stab! ✧</span>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="preview-wrapper" id="previewWrapper">
+        <img id="charPreview" src="images/niffty.png" alt="Niffty Preview">
+      </div>
+    </div>
+
+    <!-- Vibe section (quote + description) -->
+    <div class="vibe-section">
+      <p class="vibe-quote">Sometimes, I kill mother-bugs in front of their children as a warning to others!</p>
+      <p class="vibe-desc">Hiya! I'm Niffty! It's so nice to meet a new friend, oh my gosh, your shoes are absolutely filthy, did you walk through mud, or is that just dried blood, let me fix it! Wait, are you a bad boy? I like bad boys, but only if they clean up after themselves, because this place is a total disaster!</p>
+
+      <div class="sewing-row">
+    <div class="sewing-kit">
+
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+
+            <defs>
+
+                <!-- Metallic needle -->
+                <linearGradient id="needleMetal"x1="0%"y1="0%" x2="100%"y2="0%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="20%" stop-color="#f5f5f5"/>
+                    <stop offset="45%" stop-color="#cfcfcf"/>
+                    <stop offset="55%" stop-color="#8f8f8f"/>
+                    <stop offset="75%" stop-color="#ececec"/>
+                    <stop offset="100%" stop-color="#b0b0b0"/>
+                </linearGradient>
+            </defs>
+
+            <!-- Thread -->
+            <path class="thread" d=" M6 30 C16 6 48 6 58 18 S86 56 95 34 " fill="none" stroke="var(--red)" stroke-width="5" stroke-linecap="round"/>
+
+            <!-- Needle Shadow -->
+            <path d=" M48 95 C49 70 50 44 51 10 " stroke="rgba(0,0,0,.25)" stroke-width="7" stroke-linecap="round" fill="none"/>
+
+            <!-- Needle -->
+            <path d=" M46 95 C47 70 48 44 49 10" stroke="url(#needleMetal)" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+            <!-- Highlight -->
+            <path
+                d=" M45.2 93 C46.2 67 47.2 40 48.2 10 " stroke="rgba(255,255,255,.8)" stroke-width="1" fill="none"/>
+
+            <!-- Needle Eye -->
+            <ellipse cx="49" cy="18" rx="2.6" ry="6" fill="none" stroke="#555" stroke-width="1.6"/>
+
+            <!-- Thread through eye -->
+            <path d=" M49 12 C47 18 49 21 49 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"/>
+
+            <!-- Needle Point -->
+            <polygon
+                points="46,95 49,100 52,95"
+                fill="#d7d7d7"/>
+        </svg>
+
+    </div>
+     
+
+    <p class="sewing-note">
+        My wonderful sewing needle which helps me keep bug or others in place
+    </p>
+     </div>
+</div>
+
+    <!-- Customisation controls -->
+    <div class="control-panel" style="text-align:center;">
+      <div class="slider-group" style="text-align:center;">
+        <div class="slider-item" style="text-align:center;">
+          <label>Size: <span id="sizeValue">1.0</span></label>
+          <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
+        </div>
+        <div class="slider-item" style="text-align:center;">
+          <label>Allow Duplication?</label>
+          <div class="toggle-group" id="duplicateToggle">
+            <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
+            <button type="button" class="toggle-btn" data-value="no">No</button>
+          </div>
+        </div>
+      </div>
+      <button class="summon-button" id="summonBtn">Summon Sparkle</button>
+            <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
+          <p style="margin-top:0.8rem; opacity:0.8;"> Please and go support the original artist here <a href="https://ko-fi.com/spiritboxfm">spiritboxfm</a> </p>
+            <p style="margin-top:0.8rem; opacity:0.8;"> I just made the website if you want to support me do it here <a href="https://ko-fi.com/mikmonvibes">Ko-Fi</a> </p>
+    </div>
+
+    <!-- Bottom decoration: cleaning supplies with a hidden edge -->
+    <div class="cleaning-banner" aria-hidden="true">
+      <svg viewBox="0 0 900 130" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="108" width="900" height="4" fill="var(--pink)" opacity="0.5"/>
+
+       
+
+  <script>
+    // =============================================
+    //  HARDCODED CHARACTER DATA (replace each field)
+    // =============================================
+    const CHARACTER = {
+      name: "Niffty",
+      zip: "downloads/NifftyShimeji.zip",   // must match the exact filename on GitHub, including .zip
+      preview: "images/niffty.png",
+      backgroundSymbols: [
+       { "symbol": "\u2726", "color": "#e8628f", "size": "1.5rem", "opacity": 0.13 },
+       { "symbol": "\u2665", "color": "#d81e3f", "size": "1.2rem", "opacity": 0.1 },
+       { "symbol": "\u2727", "color": "#f4a6c1", "size": "1.3rem", "opacity": 0.11 },
+       { "symbol": "\u2728", "color": "#e8628f", "size": "1.4rem", "opacity": 0.12 }
+      ]
+    };
+
+    // ============== FUNCTIONALITY ==============
+    const previewImg = document.getElementById('charPreview');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const sizeValue = document.getElementById('sizeValue');
+    const duplicateToggle = document.getElementById('duplicateToggle');
+    let allowDuplication = true; // defaults to "Yes"
+
+    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        allowDuplication = btn.dataset.value === 'yes';
+      });
+    });
+
+    previewImg.src = CHARACTER.preview;
+    function updatePreviewSize(scale) {
+      previewImg.style.transform = `scale(${scale})`;
+    }
+    sizeSlider.addEventListener('input', () => {
+      const val = parseFloat(sizeSlider.value).toFixed(1);
+      sizeValue.textContent = val;
+      updatePreviewSize(parseFloat(val));
+    });
+    updatePreviewSize(1.0);
+
+    document.getElementById('summonBtn').addEventListener('click', async () => {
+      const scale = parseFloat(sizeSlider.value);
+      await generateAndDownload(CHARACTER, scale, allowDuplication);
+    });
+    sizeValue.textContent = parseFloat(sizeSlider.value).toFixed(1);
+    updatePreviewSize(parseFloat(sizeSlider.value));
+
+    function triggerDownload(blobOrUrl, filename) {
+      const a = document.createElement('a');
+      if (typeof blobOrUrl === 'string') {
+        a.href = blobOrUrl;
+      } else {
+        a.href = URL.createObjectURL(blobOrUrl);
+      }
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      if (typeof blobOrUrl !== 'string') {
+        setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+      }
+    }
+
+    async function generateAndDownload(char, scale, allowDuplication) {
+      const filename = `${char.name}_Shimeji_custom.zip`;
+      try {
+        if (location.protocol === 'file:') {
+          throw new Error('This page is running as file://. Use a local web server.');
+        }
+        const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+        const resp = await fetch(zipUrl, { cache: 'no-store' });
+        if (!resp.ok) throw new Error(`Could not fetch ZIP (${resp.status}) at ${zipUrl}`);
+
+        const zipBlob = await resp.blob();
+        const zip = await JSZip.loadAsync(zipBlob);
+
+        const allPaths = Object.keys(zip.files);
+        let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
+        if (!configPath) {
+          configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
+        }
+        const configFile = configPath ? zip.file(configPath) : null;
+
+        if (configFile) {
+          let text = await configFile.async('text');
+          text = setOrReplace(text, 'OnScreenCount', '1');
+          text = setOrReplace(text, 'Scale', scale.toFixed(1));
+          // NOTE: Shimeji-ee has no documented key that blocks the in-app
+          // right-click "Call Another" option, so this flag is written for
+          // reference only and won't itself prevent manual duplication.
+          text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
+          zip.file(configFile.name, text);
+        } else {
+          console.warn('No conf/*.properties file found in zip - shipping settings unchanged.');
+        }
+
+        const newZip = await zip.generateAsync({ type: 'blob' });
+        triggerDownload(newZip, filename);
+      } catch (err) {
+        console.error('ZIP generation failed:', err);
+        try {
+          const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+          triggerDownload(zipUrl, `${char.name}_Shimeji.zip`);
+          alert('Custom edit failed, downloaded original ZIP instead.');
+        } catch (fallbackErr) {
+          alert('Error generating ZIP: ' + err.message);
+        }
+      }
+    }
+
+    function setOrReplace(text, key, val) {
+      const lines = text.split('\n');
+      let found = false;
+      const updated = lines.map(line => {
+        if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
+          found = true;
+          return `${key}=${val}`;
+        }
+        return line;
+      });
+      if (!found) updated.push(`${key}=${val}`);
+      return updated.join('\n');
+    }
+
+    (function renderSymbols() {
+      const container = document.getElementById('symbols-container');
+      container.innerHTML = '';
+      if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
+        CHARACTER.backgroundSymbols.forEach(sym => {
+          for (let i = 0; i < 8; i++) {
+            const span = document.createElement('span');
+            span.textContent = sym.symbol;
+            span.style.cssText = `
+              position:absolute;
+              left:${Math.random() * 95}%;
+              top:${Math.random() * 95}%;
+              font-size:${sym.size};
+              color:${sym.color};
+              opacity:${sym.opacity};
+              pointer-events:none;
+              user-select:none;
+              animation-duration:${4 + Math.random() * 4}s;
+              animation-delay:${(Math.random() * 4).toFixed(2)}s;
+            `;
+            container.appendChild(span);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
