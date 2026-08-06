@@ -10,15 +10,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* ===== CHARACTER-SPECIFIC THEME ===== */
-    /* Alastor's canon signature palette */
+    /*CHARACTER-SPECIFIC THEME*/
+    /* Alastor's signature palette */
     :root {
       --scarlet: #EE2B48;
       --crimson: #8D181F;
       --onyx: #050505;
       --caramel: #FAA742;
       --sepia: #DAB39D;
-      --maroon: #2b0509;      /* deep art-deco maroon, from the "thank you" card influence */
+      --maroon: #2b0509;     
       --wood: #4a2f1f;        /* warm wood-brown radio cabinet */
       --panelgold: #e0b84a;   /* bright gold speaker panel */
 
@@ -49,7 +49,7 @@
       background-color: var(--bg-solid);
       color: var(--text);
     }
-    /* ===== Radio static noise overlay - his medium, not generic stripes ===== */
+    /* Radio static noise overlay (not the ship) */
     .static-noise {
       position: fixed;
       inset: 0;
@@ -76,7 +76,7 @@
       z-index: 0;
     }
 
-    /* ===== Collected souls, rising slowly through the background ===== */
+    /*Collected souls, rising slowly through the background */
     .soul-layer {
       position: fixed;
       inset: 0;
@@ -96,7 +96,7 @@
       100% { opacity: 0; transform: translate(var(--drift, 30px), -115vh); }
     }
 
-    /* ===== His radio-dial symbol, rising rarer and larger, like the souls but distinctly him ===== */
+    /*His radio-dial symbol, rising rarer and larger, like the souls but distinctly him */
     .symbol-rise {
       position: absolute;
       bottom: -80px;
@@ -109,7 +109,7 @@
       100% { opacity: 0; transform: translate(var(--drift, -20px), -120vh) rotate(8deg); }
     }
 
-    /* ===== Dead swamp trees, climbing up either side of the whole page ===== */
+    /* Dead swamp trees, climbing up either side of the whole page */
     .swamp-tree-side {
       position: fixed;
       top: 0;
@@ -141,7 +141,7 @@
       transition: color 0.3s;
     }
 
-    /* ===== Art deco corner-bracket header banner, maroon-and-gold ===== */
+    /* Art deco corner-bracket header banner, maroon-and-gold */
     .deco-banner {
       position: relative;
       width: 100%;
@@ -154,10 +154,8 @@
     }
     .deco-banner svg { width: 100%; height: 100px; display: block; }
 
-    /* ===== Chevron strip ===== */
-    /* (chevron strip removed) */
 
-    /* ===== Worn accessory - antlers wrapped around a tuning dial, glowing dimly like static ===== */
+    /* Radio*/
     .title-wrap {
       position: relative;
       display: flex;
@@ -196,7 +194,7 @@
       letter-spacing: 1px;
     }
 
-    /* ===== ON AIR badge ===== */
+    /*ON AIR badge */
     .on-air-badge {
       display: inline-flex;
       align-items: center;
@@ -312,7 +310,7 @@
       opacity: 0.9;
       line-height: 1.4;
     }
-  /* ===== Jump-scare overlay, triggered by clicking the staff ===== */
+     /*Jump-scare overlay, triggered by clicking the staff */
     .jumpscare-overlay {
       position: fixed;
       inset: 0;
@@ -468,7 +466,7 @@
       opacity: 0.9;
       line-height: 1.4;
     }
-
+ 
     .control-panel {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
@@ -524,7 +522,7 @@
       opacity: 1;
       box-shadow: 0 0 12px var(--accent-glow);
     }
-
+ 
     .summon-button {
       display: inline-block;
       padding: 1.2rem 3.5rem;
@@ -597,7 +595,7 @@
   </style>
 </head>
 <body>
-  <!-- Radio static texture overlay -->
+  <!-- Radio static texture overlay (again not the ship) -->
   <svg class="static-noise" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
     <filter id="staticNoise">
       <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
@@ -610,7 +608,7 @@
   <!-- Dead swamp trees, climbing up either side of the page -->
   <div class="swamp-tree-side left" aria-hidden="true">
     <svg viewBox="0 0 130 1000" preserveAspectRatio="xMinYMax slice" xmlns="http://www.w3.org/2000/svg">
-      <!-- jagged, twisted trunk - sharper angles instead of smooth curves -->
+      <!-- jagged, twisted trunk -->
       <path d="M20,1000 L28,900 L12,860 L30,790 L10,740 L32,690 L14,630 L34,580
                L16,520 L36,460 L18,410 L38,360 L20,310 L40,265 L22,220 L42,175
                L26,135 L44,95 L30,55 L46,20 L38,0"
@@ -650,7 +648,7 @@
         <ellipse cx="22" cy="260" rx="5.5" ry="4" transform="rotate(-8 22 260)"/>
       </g>
 
-      <!-- thin hanging dead tendrils, like moss with no life left -->
+      <!-- thin hanging dead tendrils -->
       <g stroke="#080808" stroke-width="1" opacity="0.55" stroke-linecap="round" fill="none">
         <path d="M-40,540 C-42,558 -38,572 -42,588"/>
         <path d="M-30,565 C-32,580 -28,592 -31,606"/>
@@ -823,8 +821,6 @@
               fill="var(--wood)" stroke="#0d0b0c" stroke-width="2.5"/>
       
 
-        <!-- subtle wood grain lines across the cabinet -->
-
         <!-- inner gold trim tracing the same arch, inset -->
             <path d="M32,132 L32,56 C32,26 45,10 75,-7 C105,10 118,26 118,56 L118,132 Z"
               fill="none" stroke="#F5C9A5" stroke-width="2" stroke-linejoin="round" opacity="0.85"/>
@@ -887,11 +883,12 @@
       <div class="vibe-section">
       <p class="vibe-quote">"A smile is a valuable tool, my dear. It inspires your friends, keeps your enemies guessing, and ensures that, no matter what comes your way, you are the one in control</p>
       <p class="vibe-desc">Alastor! Pleasure to be meeting you, quite a pleasure. </p>
-      <div class="keepsake-row">
+
+       <div class="keepsake-row">
         <div class="keepsake">
-          <img src="images/alastor-staff.jpg" alt="Alastor's staff"> <!-- make an image of Alastor's staff -->
+          <img src="images/alastor-staff.jpg" alt="Alastor's staff" id="staffImg">
         </div>
-        <p class="keepsake-note">Don't touch my staff</p>
+        <p class="keepsake-note">Don't touch my staff!</p>
       </div>
     </div>
 
@@ -932,7 +929,7 @@
           <path d="M760,158 Q790,154 820,158 T880,158"/>
         </g>
 
-        <!-- his radio tower - taller, more detailed lattice, broadcasting his show and the souls caught in the signal -->
+        <!-- his radio tower -->
         <g transform="translate(450,130)" opacity="0.7">
           <!-- base legs, splayed -->
           <line x1="-26" y1="0" x2="-8" y2="-140" stroke="#16211a" stroke-width="4"/>
@@ -1019,7 +1016,7 @@
     //  HARDCODED CHARACTER DATA
     const CHARACTER = {
       name: "Alastor",
-      zip: "downloads/AlastorShimeji.zip",   // must match the exact filename on GitHub, including .zip
+      zip: "downloads/AlastorShimeji.zip",   
       preview: "images/alastor.png",
       backgroundSymbols: [
        { "symbol": "\u25C6", "color": "#FAA742", "size": "1.3rem", "opacity": 0.12 },
@@ -1178,7 +1175,7 @@
       }
     })();
  
-    // RISING SOULS
+    // RISING SOULS 
     (function renderSouls() {
       const layer = document.getElementById('soulLayer');
       const SOUL_COUNT = 10;
@@ -1304,3 +1301,4 @@
   </script>
 </body>
 </html>
+ 
