@@ -627,6 +627,17 @@ body::before{
     .bug-8 { top: 58%; left: 84%; animation-duration: 10s; animation-delay: -3s; }
     .bug-9 { top: 83%; left: 29%; animation-duration: 11s; animation-delay: -7s; }
     .bug-10 { top: 41%; left: 7%; animation-duration: 14s; animation-delay: -4s; animation-direction: reverse; }
+    .bottom-bugs .wall-bug { position: absolute; }
+    .bottom-bugs .bottom-bug-1 { bottom: 18%; left: 12%; animation-duration: 9s; }
+    .bottom-bugs .bottom-bug-2 { bottom: 30%; left: 29%; animation-duration: 11s; animation-delay: -2s; animation-direction: reverse; }
+    .bottom-bugs .bottom-bug-3 { bottom: 16%; left: 49%; animation-duration: 8s; animation-delay: -4s; }
+    .bottom-bugs .bottom-bug-4 { bottom: 26%; left: 70%; animation-duration: 10s; animation-delay: -1s; }
+    .bottom-bugs .bottom-bug-5 { bottom: 20%; left: 86%; animation-duration: 12s; animation-delay: -6s; animation-direction: reverse; }
+    .bottom-bugs .bottom-bug-6 { bottom: 22%; left: 63%; animation-duration: 9s; animation-delay: -1s; }
+    .bottom-bugs .bottom-bug-7 { bottom: 35%; left: 40%; animation-duration: 13s; animation-delay: -5s; animation-direction: reverse; }
+    .bottom-bugs .bottom-bug-8 { bottom: 14%; left: 80%; animation-duration: 10s; animation-delay: -3s; }
+    .bottom-bugs .bottom-bug-9 { bottom: 28%; left: 20%; animation-duration: 11s; animation-delay: -7s; }
+    .bottom-bugs .bottom-bug-10 { bottom: 24%; left: 4%; animation-duration: 14s; animation-delay: -4s; animation-direction: reverse; }
 
     @keyframes bug-crawl {
       0%   { transform: translate(0,0) rotate(0deg); }
@@ -900,8 +911,24 @@ body::before{
 
     <!-- Bottom decoration: cleaning supplies with a hidden edge -->
     <div class="cleaning-banner" aria-hidden="true">
+      <div class="bottom-bugs" aria-hidden="true">
+        <span class="wall-bug bottom-bug-1"></span>
+        <span class="wall-bug bottom-bug-2"></span>
+        <span class="wall-bug bottom-bug-3"></span>
+        <span class="wall-bug bottom-bug-4"></span>
+        <span class="wall-bug bottom-bug-5"></span>
+        <span class="wall-bug bottom-bug-6"></span>
+        <span class="wall-bug bottom-bug-7"></span>
+        <span class="wall-bug bottom-bug-8"></span>
+        <span class="wall-bug bottom-bug-9"></span>
+        <span class="wall-bug bottom-bug-10"></span>
+      </div>
       <svg viewBox="0 0 900 130" xmlns="http://www.w3.org/2000/svg">
         <rect x="0" y="108" width="900" height="4" fill="var(--pink)" opacity="0.5"/>
+      </svg>
+      
+
+      
 
        
 
