@@ -3,34 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>%%CHARACTER_NAME%% - Hazbin Hotel Shimeji</title>
+  <meta name="description" content="Vox - VoxTek Overlord">
+  <title>Vox - VoxTek Overlord</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* ===== CHARACTER-SPECIFIC THEME ===== */
+    /*CHARACTER-SPECIFIC THEME*/
+    /* Vox's signature palette - 1950s broadcast tech / retro CRT */
     :root {
-      --accent: %%ACCENT_COLOR%%;
-      --text: %%TEXT_COLOR%%;
-      --heading: %%HEADING_COLOR%%;
-      --button-bg: %%BUTTON_GRADIENT%%;
-      --card-bg: %%CARD_BG%%;
-      --bg-solid: %%BACKGROUND_SOLID%%;
+      --cyan: #4be8e8;
+      --hotpink: #f70446;
+      --slate: #335176;
+      --navy: #191c49;
+      --crimson: #c3264a;
+      --void: #000000;
+
+      --accent: var(--cyan);
+      --accent-glow: rgba(75,232,232,0.5);
+      --text: #a9c4d6;
+      --heading: var(--cyan);
+      --button-bg: linear-gradient(45deg, var(--slate), var(--hotpink));
+      --card-bg: rgba(5,8,16,0.95);
+      --bg-solid: var(--void);
+      --scan-line: rgba(75,232,232,0.05);
     }
+    /* Force the hypnosis spiral to be red */
+    #hypnoEyeCenter * {
+  stroke: #ff0000 ;
+  fill: #ff0000 ;
+      }
 
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.3px;
       margin: 0;
       padding: 0;
       position: relative;
       overflow-x: hidden;
-      background: %%BACKGROUND_PATTERN%%;
+      background:
+        radial-gradient(ellipse at 50% 100%, rgba(51,81,118,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 97%, rgba(25,28,73,0.5) 0%, transparent 40%),
+        radial-gradient(ellipse at 85% 95%, rgba(195,38,74,0.25) 0%, transparent 40%),
+        linear-gradient(180deg, transparent 0%, transparent 68%, rgba(25,28,73,0.4) 85%, rgba(10,12,32,0.7) 94%, rgba(2,3,10,0.92) 100%),
+        radial-gradient(circle at 75% 15%, rgba(75,232,232,0.18) 0%, transparent 40%),
+        radial-gradient(circle at 20% 30%, #0c1440 0%, #05071c 55%, var(--void) 100%);
       background-color: var(--bg-solid);
       color: var(--text);
     }
+    /* CRT scanline + static overlay */
+    .static-noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.1;
+      mix-blend-mode: overlay;
+    }
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(75,232,232,0.05) 0px,
+        rgba(75,232,232,0.05) 1px,
+        transparent 2px,
+        transparent 4px
+      );
+      mix-blend-mode: screen;
+      opacity: 0.5;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      background: radial-gradient(circle at 50% 40%, transparent 40%, rgba(0,0,0,0.7) 100%);
+      mix-blend-mode: multiply;
+    }
 
-    /* Floating symbols container */
     #symbols-container {
       position: fixed;
       top: 0; left: 0;
@@ -39,9 +94,55 @@
       z-index: 0;
     }
 
-    /* ===== LAYOUT (unchanged from previous character page) ===== */
+    /* Rising digital "static ghosts" through the background */
+    .soul-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .soul {
+      position: absolute;
+      bottom: -60px;
+      animation: soul-rise linear infinite;
+    }
+    @keyframes soul-rise {
+      0%   { opacity: 0; transform: translate(0, 0); }
+      10%  { opacity: 0.5; }
+      85%  { opacity: 0.35; }
+      100% { opacity: 0; transform: translate(var(--drift, 30px), -115vh); }
+    }
+
+    /* His broadcast-signal symbol, rising rarer and larger */
+    .symbol-rise {
+      position: absolute;
+      bottom: -80px;
+      animation: symbol-rise-anim linear infinite;
+    }
+    @keyframes symbol-rise-anim {
+      0%   { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+      12%  { opacity: 0.6; }
+      88%  { opacity: 0.4; }
+      100% { opacity: 0; transform: translate(var(--drift, -20px), -120vh) rotate(8deg); }
+    }
+
+    /* Antenna towers, climbing up either side of the whole page */
+    .tower-side {
+      position: fixed;
+      top: 0;
+      width: 130px;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .tower-side.left { left: 0; }
+    .tower-side.right { right: 0; transform: scaleX(-1); }
+    .tower-side svg { width: 100%; height: 100%; }
+
     .room-container {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 2rem auto;
       padding: 2rem;
       position: relative;
@@ -53,18 +154,152 @@
       color: var(--accent);
       text-decoration: none;
       font-weight: 600;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
       transition: color 0.3s;
     }
+
+    /* Header camera strip - no banner background box anymore */
+    .deco-banner {
+      position: relative;
+      width: 100%;
+      padding: 1.2rem 0.5rem 0.6rem 0.5rem;
+      margin-bottom: 1.5rem;
+      overflow: visible;
+    }
+    .deco-banner svg { width: 100%; height: 190px; display: block; overflow: visible; }
+
+
+    /* TV head emblem */
+    .title-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0.5rem 0 0.6rem 0;
+    }
+    .tv-emblem {
+      width: 240px;
+      height: 110px;
+      margin-bottom: -12px;
+      opacity: 0.95;
+      pointer-events: none;
+      animation: emblem-flicker 4.2s ease-in-out infinite;
+    }
+    @keyframes emblem-flicker {
+      0%   { transform: translateY(4px); filter: drop-shadow(0 0 4px rgba(75,232,232,0.45)) drop-shadow(0 0 8px rgba(247,4,70,0.3)); }
+      50%  { transform: translateY(-6px); filter: drop-shadow(0 0 12px rgba(75,232,232,0.85)) drop-shadow(0 0 20px rgba(247,4,70,0.5)); }
+      100% { transform: translateY(4px); filter: drop-shadow(0 0 4px rgba(75,232,232,0.45)) drop-shadow(0 0 8px rgba(247,4,70,0.3)); }
+    }
+    .title-wrap .room-title { position: relative; margin: 0; }
+
+    .room-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      color: var(--heading);
+      text-align: center;
+      -webkit-text-stroke: 1.5px var(--void);
+      text-stroke: 1.5px var(--void);
+      text-shadow:
+        3px 3px 0 var(--void),
+        0 0 24px var(--cyan),
+        0 0 45px rgba(75,232,232,0.5);
+      letter-spacing: 2px;
+    }
+
+    /* LIVE badge */
+    .on-air-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0.75rem 0 1.5rem 0;
+      padding: 0.55rem 1.6rem;
+      border: 3px solid var(--hotpink);
+      outline: 1px solid var(--cyan);
+      outline-offset: -6px;
+      clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--hotpink);
+      vertical-align: middle;
+      animation: neon-flicker 4s infinite;
+    }
+    .on-air-badge::before {
+      content: "";
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--hotpink);
+      box-shadow: 0 0 8px var(--hotpink);
+      display: inline-block;
+    }
+    @keyframes neon-flicker {
+      0%, 3%, 6%, 100% { opacity: 1; text-shadow: 0 0 8px var(--hotpink), 0 0 20px var(--hotpink), 0 0 34px var(--crimson); box-shadow: 0 0 14px rgba(247,4,70,0.7), 0 0 28px rgba(195,38,74,0.5) inset; }
+      4% { opacity: 0.35; text-shadow: none; box-shadow: 0 0 4px rgba(247,4,70,0.25) inset; }
+      5% { opacity: 0.85; text-shadow: 0 0 4px var(--hotpink); box-shadow: 0 0 8px rgba(247,4,70,0.4) inset; }
+      41%, 44% { opacity: 1; text-shadow: 0 0 8px var(--hotpink), 0 0 20px var(--hotpink), 0 0 34px var(--crimson); box-shadow: 0 0 14px rgba(247,4,70,0.7), 0 0 28px rgba(195,38,74,0.5) inset; }
+      42% { opacity: 0.5; text-shadow: none; box-shadow: 0 0 5px rgba(247,4,70,0.3) inset; }
+      43% { opacity: 0.9; text-shadow: 0 0 6px var(--hotpink); box-shadow: 0 0 10px rgba(247,4,70,0.5) inset; }
+      78%, 100% { opacity: 1; text-shadow: 0 0 8px var(--hotpink), 0 0 20px var(--hotpink), 0 0 34px var(--crimson); box-shadow: 0 0 14px rgba(247,4,70,0.7), 0 0 28px rgba(195,38,74,0.5) inset; }
+      79% { opacity: 0.3; text-shadow: none; box-shadow: 0 0 3px rgba(247,4,70,0.2) inset; }
+    }
+        /* Background color breathing animation */
+  @keyframes pulse-bg {
+    0% { background-color: #ff007f; }
+    100% { background-color: #d4006a; } /* slightly darker pink */
+  }
+
+  .spiral-container {
+    width: 600px;
+    height: 600px;
+    /* A subtle glow behind the spiral */
+    filter: drop-shadow(0 0 30px rgba(255, 0, 127, 0.3));
+  }
+
+  /* Rotation settings */
+  .ring-outer {
+    transform-origin: 300px 300px;
+    animation: spin-ccw 8s linear infinite;
+  }
+  .ring-middle {
+    transform-origin: 300px 300px;
+    animation: spin-cw 6s linear infinite;
+  }
+  .ring-inner {
+    transform-origin: 300px 300px;
+    animation: spin-ccw 4s linear infinite; 
+  }
+
+  @keyframes spin-cw {
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes spin-ccw {
+    100% { transform: rotate(-360deg); }
+  }
+
+  /* Animate the white jagged line to pulse and glow */
+  .jagged-line {
+    animation: pulse-line 0.8s infinite alternate ease-in-out;
+  }
+  @keyframes pulse-line {
+    0% { stroke-width: 8; opacity: 0.8; filter: blur(1px); }
+    100% { stroke-width: 12; opacity: 1; filter: blur(0px); }
+  }
+  
     .preview-wrapper {
       display: inline-block;
       overflow: hidden;
-      border-radius: 28px;
-      max-width: 450px;
+      clip-path: polygon(24px 0, calc(100% - 24px) 0, 100% 24px, 100% calc(100% - 24px), calc(100% - 24px) 100%, 24px 100%, 0 calc(100% - 24px), 0 24px);
+      max-width: 640px;
       margin: 1rem 0 2.5rem 0;
-      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 80px var(--accent);
+      box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 45px var(--accent-glow), 0 0 25px rgba(247,4,70,0.4) inset;
       border: 3px solid var(--accent);
+      outline: 1px solid var(--hotpink);
+      outline-offset: -8px;
     }
     .preview-wrapper img {
       display: block;
@@ -73,20 +308,23 @@
       transition: transform 0.2s ease-out;
       transform-origin: top left;
     }
+
     .vibe-section {
-      background: rgba(0,0,0,0.65);
+      background: rgba(2,4,12,0.7);
       backdrop-filter: blur(12px);
       border: 2px solid var(--accent);
-      border-radius: 28px;
-      padding: 2rem;
-      margin-bottom: 2.5rem;
-      box-shadow: 0 0 35px rgba(0,0,0,0.8);
+      outline: 1px solid rgba(75,232,232,0.3);
+      outline-offset: -6px;
+      clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
+      padding: 2rem 3rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 35px rgba(0,0,0,0.85), 0 0 18px rgba(195,38,74,0.4) inset;
       position: relative;
       overflow: hidden;
     }
     .vibe-quote {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
       font-style: italic;
       margin-bottom: 1rem;
       color: var(--accent);
@@ -97,12 +335,53 @@
       line-height: 1.7;
       color: var(--text);
     }
+
+    /* his remote control */
+    .keepsake-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+      padding-top: 1.2rem;
+      border-top: 2px dashed rgba(75,232,232,0.25);
+    }
+    .keepsake {
+      flex-shrink: 0;
+      width: 76px;
+      height: 76px;
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 2px solid var(--cyan);
+      box-shadow: 0 0 10px rgba(75,232,232,0.4);
+    }
+    .keepsake img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      transition: filter 0.2s;
+    }
+    .keepsake img:hover {
+      filter: brightness(1.15) drop-shadow(0 0 8px var(--hotpink));
+    }
+
+    .keepsake-note {
+      font-size: 0.9rem;
+      color: var(--text);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
     .control-panel {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       border: 2px solid var(--accent);
-      border-radius: 28px;
-      padding: 2.5rem;
+      outline: 1px solid rgba(75,232,232,0.3);
+      outline-offset: -7px;
+      clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px);
+      padding: 2.5rem 3rem;
       box-shadow: 0 0 40px rgba(0,0,0,0.6);
     }
     .slider-group {
@@ -110,15 +389,16 @@
       flex-wrap: wrap;
       gap: 2.5rem;
       align-items: center;
+      justify-content: center;
       margin: 1.5rem 0;
     }
     .slider-item label {
       display: block;
       font-weight: 600;
       margin-bottom: 0.5rem;
-      font-family: 'Playfair Display', serif;
+      font-family: 'Orbitron', sans-serif;
       color: var(--accent);
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
     input[type="range"] {
       width: 240px;
@@ -126,12 +406,36 @@
       accent-color: var(--accent);
       border-radius: 4px;
     }
+    .toggle-group { display: flex; gap: 0.75rem; justify-content: center; }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(2,4,12,0.7);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover { opacity: 0.85; }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
     .summon-button {
       display: inline-block;
       padding: 1.2rem 3.5rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      border-radius: 60px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
       border: none;
       cursor: pointer;
       text-transform: uppercase;
@@ -142,177 +446,793 @@
       background: var(--button-bg);
       color: #fff;
       border: 3px solid var(--accent);
-      box-shadow: 0 0 25px var(--accent);
+      outline: 1px solid var(--hotpink);
+      outline-offset: -6px;
+      box-shadow: 0 0 15px var(--accent-glow);
       text-shadow: 0 0 8px rgba(0,0,0,0.6);
     }
     .summon-button:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 45px var(--accent);
+      box-shadow: 0 0 28px var(--accent-glow);
       filter: brightness(1.2);
     }
+    .support-links {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      opacity: 0.75;
+      line-height: 1.6;
+    }
+    .support-links a { color: var(--accent); }
 
-    /* Floating symbols styling (just in case you want to add them manually outside the container) */
+    /* VoxTek city skyline banner */
+    .swamp-banner {
+      width: 100vw;
+      height: 280px;
+      margin: 1.5rem 0 0 0;
+      margin-left: calc(50% - 50vw);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .swamp-banner svg { width: 100%; height: 100%; display: block; }
+    .firefly { animation: firefly-glow 3s ease-in-out infinite; }
+    .firefly:nth-child(2) { animation-delay: 0.7s; }
+    .firefly:nth-child(3) { animation-delay: 1.5s; }
+    .firefly:nth-child(4) { animation-delay: 2.1s; }
+    .firefly:nth-child(5) { animation-delay: 0.3s; }
+    @keyframes firefly-glow {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
     .floating-symbol {
       position: absolute;
       pointer-events: none;
       user-select: none;
+      animation: drift-float 9s ease-in-out infinite;
     }
+
+    /* Hypnosis spiral on the TV screen - spins continuously, never stops */
+    .hypno-spiral {
+      transform-origin: center;
+      animation: spiral-spin 2.2s linear infinite;
+    }
+    
+    @keyframes spiral-spin {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Electric arcs in the header banner */
+    .arc-flicker {
+      animation: arc-flicker-anim 2.6s ease-in-out infinite;
+    }
+    .arc-flicker:nth-child(2) { animation-delay: 0.4s; }
+    .arc-flicker:nth-child(3) { animation-delay: 1.1s; }
+    @keyframes arc-flicker-anim {
+      0%, 100% { opacity: 0.15; }
+      8%  { opacity: 0.9; }
+      12% { opacity: 0.2; }
+      18% { opacity: 0.8; }
+      24% { opacity: 0.1; }
+      60% { opacity: 0.5; }
+    }
+
+    /* Security camera rotation is eased frame-by-frame in JS (see trackCameras), not via CSS transition */
+    @keyframes drift-float {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(8px, -14px) rotate(6deg); }
+      50%  { transform: translate(-6px, -26px) rotate(-4deg); }
+      75%  { transform: translate(10px, -14px) rotate(5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+    
   </style>
 </head>
 <body>
-  <!-- Container for background symbols (filled by script) -->
+  <!-- CRT static texture overlay -->
+  <svg class="static-noise" id="staticNoiseLayer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <filter id="staticNoise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.1 0"/>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#staticNoise)"/>
+  </svg>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- Antenna towers, climbing up either side of the page -->
+  <div class="tower-side left" aria-hidden="true">
+    <svg viewBox="0 0 130 1000" preserveAspectRatio="xMinYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <!-- straight lattice antenna mast -->
+      <line x1="30" y1="1000" x2="30" y2="20" stroke="#050810" stroke-width="8"/>
+      <line x1="10" y1="1000" x2="20" y2="30" stroke="#050810" stroke-width="4"/>
+      <line x1="50" y1="1000" x2="40" y2="30" stroke="#050810" stroke-width="4"/>
+
+      <!-- cross braces stacked all the way up -->
+      <g stroke="#050810" stroke-width="2.5">
+        <path d="M12,940 L48,910 M48,940 L12,910"/>
+        <path d="M14,860 L46,832 M46,860 L14,832"/>
+        <path d="M16,780 L44,754 M44,780 L16,754"/>
+        <path d="M18,700 L42,676 M42,700 L18,676"/>
+        <path d="M20,620 L40,598 M40,620 L20,598"/>
+        <path d="M21,540 L39,520 M39,540 L21,520"/>
+        <path d="M22,460 L38,442 M38,460 L22,442"/>
+        <path d="M24,380 L36,364 M36,380 L24,364"/>
+        <path d="M25,300 L35,286 M35,300 L25,286"/>
+        <path d="M26,220 L34,208 M34,220 L26,208"/>
+        <path d="M27,140 L33,130 M33,140 L27,130"/>
+      </g>
+
+      <!-- platform decks -->
+      <g stroke="#050810" stroke-width="3">
+        <line x1="4" y1="700" x2="56" y2="700"/>
+        <line x1="10" y1="460" x2="50" y2="460"/>
+        <line x1="16" y1="220" x2="44" y2="220"/>
+      </g>
+
+      <!-- blinking beacon lights -->
+      <g class="firefly" fill="var(--hotpink)">
+        <circle cx="30" cy="20" r="4"/>
+      </g>
+      <g class="firefly" fill="var(--cyan)" style="animation-delay: 1.1s;">
+        <circle cx="30" cy="460" r="2.5"/>
+      </g>
+      <g class="firefly" fill="var(--cyan)" style="animation-delay: 2s;">
+        <circle cx="30" cy="700" r="2.5"/>
+      </g>
+
+      <!-- broadcast waves radiating off the top -->
+      <g fill="none" stroke="var(--cyan)" opacity="0.3">
+        <path d="M30,20 A30,30 0 0 1 4,45" stroke-width="1.5"/>
+        <path d="M30,20 A55,55 0 0 1 -15,60" stroke-width="1.2"/>
+        <path d="M30,20 A30,30 0 0 0 56,45" stroke-width="1.5"/>
+        <path d="M30,20 A55,55 0 0 0 75,60" stroke-width="1.2"/>
+      </g>
+
+      <!-- a small drone camera, hovering, watching -->
+      <g transform="translate(90,318)" fill="#050810">
+        <ellipse cx="0" cy="0" rx="9" ry="6"/>
+        <circle cx="0" cy="0" r="3" fill="var(--cyan)" opacity="0.7"/>
+        <line x1="-9" y1="-3" x2="-16" y2="-8" stroke="#050810" stroke-width="1.4"/>
+        <line x1="9" y1="-3" x2="16" y2="-8" stroke="#050810" stroke-width="1.4"/>
+      </g>
+    </svg>
+  </div>
+  <div class="tower-side right" aria-hidden="true">
+    <svg viewBox="0 0 130 1000" preserveAspectRatio="xMinYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <line x1="30" y1="1000" x2="30" y2="20" stroke="#050810" stroke-width="8"/>
+      <line x1="10" y1="1000" x2="20" y2="30" stroke="#050810" stroke-width="4"/>
+      <line x1="50" y1="1000" x2="40" y2="30" stroke="#050810" stroke-width="4"/>
+
+      <g stroke="#050810" stroke-width="2.5">
+        <path d="M12,940 L48,910 M48,940 L12,910"/>
+        <path d="M14,860 L46,832 M46,860 L14,832"/>
+        <path d="M16,780 L44,754 M44,780 L16,754"/>
+        <path d="M18,700 L42,676 M42,700 L18,676"/>
+        <path d="M20,620 L40,598 M40,620 L20,598"/>
+        <path d="M21,540 L39,520 M39,540 L21,520"/>
+        <path d="M22,460 L38,442 M38,460 L22,442"/>
+        <path d="M24,380 L36,364 M36,380 L24,364"/>
+        <path d="M25,300 L35,286 M35,300 L25,286"/>
+        <path d="M26,220 L34,208 M34,220 L26,208"/>
+        <path d="M27,140 L33,130 M33,140 L27,130"/>
+      </g>
+
+      <g stroke="#050810" stroke-width="3">
+        <line x1="4" y1="700" x2="56" y2="700"/>
+        <line x1="10" y1="460" x2="50" y2="460"/>
+        <line x1="16" y1="220" x2="44" y2="220"/>
+      </g>
+
+      <g class="firefly" fill="var(--hotpink)" style="animation-delay: 0.5s;">
+        <circle cx="30" cy="20" r="4"/>
+      </g>
+      <g class="firefly" fill="var(--cyan)" style="animation-delay: 1.6s;">
+        <circle cx="30" cy="460" r="2.5"/>
+      </g>
+      <g class="firefly" fill="var(--cyan)" style="animation-delay: 0.8s;">
+        <circle cx="30" cy="700" r="2.5"/>
+      </g>
+
+      <g fill="none" stroke="var(--cyan)" opacity="0.3">
+        <path d="M30,20 A30,30 0 0 1 4,45" stroke-width="1.5"/>
+        <path d="M30,20 A55,55 0 0 1 -15,60" stroke-width="1.2"/>
+        <path d="M30,20 A30,30 0 0 0 56,45" stroke-width="1.5"/>
+        <path d="M30,20 A55,55 0 0 0 75,60" stroke-width="1.2"/>
+      </g>
+
+      <!-- a wall-mounted monitor, screen dark but for a small red light -->
+      <g transform="translate(-40,700)" fill="#050810">
+        <rect x="-16" y="-11" width="32" height="22" rx="2"/>
+        <rect x="-13" y="-8" width="26" height="16" fill="#0a0d1e"/>
+        <circle cx="10" cy="7" r="1.4" fill="var(--hotpink)"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Rising static-ghosts and broadcast-symbol layers, filled by script -->
+  <div class="soul-layer" id="soulLayer" aria-hidden="true"></div>
+
   <div id="symbols-container"></div>
 
   <div class="room-container">
+
     <a href="index.html" class="back-link">Back to the Hotel</a>
 
-    <h1 style="font-family:'Playfair Display'; font-size:3rem; margin-bottom:0.5rem; text-shadow:0 0 20px var(--accent); color:var(--heading);">
-      %%CHARACTER_NAME%%
-    </h1>
+    <!-- Electric header banner, corner brackets + a security camera that watches the cursor -->
+    <div class="deco-banner" aria-hidden="true">
+      <svg viewBox="0 0 900 130" id="bannerSvg" xmlns="http://www.w3.org/2000/svg">
 
-    <!-- Live preview image -->
-    <div class="preview-wrapper" id="previewWrapper">
-      <img id="charPreview" src="%%PREVIEW_IMAGE_PATH%%" alt="%%CHARACTER_NAME%%">
+        <!-- crackling electric arcs, scattered near each camera -->
+        <g stroke="var(--cyan)" stroke-width="1.2" opacity="0.55" fill="none">
+          <path class="arc-flicker" d="M450,4 L438,20 L456,26 L440,44" />
+          <path class="arc-flicker" d="M150,4 L138,20 L156,26 L140,44" />
+          <path class="arc-flicker" d="M750,4 L738,20 L756,26 L740,44" />
+        </g>
+        <g fill="var(--hotpink)" class="arc-flicker">
+          <path d="M320,10 L312,26 L320,26 L310,44 L324,24 L316,24 Z"/>
+        </g>
+        <g fill="var(--hotpink)" class="arc-flicker">
+          <path d="M580,10 L572,26 L580,26 L570,44 L584,24 L576,24 Z"/>
+        </g>
+
+        <!-- reusable box-camera template, lens at local origin, facing -x, mount arm rising to a wall bracket -->
+        <defs>
+          <g id="boxCam">
+            <!-- dangling power/data cable -->
+            <path d="M60,11 C68,22 63,34 70,46" stroke="#050810" stroke-width="2" fill="none" opacity="0.65"/>
+            <!-- tapered housing -->
+            <polygon points="15,-9 60,-13 60,13 15,9" fill="var(--navy)" stroke="var(--cyan)" stroke-width="2"/>
+            <!-- lens barrel connecting housing to lens ring -->
+            <rect x="7" y="-7" width="9" height="14" fill="var(--slate)" stroke="var(--cyan)" stroke-width="1.2"/>
+            <!-- top screws -->
+            <circle cx="26" cy="-10.5" r="1" fill="var(--cyan)" opacity="0.8"/>
+            <circle cx="48" cy="-12" r="1" fill="var(--cyan)" opacity="0.8"/>
+            <!-- mount block at rear-top of housing -->
+            <rect x="42" y="-21" width="11" height="9" rx="1.5" fill="var(--slate)" stroke="var(--cyan)" stroke-width="1.2"/>
+            <!-- articulated arm -->
+            <line x1="47.5" y1="-21" x2="47.5" y2="-36" stroke="var(--slate)" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="47.5" cy="-36" r="4" fill="var(--navy)" stroke="var(--cyan)" stroke-width="1.4"/>
+            <line x1="47.5" y1="-36" x2="58" y2="-50" stroke="var(--slate)" stroke-width="4.5" stroke-linecap="round"/>
+            <!-- wall bracket plate -->
+            <rect x="49" y="-58" width="18" height="9" rx="2" fill="var(--slate)" stroke="#050810" stroke-width="1.2"/>
+            <circle cx="53" cy="-53.5" r="1" fill="#050810"/>
+            <circle cx="63" cy="-53.5" r="1" fill="#050810"/>
+            <!-- lens ring housing (the animated eye glint overlay sits on top of this) -->
+            <circle cx="0" cy="0" r="14" fill="#050810" stroke="var(--cyan)" stroke-width="2"/>
+            <circle cx="0" cy="0" r="10" fill="var(--slate)" stroke="var(--cyan)" stroke-width="1"/>
+          </g>
+        </defs>
+
+        <!-- left camera, mounted facing right toward center, body stays fixed -->
+        <g id="camGroupLeft" transform="translate(150,72) scale(-1.7,1.7)">
+          <use href="#boxCam"/>
+        </g>
+        <g id="camEyeLeft" transform="translate(150,72)">
+          <circle cx="3" cy="-3" r="9.5" fill="var(--cyan)" opacity="0.85"/>
+          <circle cx="2" cy="-4" r="3.4" fill="#fff" opacity="0.95"/>
+        </g>
+        <circle cx="150" cy="72" r="1.4" fill="var(--hotpink)" class="firefly"/>
+
+        <!-- right camera, mounted facing left toward center, body stays fixed -->
+        <g id="camGroupRight" transform="translate(750,72) scale(1.7)">
+          <use href="#boxCam"/>
+        </g>
+        <g id="camEyeRight" transform="translate(750,72)">
+          <circle cx="3" cy="-3" r="9.5" fill="var(--cyan)" opacity="0.85"/>
+          <circle cx="2" cy="-4" r="3.4" fill="#fff" opacity="0.95"/>
+        </g>
+        <circle cx="750" cy="72" r="1.4" fill="var(--hotpink)" class="firefly" style="animation-delay:0.7s;"/>
+
+        <!-- center camera, mounted overhead, flipped so the lens/eye faces straight down, body stays fixed -->
+        <g id="camGroupCenter" transform="translate(450,30) rotate(-90) scale(1.7)">
+          <use href="#boxCam"/>
+        </g>
+        <g id="camEyeCenter" transform="translate(450,30)">
+          <circle cx="3" cy="-3" r="9.5" fill="var(--cyan)" opacity="0.85"/>
+          <circle cx="2" cy="-4" r="3.4" fill="#fff" opacity="0.95"/>
+        </g>
+        <circle cx="450" cy="30" r="1.4" fill="var(--hotpink)" class="firefly" style="animation-delay:1.3s;"/>
+      </svg>
     </div>
 
-    <!-- Vibe section (quote + description) -->
+    <div class="title-wrap">
+    <svg class="tv-emblem" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+      <!-- TV outer shell / border -->
+  <rect x="7" y="7" width="116" height="116" rx="14" fill="#0a0f2a" stroke="#000" stroke-width="4"/>
+  <rect x="15" y="15" width="100" height="100" rx="12" fill="#8b0000" stroke="#c40000" stroke-width="3"/>
+  
+      <!-- Screen clipping area -->
+  <clipPath id="tvScreenClip"><rect x="15" y="15" width="100" height="100" rx="12"/></clipPath>
+  
+  <g clip-path="url(#tvScreenClip)">
+        <!-- Screen background -->
+    <rect x="17" y="17" width="96" height="96" fill="#ff0000" opacity="0.18"/>
+    
+        <!-- Static hypnotic eye made of layered circles -->
+    <g transform="translate(65,65)">
+          <circle cx="0" cy="0" r="54" fill="none" stroke="#000" stroke-width="4"/>
+          <circle cx="0" cy="0" r="40" fill="none" stroke="#000" stroke-width="4"/>
+          <circle cx="0" cy="0" r="24" fill="none" stroke="#000" stroke-width="4"/>
+          <polyline points="0,-12 6,-6 -6,6 0,12" fill="none" stroke="var(--cyan)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    
+        <!-- Horizontal scan line -->
+    <line x1="17" y1="65" x2="113" y2="65" stroke="#000" stroke-width="1.5" opacity="0.45"/>
+    
+        <!-- Subtle smile near the bottom of the screen -->
+    <path d="M46,92 Q65,102 84,92" stroke="#000" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.8"/>
+  </g>
+  
+      <!-- Power indicator at the lower right of the TV -->
+  <circle cx="108" cy="108" r="2.4" fill="#ff007f"/>
+</svg>
+      <h1 class="room-title">Vox</h1>
+    </div>
+
+    <div style="text-align:center;">
+      <span class="on-air-badge">LIVE</span>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="preview-wrapper" id="previewWrapper">
+        <img id="charPreview" src="images/vox.png" alt="Vox Preview">
+      </div>
+    </div>
+
+    <!-- Vibe section -->
     <div class="vibe-section">
-      <p class="vibe-quote">%%QUOTE%%</p>
-      <p class="vibe-desc">%%DESCRIPTION%%</p>
+      <p class="vibe-quote" style="text-align:center;">"The name's Vox, CEO of Voxtek Entertainment"</p>
+      <p class="vibe-desc" style="text-align:center;">FUCK YOU! It doesn't matter that you're free, I'll just beat your ass back into submission! I am more powerful than I've ever been!</p>
+        <p class="keepsake-note" style="text-align:center;" >YES! Fuck you, Alastor! Ahahaha! THIS IS BETTER THAN SEX!</p>
+
     </div>
 
     <!-- Customisation controls -->
-    <div class="control-panel">
+    <div class="control-panel" style="text-align:center; padding:0.75rem 1rem; max-width:520px; margin:0 auto;">
       <div class="slider-group">
         <div class="slider-item">
           <label>Size: <span id="sizeValue">1.0</span></label>
           <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
         </div>
         <div class="slider-item">
-          <label>Duplicates: <span id="countValue">1</span></label>
-          <input type="range" id="countSlider" min="1" max="10" step="1" value="1">
+          <label>Allow Duplication?</label>
+          <div class="toggle-group" id="duplicateToggle">
+            <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
+            <button type="button" class="toggle-btn" data-value="no">No</button>
+          </div>
         </div>
       </div>
-      <button class="summon-button" id="summonBtn">Summon Chaos</button>
+      <button class="summon-button" id="summonBtn">Go Live</button>
       <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
+      <p class="support-links">Please go support the original artist here: <a href="https://ko-fi.com/spiritboxfm">spiritboxfm</a></p>
+      <p class="support-links">I just made the website - if you want to support me, do it here: <a href="https://ko-fi.com/mikmonvibes">Ko-Fi</a></p>
+    </div>
+
+
+    <!-- VoxTek city skyline banner -->
+    <div class="swamp-banner" aria-hidden="true">
+      <svg viewBox="0 -60 1400 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <!-- ground haze -->
+          <rect x="0" y="130" width="1400" height="90" fill="#050a1c" opacity="0.9"/>
+          <path d="M0,130 Q50,124 100,130 T200,130 T300,130 T400,130 T500,130 T600,130 T700,130 T800,130 T900,130 T1000,130 T1100,130 T1200,130 T1300,130 T1400,130 V220 H0 Z"
+              fill="#0a1230" opacity="0.85"/>
+
+        <!-- dense VoxTek city skyline, buildings across the full width -->
+        <g fill="#0a0f28" opacity="0.9">
+          <rect x="0" y="95" width="12" height="35"/>
+          <rect x="10" y="70" width="28" height="60"/>
+          <rect x="40" y="45" width="34" height="85"/>
+          <rect x="76" y="20" width="26" height="110"/>
+          <rect x="104" y="65" width="40" height="65"/>
+          <rect x="146" y="35" width="30" height="95"/>
+          <rect x="178" y="80" width="24" height="50"/>
+          <rect x="204" y="10" width="22" height="120"/>
+          <rect x="228" y="55" width="36" height="75"/>
+          <rect x="266" y="90" width="26" height="40"/>
+          <rect x="294" y="30" width="32" height="100"/>
+          <rect x="328" y="65" width="28" height="65"/>
+          <rect x="358" y="15" width="24" height="115"/>
+          <rect x="384" y="50" width="34" height="80"/>
+          <rect x="420" y="85" width="22" height="45"/>
+          <rect x="444" y="60" width="30" height="70"/>
+          <rect x="456" y="25" width="20" height="105"/>
+          <rect x="480" y="40" width="30" height="90"/>
+          <rect x="512" y="75" width="26" height="55"/>
+          <rect x="540" y="20" width="24" height="110"/>
+          <rect x="566" y="60" width="38" height="70"/>
+          <rect x="606" y="30" width="28" height="100"/>
+          <rect x="636" y="85" width="24" height="45"/>
+          <rect x="662" y="10" width="22" height="120"/>
+          <rect x="686" y="55" width="34" height="75"/>
+          <rect x="722" y="35" width="26" height="95"/>
+          <rect x="750" y="70" width="30" height="60"/>
+          <rect x="782" y="15" width="24" height="115"/>
+          <rect x="808" y="50" width="36" height="80"/>
+          <rect x="846" y="80" width="26" height="50"/>
+          <rect x="874" y="60" width="26" height="70"/>
+          <rect x="904" y="25" width="24" height="105"/>
+          <rect x="930" y="70" width="32" height="60"/>
+          <rect x="964" y="40" width="28" height="90"/>
+          <rect x="994" y="15" width="22" height="115"/>
+          <rect x="1018" y="55" width="36" height="75"/>
+          <rect x="1056" y="30" width="26" height="100"/>
+          <rect x="1084" y="80" width="24" height="50"/>
+          <rect x="1110" y="20" width="22" height="110"/>
+          <rect x="1134" y="60" width="38" height="70"/>
+          <rect x="1174" y="35" width="28" height="95"/>
+          <rect x="1204" y="70" width="30" height="60"/>
+          <rect x="1236" y="15" width="24" height="115"/>
+          <rect x="1262" y="50" width="36" height="80"/>
+          <rect x="1300" y="80" width="26" height="50"/>
+          <rect x="1328" y="60" width="26" height="70"/>
+          <rect x="1358" y="28" width="28" height="102"/>
+        </g>
+
+        <!-- varied tower silhouettes for more depth and variety -->
+        <g opacity="0.95">
+          <path d="M70,130 V78 h18 v52 Z" fill="#0b132f"/>
+          <path d="M206,130 V62 h16 v-10 h10 v78 Z" fill="#0d1738"/>
+          <path d="M338,130 V88 h30 v42 Z" fill="#07101f"/>
+          <path d="M514,130 V56 h22 v-12 h8 v86 Z" fill="#0c142d"/>
+          <path d="M670,130 V48 h20 v-14 h14 v96 Z" fill="#091223"/>
+          <path d="M832,130 V72 h26 v58 Z" fill="#0b1533"/>
+          <path d="M1000,130 V58 h18 v-8 h12 v80 Z" fill="#0a1126"/>
+          <path d="M1178,130 V84 h34 v46 Z" fill="#0e183a"/>
+          <path d="M1312,130 V64 h24 v-12 h10 v78 Z" fill="#08101e"/>
+        </g>
+
+        <!-- shorter foreground buildings layered in front for depth -->
+        <g fill="#060a1c" opacity="0.95">
+          <rect x="4" y="108" width="18" height="22"/>
+          <rect x="30" y="100" width="24" height="30"/>
+          <rect x="118" y="104" width="20" height="26"/>
+          <rect x="160" y="98" width="26" height="32"/>
+          <rect x="250" y="106" width="18" height="24"/>
+          <rect x="310" y="100" width="22" height="30"/>
+          <rect x="404" y="104" width="20" height="26"/>
+          <rect x="466" y="98" width="24" height="32"/>
+          <rect x="524" y="106" width="18" height="24"/>
+          <rect x="592" y="100" width="22" height="30"/>
+          <rect x="648" y="104" width="20" height="26"/>
+          <rect x="706" y="98" width="24" height="32"/>
+          <rect x="766" y="106" width="18" height="24"/>
+          <rect x="826" y="100" width="22" height="30"/>
+          <rect x="886" y="104" width="20" height="26"/>
+          <rect x="916" y="106" width="18" height="24"/>
+          <rect x="956" y="100" width="24" height="30"/>
+          <rect x="1012" y="104" width="20" height="26"/>
+          <rect x="1068" y="98" width="24" height="32"/>
+          <rect x="1128" y="106" width="18" height="24"/>
+          <rect x="1188" y="100" width="22" height="30"/>
+          <rect x="1244" y="104" width="20" height="26"/>
+          <rect x="1302" y="98" width="24" height="32"/>
+          <rect x="1362" y="106" width="18" height="24"/>
+        </g>
+
+        <!-- rooftop antennas dotting a few of the towers -->
+        <g stroke="#0a0f28" stroke-width="1.6" opacity="0.9">
+          <line x1="91" y1="20" x2="91" y2="4"/>
+          <line x1="215" y1="10" x2="215" y2="-6"/>
+          <line x1="370" y1="15" x2="370" y2="0"/>
+          <line x1="466" y1="25" x2="466" y2="10"/>
+          <line x1="552" y1="20" x2="552" y2="4"/>
+          <line x1="673" y1="10" x2="673" y2="-6"/>
+          <line x1="794" y1="15" x2="794" y2="0"/>
+          <line x1="915" y1="25" x2="915" y2="10"/>
+          <line x1="1005" y1="15" x2="1005" y2="0"/>
+          <line x1="1120" y1="20" x2="1120" y2="4"/>
+          <line x1="1248" y1="15" x2="1248" y2="0"/>
+          <line x1="1368" y1="28" x2="1368" y2="12"/>
+        </g>
+
+        <!-- lit windows, flickering -->
+        <g fill="var(--cyan)">
+          <rect class="firefly" x="46" y="60" width="3" height="4"/>
+          <rect class="firefly" x="56" y="85" width="3" height="4" style="animation-delay:0.6s;"/>
+          <rect class="firefly" x="82" y="45" width="3" height="4" style="animation-delay:1.2s;"/>
+          <rect class="firefly" x="152" y="55" width="3" height="4" style="animation-delay:0.3s;"/>
+          <rect class="firefly" x="234" y="70" width="3" height="4" style="animation-delay:1.5s;"/>
+          <rect class="firefly" x="300" y="50" width="3" height="4" style="animation-delay:0.8s;"/>
+          <rect class="firefly" x="390" y="70" width="3" height="4" style="animation-delay:1.1s;"/>
+          <rect class="firefly" x="452" y="45" width="3" height="4" style="animation-delay:0.2s;"/>
+          <rect class="firefly" x="486" y="60" width="3" height="4" style="animation-delay:0.4s;"/>
+          <rect class="firefly" x="572" y="80" width="3" height="4" style="animation-delay:1.8s;"/>
+          <rect class="firefly" x="612" y="50" width="3" height="4" style="animation-delay:0.9s;"/>
+          <rect class="firefly" x="692" y="75" width="3" height="4" style="animation-delay:0.5s;"/>
+          <rect class="firefly" x="728" y="55" width="3" height="4" style="animation-delay:1.4s;"/>
+          <rect class="firefly" x="814" y="65" width="3" height="4" style="animation-delay:0.7s;"/>
+          <rect class="firefly" x="880" y="70" width="3" height="4" style="animation-delay:1.0s;"/>
+          <rect class="firefly" x="920" y="45" width="3" height="4" style="animation-delay:0.5s;"/>
+          <rect class="firefly" x="974" y="80" width="3" height="4" style="animation-delay:1.3s;"/>
+          <rect class="firefly" x="1030" y="55" width="3" height="4" style="animation-delay:0.2s;"/>
+          <rect class="firefly" x="1090" y="75" width="3" height="4" style="animation-delay:1.6s;"/>
+          <rect class="firefly" x="1142" y="50" width="3" height="4" style="animation-delay:0.9s;"/>
+          <rect class="firefly" x="1210" y="68" width="3" height="4" style="animation-delay:0.4s;"/>
+          <rect class="firefly" x="1270" y="58" width="3" height="4" style="animation-delay:1.1s;"/>
+          <rect class="firefly" x="1336" y="72" width="3" height="4" style="animation-delay:0.7s;"/>
+          <rect class="firefly" x="1388" y="60" width="3" height="4" style="animation-delay:1.8s;"/>
+        </g>
+
+        <!-- power/data cables strung between buildings -->
+        <g stroke="#12203f" stroke-width="1.5" fill="none" opacity="0.6">
+          <path d="M74,90 C120,100 160,95 180,105"/>
+          <path d="M264,95 C290,100 310,92 326,100"/>
+          <path d="M418,95 C450,102 470,96 480,104"/>
+          <path d="M700,95 C660,105 630,98 610,108"/>
+          <path d="M850,90 C820,100 800,94 782,102"/>
+          <path d="M930,92 C960,100 990,96 1018,104"/>
+          <path d="M1088,96 C1120,102 1150,94 1176,106"/>
+          <path d="M1238,94 C1270,101 1300,95 1324,103"/>
+          <path d="M1370,90 C1340,99 1318,94 1298,102"/>
+        </g>
+
+        <!-- floating VoxTek drone lights -->
+        <g fill="var(--cyan)">
+          <circle class="firefly" cx="110" cy="60" r="2.5"/>
+          <circle class="firefly" cx="260" cy="45" r="2"/>
+          <circle class="firefly" cx="380" cy="70" r="2.5"/>
+          <circle class="firefly" cx="520" cy="50" r="2"/>
+          <circle class="firefly" cx="650" cy="65" r="2.5"/>
+          <circle class="firefly" cx="800" cy="55" r="2"/>
+          <circle class="firefly" cx="940" cy="70" r="2.5"/>
+          <circle class="firefly" cx="1080" cy="48" r="2"/>
+          <circle class="firefly" cx="1215" cy="64" r="2.5"/>
+          <circle class="firefly" cx="1340" cy="54" r="2"/>
+        </g>
+      </svg>
     </div>
   </div>
 
   <script>
-    // =============================================
-    //  HARDCODED CHARACTER DATA (replace each field)
-    // =============================================
+    //  HARDCODED CHARACTER DATA
     const CHARACTER = {
-      name: "%%CHARACTER_NAME%%",
-      zip: "%%ZIP_PATH%%",           // e.g., "downloads/Alastor.zip"
-      preview: "%%PREVIEW_IMAGE_PATH%%",
+      name: "Vox",
+      zip: "downloads/VoxShimeji.zip",
+      preview: "images/vox.png",
       backgroundSymbols: [
-        %%BACKGROUND_SYMBOLS_ARRAY%%
+       { "symbol": "\u25A0", "color": "#4be8e8", "size": "1.3rem", "opacity": 0.12 },
+       { "symbol": "\u2726", "color": "#f70446", "size": "1.5rem", "opacity": 0.12 },
+       { "symbol": "\u25C7", "color": "#335176", "size": "1.4rem", "opacity": 0.1 },
+       { "symbol": "\u2699", "color": "#c3264a", "size": "1.2rem", "opacity": 0.1 }
       ]
     };
 
-    // ============== FUNCTIONALITY ==============
+    //  DOM REFS
     const previewImg = document.getElementById('charPreview');
     const sizeSlider = document.getElementById('sizeSlider');
     const sizeValue = document.getElementById('sizeValue');
-    const countSlider = document.getElementById('countSlider');
-    const countValue = document.getElementById('countValue');
+    const duplicateToggle = document.getElementById('duplicateToggle');
+    const summonBtn = document.getElementById('summonBtn');
 
-    // Live size preview
-    function updatePreviewSize(scale) {
-      previewImg.style.transform = `scale(${scale})`;
+    let allowDuplication = true;
+
+    // Duplication toggle
+    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            allowDuplication = btn.dataset.value === 'yes';
+        });
+    });
+
+    // Preview image
+    previewImg.src = CHARACTER.preview;
+
+    //  Size slider
+    function updateSliderDisplay() {
+        const val = parseFloat(sizeSlider.value).toFixed(1);
+        sizeValue.textContent = val;
     }
-    sizeSlider.addEventListener('input', () => {
-      const val = parseFloat(sizeSlider.value).toFixed(1);
-      sizeValue.textContent = val;
-      updatePreviewSize(parseFloat(val));
-    });
-    countSlider.addEventListener('input', () => {
-      countValue.textContent = countSlider.value;
-    });
-    updatePreviewSize(1.0); // initial
 
-    // Summon button
-    document.getElementById('summonBtn').addEventListener('click', async () => {
-      const scale = parseFloat(sizeSlider.value);
-      const count = parseInt(countSlider.value, 10);
-      await generateAndDownload(CHARACTER, scale, count);
-    });
+    sizeSlider.addEventListener('input', updateSliderDisplay);
+    updateSliderDisplay();
 
-    // ========== ZIP GENERATION ==========
-    async function generateAndDownload(char, scale, count) {
-      try {
-        const resp = await fetch('../' + char.zip);
-        if (!resp.ok) throw new Error('Could not fetch ZIP.');
-        const zipBlob = await resp.blob();
-        const zip = await JSZip.loadAsync(zipBlob);
 
-        // Locate configuration file
-        let configFile = zip.file('conf/設定.properties') || zip.file('conf/Actions.properties');
-        if (!configFile) {
-          const confs = Object.keys(zip.files).filter(f => f.startsWith('conf/') && f.endsWith('.properties'));
-          if (confs.length) configFile = zip.file(confs[0]);
-        }
 
-        if (configFile) {
-          let text = await configFile.async('text');
-          text = setOrReplace(text, 'OnScreenCount', count.toString());
-          text = setOrReplace(text, 'Scale', scale.toFixed(1));
-          zip.file(configFile.name, text);
-        }
+    //  DOWNLOAD LOGIC
 
-        const newZip = await zip.generateAsync({ type: 'blob' });
-        const url = URL.createObjectURL(newZip);
+    function triggerDownload(blobOrUrl, filename) {
         const a = document.createElement('a');
-        a.href = url;
-        a.download = `${char.name}_Shimeji_custom.zip`;
+        if (typeof blobOrUrl === 'string') {
+            a.href = blobOrUrl;
+        } else {
+            a.href = URL.createObjectURL(blobOrUrl);
+        }
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         a.remove();
-        URL.revokeObjectURL(url);
-      } catch (err) {
-        alert('Error generating ZIP: ' + err.message);
-      }
+        if (typeof blobOrUrl !== 'string') {
+            setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+        }
     }
 
     function setOrReplace(text, key, val) {
-      const lines = text.split('\n');
-      let found = false;
-      const updated = lines.map(line => {
-        if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
-          found = true;
-          return `${key}=${val}`;
-        }
-        return line;
-      });
-      if (!found) updated.push(`${key}=${val}`);
-      return updated.join('\n');
+        const lines = text.split('\n');
+        let found = false;
+        const updated = lines.map(line => {
+            if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
+                found = true;
+                return key + '=' + val;
+            }
+            return line;
+        });
+        if (!found) updated.push(key + '=' + val);
+        return updated.join('\n');
     }
 
-    // ========== FLOATING SYMBOLS ==========
-    (function renderSymbols() {
-      const container = document.getElementById('symbols-container');
-      container.innerHTML = '';
-      if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
-        CHARACTER.backgroundSymbols.forEach(sym => {
-          for (let i = 0; i < 8; i++) {
-            const span = document.createElement('span');
-            span.textContent = sym.symbol;
-            span.style.cssText = `
-              position:absolute;
-              left:${Math.random() * 95}%;
-              top:${Math.random() * 95}%;
-              font-size:${sym.size};
-              color:${sym.color};
-              opacity:${sym.opacity};
-              pointer-events:none;
-              user-select:none;
-            `;
-            container.appendChild(span);
-          }
-        });
+    async function generateAndDownload(char, scale, allowDuplication) {
+        const filename = char.name + '_Shimeji_custom.zip';
+        try {
+            if (location.protocol === 'file:') {
+                throw new Error('This page is running as file://. Use a local web server.');
+            }
+
+            const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+            const resp = await fetch(zipUrl, { cache: 'no-store' });
+            if (!resp.ok) throw new Error('Could not fetch ZIP (' + resp.status + ') at ' + zipUrl);
+
+            const zipBlob = await resp.blob();
+            const zip = await JSZip.loadAsync(zipBlob);
+
+            // Locate the config file
+            const allPaths = Object.keys(zip.files);
+            let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
+            if (!configPath) {
+                configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
+            }
+
+            const configFile = configPath ? zip.file(configPath) : null;
+
+            if (configFile) {
+                let text = await configFile.async('text');
+
+                // Always keep OnScreenCount = 1
+                text = setOrReplace(text, 'OnScreenCount', '1');
+
+                // Scale from slider → controls Shimeji size in the downloaded ZIP
+                text = setOrReplace(text, 'Scale', scale.toFixed(1));
+
+                // Duplication from toggle → controls whether Shimeji can duplicate
+                text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
+
+                zip.file(configFile.name, text);
+            } else {
+                console.warn('No conf/*.properties file found in zip — shipping settings unchanged.');
+            }
+
+            const newZip = await zip.generateAsync({ type: 'blob' });
+            triggerDownload(newZip, filename);
+
+        } catch (err) {
+            console.error('ZIP generation failed:', err);
+            try {
+                const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+                triggerDownload(zipUrl, char.name + '_Shimeji.zip');
+                alert('Custom edit failed, downloaded original ZIP instead.');
+            } catch (fallbackErr) {
+                alert('Error generating ZIP: ' + err.message);
+            }
+        }
+    }
+
+    summonBtn.addEventListener('click', async () => {
+        const scale = parseFloat(sizeSlider.value);
+        await generateAndDownload(CHARACTER, scale, allowDuplication);
+    });
+
+  // Security cameras rotate their whole body a full 360 degrees to face the cursor
+  // Security cameras rotate their whole body to face the cursor, but with a beat of
+  // mechanical lag behind the eye - like a real PTZ camera catching up to where it's looking.
+  // Cameras stay fixed in place, but each lens's eye/glint follows the cursor
+  (function trackCameraEyes() {
+    const bannerSvg = document.getElementById('bannerSvg');
+    if (!bannerSvg) return;
+    const MAX_DRIFT = 4; // how far each eye glint can shift toward the cursor, within the lens ring
+
+    const eyes = [
+      { el: document.getElementById('camEyeLeft'), x: 150, y: 72 },
+      { el: document.getElementById('camEyeRight'), x: 750, y: 72 },
+      { el: document.getElementById('camEyeCenter'), x: 450, y: 30 }
+    ].filter(c => c.el);
+    if (!eyes.length) return;
+
+    function updateEyes(clientX, clientY) {
+      const rect = bannerSvg.getBoundingClientRect();
+      const scaleX = 900 / rect.width;
+      const scaleY = 130 / rect.height;
+
+      eyes.forEach(eye => {
+        const localX = (clientX - rect.left) * scaleX - eye.x;
+        const localY = (clientY - rect.top) * scaleY - eye.y;
+        const dist = Math.hypot(localX, localY) || 1;
+        const dx = (localX / dist) * MAX_DRIFT;
+        const dy = (localY / dist) * MAX_DRIFT;
+        eye.el.setAttribute('transform', `translate(${(eye.x + dx).toFixed(2)},${(eye.y + dy).toFixed(2)})`);
+      });
+    }
+
+    window.addEventListener('mousemove', (e) => updateEyes(e.clientX, e.clientY));
+  })();
+
+
+
+  (function renderSouls() {
+      const layer = document.getElementById('soulLayer');
+      const SOUL_COUNT = 10;
+      for (let i = 0; i < SOUL_COUNT; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'soul';
+        const size = 18 + Math.random() * 14;
+        wrapper.style.left = `${Math.random() * 96}%`;
+        wrapper.style.setProperty('--drift', `${(Math.random() * 60 - 30).toFixed(0)}px`);
+        wrapper.style.animationDuration = `${16 + Math.random() * 12}s`;
+        wrapper.style.animationDelay = `${(Math.random() * -25).toFixed(1)}s`;
+          // Vox's hypnosis spiral stays visible and rotates to help keep the user focused
+// Vox's hypnosis spiral – now RED and rotating hypnotically
+// Vox's hypnosis spiral – red, rotating, and pulsing hypnotically
+(function trackEyes() {
+  const tvSvg = document.getElementById('tvEmblemSvg');
+  const eyeCenter = document.getElementById('hypnoEyeCenter');
+  if (!tvSvg || !eyeCenter) return;
+
+  const SPIN_SPEED = 0.0018;        // degrees per millisecond
+  const PULSE_AMPLITUDE = 0.08;     // scale variation
+  const PULSE_FREQ = 0.003;         // radians per ms
+
+  function animateHypno(now) {
+    const bbox = eyeCenter.getBBox();
+    const cx = bbox.x + bbox.width / 2;
+    const cy = bbox.y + bbox.height / 2;
+
+    const spin = (now * SPIN_SPEED * 360) % 360;
+    const pulse = 1 + Math.sin(now * PULSE_FREQ) * PULSE_AMPLITUDE;
+
+    eyeCenter.setAttribute(
+      'transform',
+      `translate(${cx} ${cy}) rotate(${spin.toFixed(2)}) scale(${pulse.toFixed(3)}) translate(${-cx} ${-cy})`
+    );
+    // Keep it fully visible
+    eyeCenter.setAttribute('opacity', '1');
+
+    requestAnimationFrame(animateHypno);
+  }
+
+  requestAnimationFrame(animateHypno);
+})();wrapper.innerHTML = `
+          <svg width="${size}" height="${size * 1.3}" viewBox="0 0 40 52" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="32" height="34" rx="4" fill="#020306" stroke="rgba(75,232,232,0.4)" stroke-width="0.8" opacity="0.7"/>
+            <rect x="16" y="42" width="8" height="6" fill="#020306" opacity="0.7"/>
+            <circle cx="14" cy="20" r="1.4" fill="var(--hotpink)" opacity="0.6"/>
+            <circle cx="26" cy="20" r="1.4" fill="var(--hotpink)" opacity="0.6"/>
+          </svg>
+        `;
+        layer.appendChild(wrapper);
+      }
+
+      // his broadcast-signal symbol, rising rarer and larger among the static ghosts
+      const SYMBOL_COUNT = 3;
+      for (let i = 0; i < SYMBOL_COUNT; i++) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'symbol-rise';
+        wrapper.style.left = `${10 + Math.random() * 80}%`;
+        wrapper.style.setProperty('--drift', `${(Math.random() * 50 - 25).toFixed(0)}px`);
+        wrapper.style.animationDuration = `${26 + Math.random() * 10}s`;
+        wrapper.style.animationDelay = `${(Math.random() * -30).toFixed(1)}s`;
+        wrapper.innerHTML = `
+          <svg width="46" height="46" viewBox="0 0 46 46" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="6" width="34" height="34" rx="5" fill="none" stroke="var(--cyan)" stroke-width="2" opacity="0.7"/>
+            <circle cx="23" cy="23" r="6" fill="var(--hotpink)" opacity="0.6"/>
+            <line x1="23" y1="23" x2="23" y2="14" stroke="var(--void)" stroke-width="1.5"/>
+          </svg>
+        `;
+        layer.appendChild(wrapper);
       }
     })();
   </script>
+
 </body>
 </html>
