@@ -9,8 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    /* ===== CHARACTER-SPECIFIC THEME ===== */
-    /* Niffty's canon signature palette */
+    /* Niffty's color theme */
     :root {
       --pink: #DA194C;       /* dress */
       --deeppink: #990022;   /* dress shading, trim */
@@ -226,7 +225,7 @@ body::before{
       transition: color 0.3s;
     }
 
-    /* ===== Gingham checkered strip, retro kitchen feel ===== */
+    /*  Gingham checkered strip, retro kitchen feel  */
     .gingham-strip {
       width: 100%;
       height: 20px;
@@ -239,7 +238,7 @@ body::before{
       opacity: 0.6;
     }
 
-    /* ===== Her little cockroach friends, dancing along the top ===== */
+    /* Her little cockroach friends, dancing along the top */
     .roach-strip {
       width: 100%;
       display: flex;
@@ -472,7 +471,7 @@ body::before{
       filter: brightness(1.08);
     }
 
-    /* Bottom decoration: cleaning supplies with a hidden edge */
+    /* Bottom decoration bugs */
     .cleaning-banner {
       width: 100%;
       height: 130px;
@@ -909,7 +908,7 @@ body::before{
             <p style="margin-top:0.8rem; opacity:0.8;"> I just made the website if you want to support me do it here <a href="https://ko-fi.com/mikmonvibes">Ko-Fi</a> </p>
     </div>
 
-    <!-- Bottom decoration: cleaning supplies with a hidden edge -->
+    <!-- Bottom decoration just bugs -->
     <div class="cleaning-banner" aria-hidden="true">
       <div class="bottom-bugs" aria-hidden="true">
         <span class="wall-bug bottom-bug-1"></span>
@@ -927,15 +926,8 @@ body::before{
         <rect x="0" y="108" width="900" height="4" fill="var(--pink)" opacity="0.5"/>
       </svg>
       
-
-      
-
-       
-
   <script>
-    // =============================================
-    //  HARDCODED CHARACTER DATA (replace each field)
-    // =============================================
+    //  HARDCODED CHARACTER DATA 
     const CHARACTER = {
       name: "Niffty",
       zip: "downloads/NifftyShimeji.zip",   // must match the exact filename on GitHub, including .zip
@@ -948,7 +940,7 @@ body::before{
       ]
     };
 
-    // ============== FUNCTIONALITY ==============
+    // FUNCTIONALITY 
     const previewImg = document.getElementById('charPreview');
     const sizeSlider = document.getElementById('sizeSlider');
     const sizeValue = document.getElementById('sizeValue');

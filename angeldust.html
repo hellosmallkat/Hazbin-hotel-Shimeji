@@ -10,8 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ===== CHARACTER-SPECIFIC THEME ===== */
-    /* Angel Dust's canon signature palette */
+    /* Angel Dust's color theme */
     :root {
       --furwhite: #FFF4F1;   /* main fur */
       --lightpink: #FDC0BD;  /* patterns & suit trim */
@@ -102,7 +101,7 @@
       transition: color 0.3s;
     }
 
-    /* ===== Marquee lights strip up top, showbiz glam ===== */
+    /* Marquee lights strip up top, showbiz glam */
     .marquee-strip {
       width: 100%;
       height: 46px;
@@ -117,7 +116,7 @@
       50% { opacity: 1; }
     }
 
-    /* ===== Worn accessory heart-charm choker, glowing ===== */
+    /* Worn accessory heart-charm choker, glowing  */
     .title-wrap {
       position: relative;
       display: flex;
@@ -156,7 +155,7 @@
       letter-spacing: 1px;
     }
 
-        /* ===== Bold badge - flamboyant surface ===== */
+        /* Bold badge */
     .mood-badge {
       display: inline-flex;
       align-items: center;
@@ -225,7 +224,6 @@
       line-height: 1.7;
       color: var(--text);
     }
-
 
     .control-panel {
       background: var(--card-bg);
@@ -305,7 +303,7 @@
       filter: brightness(1.1);
     }
 
-    /* ===== Bottom decoration: four retractable arms + feather boa, showbiz flair ===== */
+    /* Bottom decoration*/
     .finale-banner {
       width: 100%;
       height: 220px;
@@ -501,9 +499,7 @@
   </div>
 
   <script>
-    // =============================================
     //  HARDCODED CHARACTER DATA
-    // =============================================
     const CHARACTER = {
       name: "AngelDust",
       zip: "downloads/AngelDustShimeji.zip",   // must match the exact filename on GitHub, including .zip
@@ -545,7 +541,6 @@
 
         sizeSlider.addEventListener('input', updateSliderDisplay);
         updateSliderDisplay();
-
 
         //  DOWNLOAD LOGIC
 
