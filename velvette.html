@@ -3,43 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>%%CHARACTER_NAME%% - Hazbin Hotel Shimeji</title>
+  <meta name="description" content="Velvette - Fashion & Media Overlord">
+  <title>Velvette - Fashion & Media Overlord</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     /* ===== CHARACTER-SPECIFIC THEME ===== */
+    /* Velvette's signature palette - deep navy, hot magenta-red, rose, cream */
     :root {
-      --accent: %%ACCENT_COLOR%%;
-      --text: %%TEXT_COLOR%%;
-      --heading: %%HEADING_COLOR%%;
-      --button-bg: %%BUTTON_GRADIENT%%;
-      --card-bg: %%CARD_BG%%;
-      --bg-solid: %%BACKGROUND_SOLID%%;
+      --navy: #131a34;
+      --hotred: #f41b43;
+      --rose: #cd3a58;
+      --cream: #feeff3;
+      --mauve: #7d5d5f;
+
+      --accent: var(--hotred);
+      --accent-glow: rgba(244,27,67,0.4);
+      --text: #e9ccd3;
+      --heading: var(--hotred);
+      --button-bg: linear-gradient(45deg, var(--navy), var(--hotred));
+      --card-bg: rgba(19,26,52,0.92);
+      --bg-solid: #0c0f22;
+      --static-line: rgba(244,27,67,0.06);
     }
 
     body {
       font-family: 'Poppins', sans-serif;
+      letter-spacing: 0.2px;
       margin: 0;
       padding: 0;
       position: relative;
       overflow-x: hidden;
-      background: %%BACKGROUND_PATTERN%%;
+      background:
+        radial-gradient(circle at 80% 12%, rgba(244,27,67,0.2) 0%, transparent 42%),
+        radial-gradient(circle at 15% 88%, rgba(205,58,88,0.15) 0%, transparent 45%),
+        radial-gradient(circle at 50% 45%, #171f42 0%, #101430 55%, var(--bg-solid) 100%),
+        repeating-linear-gradient(0deg, var(--static-line) 0px, var(--static-line) 1px, transparent 1px, transparent 3px);
       background-color: var(--bg-solid);
       color: var(--text);
     }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(circle at 50% 35%, transparent 45%, rgba(0,0,0,0.55) 100%);
+      mix-blend-mode: multiply;
+    }
 
-    /* Floating symbols container */
     #symbols-container {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       pointer-events: none;
-      z-index: 0;
+      z-index: 5;
     }
 
-    /* ===== LAYOUT (unchanged from previous character page) ===== */
+    /* ===== Glowing neon poles, either side of the page ===== */
+    .neon-pole {
+      position: fixed;
+      top: 0;
+      width: 14px;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(180deg, var(--hotred) 0%, var(--cream) 50%, var(--hotred) 100%);
+      box-shadow:
+        0 0 12px var(--hotred),
+        0 0 24px var(--hotred),
+        0 0 45px rgba(244,27,67,0.6);
+      animation: pole-pulse 2.6s ease-in-out infinite;
+    }
+    .neon-pole.left { left: 6px; }
+    .neon-pole.right { right: 6px; }
+    @keyframes pole-pulse {
+      0%, 100% { opacity: 0.75; filter: brightness(1); }
+      50%      { opacity: 1; filter: brightness(1.25); }
+    }
+
     .room-container {
       max-width: 900px;
       margin: 2rem auto;
@@ -52,266 +96,523 @@
       margin-bottom: 1.5rem;
       color: var(--accent);
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
       font-family: 'Playfair Display', serif;
       font-size: 1.2rem;
       transition: color 0.3s;
     }
+
+    /* ===== Trending ticker strip up top - a scrolling social feed headline bar ===== */
+    .ticker-strip {
+      width: 100%;
+      height: 42px;
+      margin: 0.25rem 0 1.2rem 0;
+      overflow: hidden;
+      background: linear-gradient(90deg, var(--navy) 0%, #1c2450 50%, var(--navy) 100%);
+      border-top: 2px solid var(--hotred);
+      border-bottom: 2px solid var(--hotred);
+      position: relative;
+      box-shadow: 0 0 14px rgba(244,27,67,0.35) inset;
+    }
+    .ticker-strip::before, .ticker-strip::after {
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 40px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .ticker-strip::before { left: 0; background: linear-gradient(90deg, var(--navy), transparent); }
+    .ticker-strip::after { right: 0; background: linear-gradient(270deg, var(--navy), transparent); }
+    .ticker-track {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      width: max-content;
+      white-space: nowrap;
+      animation: ticker-scroll 22s linear infinite;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      color: var(--cream);
+      padding: 0 1.6rem;
+      text-transform: uppercase;
+    }
+    .ticker-item .dot { color: var(--hotred); font-size: 1.1rem; }
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Phone emblem  */
+    .title-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0.5rem 0 0.6rem 0;
+    }
+    .phone-emblem {
+      width: 150px;
+      height: 150px;
+      margin-bottom: -6px;
+      opacity: 0.97;
+      pointer-events: none;
+      animation: phone-glow 3.4s ease-in-out infinite;
+    }
+    .title-wrap .room-title { position: relative; margin: 0; }
+
+    .room-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      font-style: italic;
+      margin-bottom: 0.4rem;
+      color: var(--heading);
+      text-align: center;
+      -webkit-text-stroke: 2px var(--navy);
+      text-stroke: 2px var(--navy);
+      text-shadow:
+        3px 3px 0 var(--navy),
+        0 0 22px var(--rose),
+        0 0 40px rgba(205,58,88,0.5);
+      letter-spacing: 1px;
+    }
+
+    /* ===== Badge ===== */
+    .mood-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.6rem 0 1.2rem 0;
+      padding: 0.55rem 1.6rem;
+      border: 2px solid var(--hotred);
+      outline-offset: -5px;
+      clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--cream);
+      background: rgba(19,26,52,0.75);
+      box-shadow: 0 0 10px rgba(244,27,67,0.6), 0 0 18px rgba(244,27,67,0.3);
+      vertical-align: middle;
+      animation: wobble 4.8s ease-in-out infinite;
+    }
+    @keyframes wobble {
+      0%, 100% { transform: rotate(-1.5deg); }
+      50% { transform: rotate(1.5deg); }
+    }
+
     .preview-wrapper {
       display: inline-block;
       overflow: hidden;
-      border-radius: 28px;
+      clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
       max-width: 450px;
       margin: 1rem 0 2.5rem 0;
-      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 80px var(--accent);
+      box-shadow: 0 0 40px rgba(0,0,0,0.7), 0 0 45px var(--accent-glow), 0 0 22px rgba(205,58,88,0.4) inset;
       border: 3px solid var(--accent);
+      outline-offset: -8px;
     }
     .preview-wrapper img {
       display: block;
       width: 100%;
       height: auto;
-      transition: transform 0.2s ease-out;
-      transform-origin: top left;
     }
+
     .vibe-section {
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      border-radius: 28px;
+      background: rgba(19,26,52,0.85);
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      outline-offset: -7px;
+      clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
       padding: 2rem;
-      margin-bottom: 2.5rem;
-      box-shadow: 0 0 35px rgba(0,0,0,0.8);
+      margin-bottom: 2rem;
+      box-shadow: 0 0 30px rgba(0,0,0,0.75);
       position: relative;
       overflow: hidden;
     }
     .vibe-quote {
       font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+      font-size: 1.6rem;
       font-style: italic;
       margin-bottom: 1rem;
-      color: var(--accent);
-      text-shadow: 0 0 15px currentColor;
+      color: var(--cream);
+      text-shadow: 0 0 10px rgba(244,27,67,0.3);
     }
     .vibe-desc {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       line-height: 1.7;
       color: var(--text);
     }
+
     .control-panel {
       background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 2px solid var(--accent);
-      border-radius: 28px;
+      backdrop-filter: blur(10px);
+      border: 3px solid var(--accent);
+      outline-offset: -8px;
+      clip-path: polygon(6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px), 0 6px);
       padding: 2.5rem;
-      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      box-shadow: 0 0 35px rgba(0,0,0,0.55);
     }
     .slider-group {
       display: flex;
       flex-wrap: wrap;
       gap: 2.5rem;
       align-items: center;
+      justify-content: center;
       margin: 1.5rem 0;
     }
     .slider-item label {
       display: block;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 0.5rem;
-      font-family: 'Playfair Display', serif;
-      color: var(--accent);
+      font-family: 'Poppins', sans-serif;
+      color: var(--cream);
       font-size: 1.1rem;
     }
     input[type="range"] {
       width: 240px;
       height: 8px;
-      accent-color: var(--accent);
+      accent-color: var(--hotred);
       border-radius: 4px;
     }
+    .toggle-group { display: flex; gap: 0.75rem; justify-content: center; }
+    .toggle-btn {
+      padding: 0.5rem 1.4rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      opacity: 0.55;
+    }
+    .toggle-btn:hover { opacity: 0.85; }
+    .toggle-btn.active {
+      background: var(--button-bg);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
     .summon-button {
       display: inline-block;
-      padding: 1.2rem 3.5rem;
+      padding: 1.1rem 3.2rem;
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      border-radius: 60px;
+      font-size: 1.6rem;
+      border-radius: 50px;
       border: none;
       cursor: pointer;
       text-transform: uppercase;
       font-weight: 900;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       transition: all 0.3s;
       margin-top: 1.5rem;
       background: var(--button-bg);
       color: #fff;
-      border: 3px solid var(--accent);
-      box-shadow: 0 0 25px var(--accent);
-      text-shadow: 0 0 8px rgba(0,0,0,0.6);
+      border: 3px solid var(--cream);
+      box-shadow: 0 0 15px var(--accent-glow);
+      text-shadow: 0 0 8px rgba(0,0,0,0.5);
     }
     .summon-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 45px var(--accent);
-      filter: brightness(1.2);
+      transform: scale(1.05) rotate(-1deg);
+      box-shadow: 0 0 28px var(--accent-glow);
+      filter: brightness(1.1);
+    }
+    .support-links {
+      margin-top: 0.8rem;
+      opacity: 0.8;
+    }
+    .support-links a { color: var(--cream); }
+
+    /* ===== Bottom banner: runway, flashes, and a trending feed ===== */
+    .finale-banner {
+      width: 100%;
+      height: 240px;
+      margin-top: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .finale-banner svg { width: 100%; height: 100%; display: block; }
+    .twinkle { animation: twinkle-glow 2.2s ease-in-out infinite; }
+    .twinkle:nth-child(2) { animation-delay: 0.4s; }
+    .twinkle:nth-child(3) { animation-delay: 0.9s; }
+    @keyframes twinkle-glow {
+      0%, 100% { opacity: 0.25; }
+      50% { opacity: 1; }
+    }
+    .flash-pop {
+      animation: flash-pop-anim 3s ease-in-out infinite;
+    }
+    .flash-pop:nth-child(2) { animation-delay: 1s; }
+    .flash-pop:nth-child(3) { animation-delay: 2s; }
+    @keyframes flash-pop-anim {
+      0%, 88%, 100% { opacity: 0; }
+      90% { opacity: 0.9; }
+      94% { opacity: 0.2; }
+      96% { opacity: 0.75; }
+    }
+    .notif-float {
+      animation: notif-float-anim 4.5s ease-in-out infinite;
+    }
+    @keyframes notif-float-anim {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
 
-    /* Floating symbols styling (just in case you want to add them manually outside the container) */
     .floating-symbol {
       position: absolute;
       pointer-events: none;
       user-select: none;
+      animation: drift-float 8s ease-in-out infinite;
+    }
+    @keyframes drift-float {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(8px, -14px) rotate(6deg); }
+      50%  { transform: translate(-6px, -26px) rotate(-4deg); }
+      75%  { transform: translate(10px, -14px) rotate(5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
   </style>
 </head>
 <body>
-  <!-- Container for background symbols (filled by script) -->
+  <div class="neon-pole left" aria-hidden="true"></div>
+  <div class="neon-pole right" aria-hidden="true"></div>
   <div id="symbols-container"></div>
 
   <div class="room-container">
     <a href="index.html" class="back-link">Back to the Hotel</a>
 
-    <h1 style="font-family:'Playfair Display'; font-size:3rem; margin-bottom:0.5rem; text-shadow:0 0 20px var(--accent); color:var(--heading);">
-      %%CHARACTER_NAME%%
-    </h1>
+    <!-- Trending ticker strip -->
+    <div class="ticker-strip" aria-hidden="true">
+      <div class="ticker-track" id="tickerTrack">
+                <span class="ticker-item"><span class="dot">●</span> #TRENDING <span class="dot">●</span> #BITCH <span class="dot">●</span> BACKBONE OF THE VEES <span class="dot">●</span> 2.4M WATCHING <span class="dot">●</span> BACKBONE OF THE VEES<span class="dot">●</span> #TRENDING<span class="dot">●</span> #BITCH<span class="dot">●</span> BACKBONE OF THE VEES <span class="dot">●</span> 2.4M WATCHING <span class="dot">●</span> EVERYONE'S REPLACEABLE <span class="dot">●</span></span>
+      </div>
+    </div>
 
-    <!-- Live preview image -->
-    <div class="preview-wrapper" id="previewWrapper">
-      <img id="charPreview" src="%%PREVIEW_IMAGE_PATH%%" alt="%%CHARACTER_NAME%%">
+    <div class="title-wrap">
+      <!-- her icon: the phone, always in hand -->
+      <svg class="phone-emblem" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- phone body -->
+        <rect x="42" y="10" width="56" height="104" rx="10" fill="var(--navy)" stroke="var(--hotred)" stroke-width="3"/>
+        <rect x="48" y="20" width="44" height="76" fill="#0a0d1e" stroke="var(--rose)" stroke-width="1.5"/>
+        <circle cx="70" cy="106" r="4" fill="none" stroke="var(--hotred)" stroke-width="1.6"/>
+        <rect x="60" y="14" width="20" height="3" rx="1.5" fill="var(--hotred)" opacity="0.7"/>
+        <!-- screen content: a heart "like" and a play-style story ring -->
+        <path d="M70,60 c-3,-6 -12,-4 -12,3 c0,6 12,13 12,13 s12,-7 12,-13 c0,-7 -9,-9 -12,-3 Z" fill="var(--hotred)" opacity="0.9"/>
+        <g stroke="var(--rose)" stroke-width="1.6" opacity="0.7">
+          <line x1="55" y1="32" x2="85" y2="32"/>
+          <line x1="55" y1="38" x2="78" y2="38"/>
+          <line x1="55" y1="44" x2="78" y2="44"/>
+          <line x1="55" y1="50" x2="85" y2="50"/>
+          <line x1="55" y1="82" x2="85" y2="82"/>
+          <line x1="55" y1="88" x2="78" y2="88"/>
+        </g>
+      </svg>
+      <h1 class="room-title">Velvette</h1>
+    </div>
+
+    <div style="text-align:center;">
+      <span class="mood-badge">♫ No wonder I'm so respectless, I could eat you lot for breakfast. ♫</span>
+    </div>
+
+    <div style="text-align:center;">
+      <div class="preview-wrapper" id="previewWrapper">
+        <img id="charPreview" src="images/velvette.png" alt="Velvette Preview">
+      </div>
     </div>
 
     <!-- Vibe section (quote + description) -->
     <div class="vibe-section">
-      <p class="vibe-quote">%%QUOTE%%</p>
-      <p class="vibe-desc">%%DESCRIPTION%%</p>
+      <p class="vibe-quote">"Ha. Nice shot, Val."</p>
+      <p class="vibe-desc">Name's Velvette, and I'm classy, bitch. I run the trends, I run the feeds, and let's be real, I'm the only reason the Vees even function. While the boys are busy playing with their screens and their cheap porn, I actually keep Hell's attention span alive. So take a picture, make it viral, and try not to bore me.</p>
     </div>
 
     <!-- Customisation controls -->
-    <div class="control-panel">
+    <div class="control-panel" style="text-align:center;">
       <div class="slider-group">
         <div class="slider-item">
           <label>Size: <span id="sizeValue">1.0</span></label>
           <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1.0">
         </div>
         <div class="slider-item">
-          <label>Duplicates: <span id="countValue">1</span></label>
-          <input type="range" id="countSlider" min="1" max="10" step="1" value="1">
+          <label>Allow Duplication?</label>
+          <div class="toggle-group" id="duplicateToggle">
+            <button type="button" class="toggle-btn active" data-value="yes">Yes</button>
+            <button type="button" class="toggle-btn" data-value="no">No</button>
+          </div>
         </div>
       </div>
-      <button class="summon-button" id="summonBtn">Summon Chaos</button>
-      <p style="margin-top:0.8rem; opacity:0.8;">Downloads a custom ZIP with your settings</p>
+      <button class="summon-button" id="summonBtn">Post It</button>
+      <p class="support-links">Downloads a custom ZIP with your settings</p>
+      <p class="support-links">Please go support the original artist here: <a href="https://ko-fi.com/spiritboxfm">spiritboxfm</a></p>
+      <p class="support-links">I just made the website - if you want to support me, do it here: <a href="https://ko-fi.com/mikmonvibes">Ko-Fi</a></p>
     </div>
+
+    <!-- Bottom banner -->
+    <div class="finale-banner" aria-hidden="true">
+      <svg viewBox="0 0 900 240" xmlns="http://www.w3.org/2000/svg">
+      </svg>
   </div>
 
   <script>
-    // =============================================
-    //  HARDCODED CHARACTER DATA (replace each field)
-    // =============================================
+    //  HARDCODED CHARACTER DATA
     const CHARACTER = {
-      name: "%%CHARACTER_NAME%%",
-      zip: "%%ZIP_PATH%%",           // e.g., "downloads/Alastor.zip"
-      preview: "%%PREVIEW_IMAGE_PATH%%",
+      name: "Velvette",
+      zip: "downloads/VelvetteShimeji.zip",
+      preview: "images/velvette.png",
       backgroundSymbols: [
-        %%BACKGROUND_SYMBOLS_ARRAY%%
+       { "symbol": "\u2665", "color": "#f41b43", "size": "1.3rem", "opacity": 0.12 },
+       { "symbol": "\u2726", "color": "#feeff3", "size": "1.6rem", "opacity": 0.11 },
+       { "symbol": "\u2727", "color": "#cd3a58", "size": "1.4rem", "opacity": 0.1 },
+       { "symbol": "\u2728", "color": "#f41b43", "size": "1.5rem", "opacity": 0.12 }
       ]
     };
 
-    // ============== FUNCTIONALITY ==============
+    //  DOM REFS
     const previewImg = document.getElementById('charPreview');
     const sizeSlider = document.getElementById('sizeSlider');
     const sizeValue = document.getElementById('sizeValue');
-    const countSlider = document.getElementById('countSlider');
-    const countValue = document.getElementById('countValue');
+    const duplicateToggle = document.getElementById('duplicateToggle');
+    const summonBtn = document.getElementById('summonBtn');
 
-    // Live size preview
-    function updatePreviewSize(scale) {
-      previewImg.style.transform = `scale(${scale})`;
+    let allowDuplication = true;
+
+    duplicateToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            duplicateToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            allowDuplication = btn.dataset.value === 'yes';
+        });
+    });
+
+    previewImg.src = CHARACTER.preview;
+
+    function updateSliderDisplay() {
+        const val = parseFloat(sizeSlider.value).toFixed(1);
+        sizeValue.textContent = val;
     }
-    sizeSlider.addEventListener('input', () => {
-      const val = parseFloat(sizeSlider.value).toFixed(1);
-      sizeValue.textContent = val;
-      updatePreviewSize(parseFloat(val));
-    });
-    countSlider.addEventListener('input', () => {
-      countValue.textContent = countSlider.value;
-    });
-    updatePreviewSize(1.0); // initial
+    sizeSlider.addEventListener('input', updateSliderDisplay);
+    updateSliderDisplay();
 
-    // Summon button
-    document.getElementById('summonBtn').addEventListener('click', async () => {
-      const scale = parseFloat(sizeSlider.value);
-      const count = parseInt(countSlider.value, 10);
-      await generateAndDownload(CHARACTER, scale, count);
-    });
-
-    // ========== ZIP GENERATION ==========
-    async function generateAndDownload(char, scale, count) {
-      try {
-        const resp = await fetch('../' + char.zip);
-        if (!resp.ok) throw new Error('Could not fetch ZIP.');
-        const zipBlob = await resp.blob();
-        const zip = await JSZip.loadAsync(zipBlob);
-
-        // Locate configuration file
-        let configFile = zip.file('conf/設定.properties') || zip.file('conf/Actions.properties');
-        if (!configFile) {
-          const confs = Object.keys(zip.files).filter(f => f.startsWith('conf/') && f.endsWith('.properties'));
-          if (confs.length) configFile = zip.file(confs[0]);
-        }
-
-        if (configFile) {
-          let text = await configFile.async('text');
-          text = setOrReplace(text, 'OnScreenCount', count.toString());
-          text = setOrReplace(text, 'Scale', scale.toFixed(1));
-          zip.file(configFile.name, text);
-        }
-
-        const newZip = await zip.generateAsync({ type: 'blob' });
-        const url = URL.createObjectURL(newZip);
+    //  DOWNLOAD LOGIC
+    function triggerDownload(blobOrUrl, filename) {
         const a = document.createElement('a');
-        a.href = url;
-        a.download = `${char.name}_Shimeji_custom.zip`;
+        if (typeof blobOrUrl === 'string') {
+            a.href = blobOrUrl;
+        } else {
+            a.href = URL.createObjectURL(blobOrUrl);
+        }
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         a.remove();
-        URL.revokeObjectURL(url);
-      } catch (err) {
-        alert('Error generating ZIP: ' + err.message);
-      }
+        if (typeof blobOrUrl !== 'string') {
+            setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+        }
     }
 
     function setOrReplace(text, key, val) {
-      const lines = text.split('\n');
-      let found = false;
-      const updated = lines.map(line => {
-        if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
-          found = true;
-          return `${key}=${val}`;
-        }
-        return line;
-      });
-      if (!found) updated.push(`${key}=${val}`);
-      return updated.join('\n');
+        const lines = text.split('\n');
+        let found = false;
+        const updated = lines.map(line => {
+            if (line.trim().startsWith(key + '=') || line.trim().startsWith(key + ' ')) {
+                found = true;
+                return key + '=' + val;
+            }
+            return line;
+        });
+        if (!found) updated.push(key + '=' + val);
+        return updated.join('\n');
     }
 
-    // ========== FLOATING SYMBOLS ==========
+    async function generateAndDownload(char, scale, allowDuplication) {
+        const filename = char.name + '_Shimeji_custom.zip';
+        try {
+            if (location.protocol === 'file:') {
+                throw new Error('This page is running as file://. Use a local web server.');
+            }
+
+            const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+            const resp = await fetch(zipUrl, { cache: 'no-store' });
+            if (!resp.ok) throw new Error('Could not fetch ZIP (' + resp.status + ') at ' + zipUrl);
+
+            const zipBlob = await resp.blob();
+            const zip = await JSZip.loadAsync(zipBlob);
+
+            const allPaths = Object.keys(zip.files);
+            let configPath = allPaths.find(p => /(^|\/)conf\/(設定|settings|Actions)\.properties$/i.test(p));
+            if (!configPath) {
+                configPath = allPaths.find(p => /(^|\/)conf\/.*\.properties$/i.test(p));
+            }
+
+            const configFile = configPath ? zip.file(configPath) : null;
+
+            if (configFile) {
+                let text = await configFile.async('text');
+                text = setOrReplace(text, 'OnScreenCount', '1');
+                text = setOrReplace(text, 'Scale', scale.toFixed(1));
+                text = setOrReplace(text, 'AllowDuplication', allowDuplication ? 'true' : 'false');
+                zip.file(configFile.name, text);
+            } else {
+                console.warn('No conf/*.properties file found in zip — shipping settings unchanged.');
+            }
+
+            const newZip = await zip.generateAsync({ type: 'blob' });
+            triggerDownload(newZip, filename);
+
+        } catch (err) {
+            console.error('ZIP generation failed:', err);
+            try {
+                const zipUrl = new URL(encodeURI(char.zip), window.location.href).toString();
+                triggerDownload(zipUrl, char.name + '_Shimeji.zip');
+                alert('Custom edit failed, downloaded original ZIP instead.');
+            } catch (fallbackErr) {
+                alert('Error generating ZIP: ' + err.message);
+            }
+        }
+    }
+
+    summonBtn.addEventListener('click', async () => {
+        const scale = parseFloat(sizeSlider.value);
+        await generateAndDownload(CHARACTER, scale, allowDuplication);
+    });
+
+    //  BACKGROUND SYMBOLS
     (function renderSymbols() {
-      const container = document.getElementById('symbols-container');
-      container.innerHTML = '';
-      if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
-        CHARACTER.backgroundSymbols.forEach(sym => {
-          for (let i = 0; i < 8; i++) {
-            const span = document.createElement('span');
-            span.textContent = sym.symbol;
-            span.style.cssText = `
-              position:absolute;
-              left:${Math.random() * 95}%;
-              top:${Math.random() * 95}%;
-              font-size:${sym.size};
-              color:${sym.color};
-              opacity:${sym.opacity};
-              pointer-events:none;
-              user-select:none;
-            `;
-            container.appendChild(span);
-          }
-        });
-      }
+        const container = document.getElementById('symbols-container');
+        container.innerHTML = '';
+        if (CHARACTER.backgroundSymbols && CHARACTER.backgroundSymbols.length > 0) {
+            CHARACTER.backgroundSymbols.forEach(sym => {
+                for (let i = 0; i < 8; i++) {
+                    const span = document.createElement('span');
+                    span.className = 'floating-symbol';
+                    span.textContent = sym.symbol;
+                    span.style.cssText = `
+                        left:${Math.random() * 95}%;
+                        top:${Math.random() * 95}%;
+                        font-size:${sym.size};
+                        color:${sym.color};
+                        opacity:${sym.opacity};
+                        animation-duration:${6 + Math.random() * 6}s;
+                        animation-delay:${(Math.random() * 5).toFixed(2)}s;
+                    `;
+                    container.appendChild(span);
+                }
+            });
+        }
     })();
   </script>
 </body>
