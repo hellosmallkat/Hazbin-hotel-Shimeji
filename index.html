@@ -38,11 +38,13 @@
       padding-top: 1rem;
     }
 
-    /* Top shortcut button */
+    /* Top shortcut buttons */
     .top-tab {
       position: absolute;
       top: 1.5rem; right: 2.5rem;
       z-index: 10;
+      display: flex;
+      gap: 0.8rem;
     }
     .top-tab button {
       font-family: 'Playfair Display', serif;
@@ -208,7 +210,7 @@
     }
     footer a { color: #f5b342; }
 
-    /* Modal for shortcut guide */
+    /* Modal for shortcut/setup guides */
     .modal {
       display: none;
       position: fixed;
@@ -250,12 +252,39 @@
       cursor: pointer;
     }
 
-    
+    .modal-content code {
+      background: rgba(212,175,55,0.12);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      color: #f5c782;
+    }
+    .modal-content pre {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid #6b1a1a;
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      margin: 0.5rem 0;
+      overflow-x: auto;
+    }
+    .modal-content pre code {
+      background: none;
+      padding: 0;
+    }
+    .modal-note {
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      border-left: 3px solid #e8924b;
+      background: rgba(232,146,75,0.08);
+      color: #e0d3b8;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
 
     @media (max-width: 600px) {
       .character-grid { grid-template-columns: 1fr; }
       .character-card { aspect-ratio: auto; }
       .character-card img { height: 250px; }
+      .top-tab { position: static; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -272,8 +301,9 @@
   </svg>
 
   <div class="main-wrapper">
-    <!-- Shortcut button at top -->
+    <!-- Shortcut buttons at top -->
     <div class="top-tab">
+      <button id="setupTabBtn">Setup Guide</button>
       <button id="shortcutTabBtn">Shortcut Guide</button>
     </div>
 
@@ -299,6 +329,53 @@
       <p > I just made the website if you want to support me do it here <a href="https://ko-fi.com/mikmonvibes">Ko-Fi</a> </p>
       <p>Hazbin Hotel Shimeji Collection &middot; <a href="https://github.com/hellosmallkat/Hazbin-hotel-Shimeji">GitHub Repository</a></p>
     </footer>
+  </div>
+
+  <!-- Setup Guide Modal - getting Shimeji running for the first time -->
+  <div class="modal" id="setupModal">
+    <div class="modal-content" style="margin-left:-50px;">
+      <button class="close-modal" id="closeSetupModal">&times;</button>
+      <h2>Getting Shimeji Running</h2>
+      <p><strong>Shimeji is a Java program, so your computer needs Java installed before anything else will work.</strong></p>
+
+      <h3 style="font-family:'Playfair Display'; color:#f0c27a; margin-top:1.5rem;">Step 1 - Install Java</h3>
+      <ol>
+        <li>Go to <a href="https://www.java.com/download/" target="_blank" rel="noopener">java.com/download</a> and download Java for your system.</li>
+        <li>Run the installer and follow the prompts (defaults are fine).</li>
+        <li>Restart your computer if it asks you to.</li>
+      </ol>
+
+      <h3 style="font-family:'Playfair Display'; color:#f0c27a; margin-top:1.5rem;">Step 2 - Check it worked</h3>
+      <p><strong>Windows:</strong> open <strong>Command Prompt</strong> (search "cmd" in the Start menu) and type:</p>
+      <pre><code>java -version</code></pre>
+      <p><strong>macOS:</strong> open <strong>Terminal</strong> (Command+Space, type "Terminal") and type the same command:</p>
+      <pre><code>java -version</code></pre>
+      <p>If you see a version number printed back, Java is installed correctly. If you see "command not found" or similar, reinstall Java and make sure you restart your computer.</p>
+
+      <h3 style="font-family:'Playfair Display'; color:#f0c27a; margin-top:1.5rem;">Step 3 - Download and unzip your Shimeji</h3>
+      <ol>
+        <li>Pick a character on this site and click <strong>Summon</strong> (or the equivalent download button) to get your custom ZIP.</li>
+        <li>Find the downloaded ZIP file (usually in your <strong>Downloads</strong> folder).</li>
+        <li>Right-click it and choose <strong>Extract All</strong> (Windows) or double-click it (macOS) to unzip it into its own folder.</li>
+        <li>Keep that folder somewhere permanent - don't leave it in Downloads long-term, since deleting the ZIP folder later will delete your Shimeji.</li>
+      </ol>
+
+      <h3 style="font-family:'Playfair Display'; color:#f0c27a; margin-top:1.5rem;">Step 4 - Run it</h3>
+      <p>Inside the extracted folder, look for <code>Shimeji-ee.jar</code>.</p>
+      <ul style="margin-left:1.2rem;">
+        <li><strong>Windows:</strong> double-click <code>Shimeji-ee.jar</code>. If double-clicking does nothing, right-click it &gt; <strong>Open with</strong> &gt; <strong>Java Platform SE binary</strong>.</li>
+        <li><strong>macOS:</strong> double-click <code>Shimeji-ee.jar</code>. If macOS blocks it (unidentified developer), right-click &gt; <strong>Open</strong>, then confirm in the popup.</li>
+      </ul>
+      <p>Your character should pop up on screen and start wandering around!</p>
+
+      <div class="modal-note">
+        <strong>Nothing happening when you double-click the jar?</strong> Open a terminal/command prompt, navigate to the extracted folder (<code>cd</code> followed by the folder path), and run:
+        <pre><code>java -jar Shimeji-ee.jar</code></pre>
+        Any error message that appears will tell you what's missing (usually a Java install or version issue).
+      </div>
+
+      <p style="margin-top:1.2rem; color:#a58b6f;">Once it's running, check the <strong>Shortcut Guide</strong> button up top for how to make it launch with a single click next time.</p>
+    </div>
   </div>
 
   <!-- Shortcut Guide Modal -->
@@ -330,8 +407,6 @@ java -jar "Shimeji-ee.jar"</code></pre> (Replace with actual path.)</li>
     </div>
   </div>
 
-  
-
   <script>
   (async function() {
     const hazbinGrid = document.getElementById('hazbinGrid');
@@ -347,7 +422,6 @@ java -jar "Shimeji-ee.jar"</code></pre> (Replace with actual path.)</li>
         chars.forEach(char => {
           const a = document.createElement('a');
           a.className = 'character-card';
-          // **** THIS IS THE ONLY CHANGE ****
           a.href = char.id + '.html';
           a.innerHTML = `<img src="${char.preview}" alt="${char.name}" loading="lazy"><div class="card-body"><h3>${char.name}</h3></div>`;
           grid.appendChild(a);
@@ -376,6 +450,14 @@ java -jar "Shimeji-ee.jar"</code></pre> (Replace with actual path.)</li>
     document.body.style.setProperty('--border-color', `rgb(${r},${g},${b})`);
   });
 
+  // Setup modal logic
+  document.getElementById('setupTabBtn').addEventListener('click', () => {
+    document.getElementById('setupModal').classList.add('active');
+  });
+  document.getElementById('closeSetupModal').addEventListener('click', () => {
+    document.getElementById('setupModal').classList.remove('active');
+  });
+
   // Shortcut modal logic (unchanged)
   document.getElementById('shortcutTabBtn').addEventListener('click', () => {
     document.getElementById('shortcutModal').classList.add('active');
@@ -386,6 +468,9 @@ java -jar "Shimeji-ee.jar"</code></pre> (Replace with actual path.)</li>
   window.addEventListener('click', (e) => {
     if (e.target === document.getElementById('shortcutModal')) {
       document.getElementById('shortcutModal').classList.remove('active');
+    }
+    if (e.target === document.getElementById('setupModal')) {
+      document.getElementById('setupModal').classList.remove('active');
     }
   });
 </script>
